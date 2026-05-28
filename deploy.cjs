@@ -12,9 +12,9 @@ const conn = new Client();
 conn.on('ready', () => {
   console.log('[SSH] Connected');
 
-  // Check docker compose build error
   const commands = [
     `cd /root/app`,
+    `git pull origin master`,
     `docker compose down`,
     `docker compose up -d --build 2>&1`,
   ].join(' && ');
