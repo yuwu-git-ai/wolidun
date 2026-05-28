@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-窝里蹲点单系统 (Wolidun Ordering System) — a dormitory convenience store ordering SPA. No-login flow: fill nickname + dorm → browse → order → copy to WeChat. Admin panel with order notifications and product CRUD. Full-stack: React 19 + Express/SQLite, Docker on Alibaba Cloud ECS (47.121.198.81). Tailwind CSS v4, `motion`, lucide-react.
+窝里蹲点单系统 (Wolidun Ordering System) — a dormitory convenience store ordering SPA. No-login flow: fill nickname + dorm → browse → order → copy to WeChat. Admin panel with order notifications and product CRUD. Full-stack: React 19 + Express/SQLite, Docker deployment. Tailwind CSS v4, `motion`, lucide-react.
 
 ## Commands
 
@@ -108,73 +108,13 @@ Single-container multi-stage build:
 - Production CMD: `node dist-server/server/index.js`
 - DB persisted via Docker volume: `./data:/app/data`
 
-### Deploy to server (47.121.198.81)
+### Deploy to server
 
-Server: Alibaba Cloud ECS, Ubuntu 24.04, root@47.121.198.81, Docker + Docker Compose installed.
+Server: Alibaba Cloud ECS, Ubuntu 24.04, Docker + Docker Compose installed.
 Project location on server: `/root/app/`
 
-**Full redeploy after code changes:**
-
-```bash
-# 1. Build locally
-npm run build
-npx tsc --project tsconfig.server.json
-
-# 2. Package (exclude node_modules, data, .git, *.tar.gz)
-# Use PowerShell Compress-Archive or tar czf
-
-# 3. Upload and rebuild on server
-# Use ssh2-based deploy script (see template below), or manually:
-#   scp deploy.zip root@47.121.198.81:/root/
-#   ssh root@47.121.198.81
-#   cd /root/app && docker compose down
-#   unzip -o /root/deploy.zip -d /root/app
-#   docker compose up -d --build
-#   curl -s http://localhost:3001/api/health
-```
-
-**Deploy script template** (save as `deploy.cjs`, run with `node deploy.cjs`):
-```js
-const { Client } = require('ssh2');
-const fs = require('fs');
-
-const CONFIG = {
-  host: '47.121.198.81',
-  port: 22,
-  username: 'root',
-  password: 'QWErty83513721abc',
-};
-
-const conn = new Client();
-conn.on('ready', () => {
-  console.log('[SSH] Connected');
-  conn.sftp((err, sftp) => {
-    if (err) { console.error(err); process.exit(1); }
-    const readStream = fs.createReadStream('E:/deploy.zip');
-    const writeStream = sftp.createWriteStream('/root/deploy.zip');
-    writeStream.on('close', () => {
-      sftp.end();
-      conn.exec(
-        'cd /root/app && docker compose down && unzip -o /root/deploy.zip -d /root/app && rm /root/deploy.zip && docker compose up -d --build',
-        { timeout: 300000 },
-        (err, stream) => {
-          if (err) { console.error(err); conn.end(); return; }
-          stream.on('data', d => process.stdout.write(d.toString()));
-          stream.stderr.on('data', d => process.stderr.write(d.toString()));
-          stream.on('close', code => {
-            console.log(`Exit: ${code}`);
-            conn.end();
-          });
-        }
-      );
-    });
-    readStream.pipe(writeStream);
-  });
-});
-conn.connect(CONFIG);
-```
-
-**Production URL**: http://47.121.198.81:3001/ (customer), http://47.121.198.81:3001/admin (admin)
+See `deploy.cjs` (not committed) for the deployment script.
+Production URL: `http://<server-ip>:3001/` (customer), `http://<server-ip>:3001/admin` (admin)
 
 ## Build Notes
 

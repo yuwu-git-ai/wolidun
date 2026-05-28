@@ -12,3 +12,4 @@ coverage/
 *.db-wal
 data/
 deploy.tar.gz
+deploy.cjs
