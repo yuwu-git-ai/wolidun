@@ -35,34 +35,50 @@ function runMigrations() {
     // Drop users table (no longer needed — no auth)
     db.exec(`DROP TABLE IF EXISTS users`);
 
-    // Recreate products without variants column
-    db.exec(`
-      CREATE TABLE IF NOT EXISTS products_new (
-        id TEXT PRIMARY KEY, name TEXT NOT NULL, price REAL NOT NULL,
-        category TEXT NOT NULL, description TEXT DEFAULT '', image TEXT DEFAULT '',
-        stock INTEGER DEFAULT 999, allow_brewing INTEGER DEFAULT 0,
-        allow_freezing INTEGER DEFAULT 0, created_at TEXT DEFAULT (datetime('now'))
-      );
-      INSERT INTO products_new (id, name, price, category, description, image, stock, allow_brewing, allow_freezing, created_at)
-        SELECT id, name, price, category, description, image, stock, allow_brewing, allow_freezing, created_at FROM products;
-      DROP TABLE products;
-      ALTER TABLE products_new RENAME TO products;
-    `);
+    // Check whether old tables exist (fresh DB won't have them)
+    const hasProducts = db.prepare(
+      "SELECT name FROM sqlite_master WHERE type='table' AND name='products'"
+    ).get();
+    const hasOrders = db.prepare(
+      "SELECT name FROM sqlite_master WHERE type='table' AND name='orders'"
+    ).get();
 
-    // Recreate orders without user_id FK column
-    db.exec(`
-      CREATE TABLE IF NOT EXISTS orders_new (
-        id TEXT PRIMARY KEY, nickname TEXT NOT NULL, dorm TEXT NOT NULL,
-        is_delivery INTEGER DEFAULT 0, items TEXT NOT NULL,
-        total_price REAL NOT NULL, status TEXT DEFAULT 'pending',
-        created_at TEXT DEFAULT (datetime('now'))
-      );
-      INSERT INTO orders_new (id, nickname, dorm, is_delivery, items, total_price, status, created_at)
-        SELECT o.id, COALESCE(o.nickname, ''), COALESCE(o.dorm, ''),
-          o.is_delivery, o.items, o.total_price, o.status, o.created_at FROM orders o;
-      DROP TABLE orders;
-      ALTER TABLE orders_new RENAME TO orders;
-    `);
+    // Clean up any leftovers from a failed prior migration
+    db.exec(`DROP TABLE IF EXISTS products_new`);
+    db.exec(`DROP TABLE IF EXISTS orders_new`);
+
+    if (hasProducts) {
+      // Migrate products: remove variants column
+      db.exec(`
+        CREATE TABLE products_new (
+          id TEXT PRIMARY KEY, name TEXT NOT NULL, price REAL NOT NULL,
+          category TEXT NOT NULL, description TEXT DEFAULT '', image TEXT DEFAULT '',
+          stock INTEGER DEFAULT 999, allow_brewing INTEGER DEFAULT 0,
+          allow_freezing INTEGER DEFAULT 0, created_at TEXT DEFAULT (datetime('now'))
+        );
+        INSERT INTO products_new (id, name, price, category, description, image, stock, allow_brewing, allow_freezing, created_at)
+          SELECT id, name, price, category, description, image, stock, allow_brewing, allow_freezing, created_at FROM products;
+        DROP TABLE products;
+        ALTER TABLE products_new RENAME TO products;
+      `);
+    }
+
+    if (hasOrders) {
+      // Migrate orders: remove user_id FK, add nickname/dorm columns
+      db.exec(`
+        CREATE TABLE orders_new (
+          id TEXT PRIMARY KEY, nickname TEXT NOT NULL, dorm TEXT NOT NULL,
+          is_delivery INTEGER DEFAULT 0, items TEXT NOT NULL,
+          total_price REAL NOT NULL, status TEXT DEFAULT 'pending',
+          created_at TEXT DEFAULT (datetime('now'))
+        );
+        INSERT INTO orders_new (id, nickname, dorm, is_delivery, items, total_price, status, created_at)
+          SELECT o.id, COALESCE(o.nickname, ''), COALESCE(o.dorm, ''),
+            o.is_delivery, o.items, o.total_price, o.status, o.created_at FROM orders o;
+        DROP TABLE orders;
+        ALTER TABLE orders_new RENAME TO orders;
+      `);
+    }
 
     db.pragma('foreign_keys = ON');
     db.prepare('INSERT INTO schema_version (version) VALUES (2)').run();
