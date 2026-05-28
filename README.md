@@ -1,20 +1,39 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# 窝里蹲点单系统
 
-# Run and deploy your AI Studio app
+宿舍点单小程序 —— 浏览商品、加入购物车、一键复制订单发微信群。
 
-This contains everything you need to run your app locally.
+## 技术栈
 
-View your app in AI Studio: https://ai.studio/apps/fefca2bb-aa92-4a4a-905d-84fd95f1f75d
+- **前端**: React + TypeScript + Tailwind CSS + motion
+- **后端**: Express + better-sqlite3
+- **部署**: Node.js 单进程，前端静态文件由 Express 托管
 
-## Run Locally
+## 本地开发
 
-**Prerequisites:**  Node.js
+```bash
+npm install
+npm run dev:all    # 前后端同时启动
+```
 
+- 前端: http://localhost:3000
+- 后端: http://localhost:3001
+- 管理后台: http://localhost:3000/admin
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+## 环境变量
+
+复制 `.env.example` 为 `.env`：
+
+| 变量 | 说明 | 默认值 |
+|------|------|--------|
+| `PORT` | 服务端口 | `3001` |
+| `ADMIN_KEY` | 管理后台密钥 | `admin123` |
+| `DB_PATH` | 数据库路径 | `./data/ordering.db` |
+
+## 部署
+
+```bash
+npm run build
+NODE_ENV=production node server/index.ts
+```
+
+生产模式下 Express 自动托管 `dist/` 静态文件，单端口访问。
