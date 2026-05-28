@@ -14,7 +14,7 @@ conn.on('ready', () => {
 
   const commands = [
     `cd /root/app`,
-    `git pull origin master`,
+    `if git remote -v | grep -q origin; then git pull origin master; else echo "No git remote, using existing code"; fi`,
     `docker compose down`,
     `docker compose up -d --build 2>&1`,
   ].join(' && ');
