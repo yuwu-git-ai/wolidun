@@ -1,0 +1,67 @@
+import { Product, Category } from './types';
+
+export const DEFAULT_CATEGORIES: Category[] = [
+  { id: '1', name: '热销推荐', icon: 'Flame' },
+  { id: '2', name: '主食套餐', icon: 'Utensils' },
+  { id: '3', name: '美味小食', icon: 'Pizza' },
+  { id: '4', name: '清凉饮品', icon: 'Coffee' },
+  { id: '5', name: '精致甜点', icon: 'IceCream' },
+];
+
+export const DEFAULT_PRODUCTS: Product[] = [
+  {
+    id: 'p1',
+    name: '招牌红烧肉套餐',
+    price: 38,
+    category: '1',
+    description: '精选五花肉，慢火炖煮，口感软糯。',
+    image: 'https://images.unsplash.com/photo-1544025162-d76694265947?w=400&h=300&fit=crop',
+    stock: 999,
+    allowBrewing: false,
+    allowFreezing: false,
+  },
+  {
+    id: 'p2',
+    name: '秘制香辣鸡腿堡',
+    price: 22,
+    category: '2',
+    description: '外酥里嫩，辣味过瘾。',
+    image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&h=300&fit=crop',
+    stock: 999,
+    allowBrewing: false,
+    allowFreezing: false,
+  },
+  {
+    id: 'p3',
+    name: '康师傅红烧牛肉面（帮泡）',
+    price: 6,
+    category: '1',
+    description: '经典红烧牛肉面，帮你泡好送到手。',
+    image: 'https://images.unsplash.com/photo-1612929904986-8e4ba5b8f9d1?w=400&h=300&fit=crop',
+    stock: 999,
+    allowBrewing: true,
+    allowFreezing: false,
+  },
+  {
+    id: 'p4',
+    name: '可口可乐（冰镇）',
+    price: 4,
+    category: '4',
+    description: '冰镇可口可乐，透心凉。',
+    image: 'https://images.unsplash.com/photo-1554866585-cd94860890b7?w=400&h=300&fit=crop',
+    stock: 999,
+    allowBrewing: false,
+    allowFreezing: true,
+  },
+  {
+    id: 'p5',
+    name: '草莓芝士蛋糕',
+    price: 25,
+    category: '5',
+    description: '绵密芝士搭配新鲜草莓酱。',
+    image: 'https://images.unsplash.com/photo-1533134242443-d4fd215305ad?w=400&h=300&fit=crop',
+    stock: 999,
+    allowBrewing: false,
+    allowFreezing: true,
+  },
+];

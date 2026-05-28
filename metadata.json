@@ -1,0 +1,6 @@
+{
+  "name": "Remix: 窝里蹲点单系统",
+  "description": "一个轻量级的点餐管理系统，支持侧边分类浏览、实时购物车管理、订单文本复制以及后台商品管理功能。",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}

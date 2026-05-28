@@ -1,0 +1,14 @@
+node_modules/
+build/
+dist/
+dist-server/
+coverage/
+.DS_Store
+*.log
+.env*
+!.env.example
+*.db
+*.db-shm
+*.db-wal
+data/
+deploy.tar.gz
