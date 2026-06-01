@@ -638,6 +638,19 @@ function CustomerApp() {
         </div>
       </nav>
 
+      {/* Search bar — fixed below header */}
+      <div className="px-3 sm:px-6 py-2.5 bg-white border-b border-slate-100 shrink-0">
+        <div className="relative max-w-2xl mx-auto">
+          <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+          <input
+            value={searchQuery}
+            onChange={e => { setSearchQuery(e.target.value); setActiveCategory(DEFAULT_CATEGORIES[0].id); }}
+            placeholder="搜索商品..."
+            className="w-full pl-11 pr-4 py-2.5 bg-slate-50 rounded-2xl border border-slate-100 outline-none focus:bg-white focus:border-orange-300 transition-all text-sm"
+          />
+        </div>
+      </div>
+
       {/* Mobile category bar — outside scroll, always visible below header */}
       <div className="flex md:hidden gap-2 overflow-x-auto px-3 py-2.5 bg-white border-b border-slate-100 shrink-0">
         {DEFAULT_CATEGORIES.map(cat => {
@@ -675,18 +688,12 @@ function CustomerApp() {
         {/* Main content */}
         <main className="flex-1 p-3 sm:p-6 overflow-y-auto flex flex-col gap-3 sm:gap-6 pb-28 lg:pb-6">
 
-          {/* Search bar */}
-          <div className="relative">
-            <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-            <input
-              value={searchQuery}
-              onChange={e => setSearchQuery(e.target.value)}
-              placeholder="搜索商品..."
-              className="w-full pl-11 pr-4 py-3 bg-white rounded-2xl border border-slate-200 outline-none focus:border-orange-300 transition-colors text-sm"
-            />
-          </div>
-
-          {!searchQuery && (
+          {searchQuery ? (
+            <div className="flex items-center justify-between">
+              <h2 className="text-xl sm:text-2xl font-bold">搜索"{searchQuery}"</h2>
+              <button onClick={() => setSearchQuery('')} className="text-xs text-orange-500 font-bold">清除</button>
+            </div>
+          ) : (
             <div className="flex flex-col gap-2 sm:flex-row sm:justify-between sm:items-center">
               <h2 className="text-xl sm:text-2xl font-bold">
                 {DEFAULT_CATEGORIES.find(c => c.id === activeCategory)?.name}
@@ -694,12 +701,6 @@ function CustomerApp() {
               <div className="self-start text-xs sm:text-sm text-slate-500 bg-white px-3 sm:px-4 py-1.5 rounded-full border border-slate-200 shadow-sm">
                 共 {filteredProducts.length} 款
               </div>
-            </div>
-          )}
-          {searchQuery && (
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl sm:text-2xl font-bold">搜索结果</h2>
-              <span className="text-xs text-slate-400">{filteredProducts.length} 款</span>
             </div>
           )}
 
