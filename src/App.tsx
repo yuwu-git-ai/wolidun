@@ -42,6 +42,30 @@ function getItemUnitPrice(item: { price: number; isBrewingSelected?: boolean; is
   return item.price + (item.isBrewingSelected ? 1 : 0) + (item.isFreezingSelected ? 0.5 : 0);
 }
 
+// ── Cart Storage ──
+
+function getCartStorageKey(): string {
+  const id = getIdentity();
+  return id ? `wolidun_cart_${id.nickname}_${id.dorm}` : 'wolidun_cart';
+}
+
+function loadCartFromStorage(): CartItem[] {
+  try {
+    const raw = localStorage.getItem(getCartStorageKey());
+    return raw ? JSON.parse(raw) : [];
+  } catch { return []; }
+}
+
+function saveCartToStorage(items: CartItem[]) {
+  try {
+    if (items.length > 0) {
+      localStorage.setItem(getCartStorageKey(), JSON.stringify(items));
+    } else {
+      localStorage.removeItem(getCartStorageKey());
+    }
+  } catch {}
+}
+
 // ── Identity Form ──
 
 function IdentityForm({ onSave }: { onSave: (nickname: string, dorm: string) => void }) {
@@ -260,16 +284,47 @@ function OrderTracker({ onClose }: { onClose: () => void }) {
 
 // ── Order History ──
 
-function OrderHistory({ identity, onClose }: { identity: { nickname: string; dorm: string }; onClose: () => void }) {
+function OrderHistory({ identity, onClose, onReorder }: {
+  identity: { nickname: string; dorm: string };
+  onClose: () => void;
+  onReorder: (items: CartItem[]) => void;
+}) {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [changedIds, setChangedIds] = useState<Set<string>>(new Set());
 
+  // Initial load
   useEffect(() => {
     fetchOrders({ nickname: identity.nickname, dorm: identity.dorm })
       .then(setOrders)
       .catch(() => {})
       .finally(() => setLoading(false));
+  }, [identity]);
+
+  // Auto-refresh every 10s, detect status changes
+  useEffect(() => {
+    const t = setInterval(() => {
+      fetchOrders({ nickname: identity.nickname, dorm: identity.dorm })
+        .then(newOrders => {
+          setOrders(prev => {
+            const prevMap = new Map(prev.map(o => [o.id, o.status]));
+            const changed = new Set<string>();
+            for (const o of newOrders) {
+              if (prevMap.has(o.id) && prevMap.get(o.id) !== o.status) {
+                changed.add(o.id);
+              }
+            }
+            if (changed.size > 0) {
+              setChangedIds(changed);
+              setTimeout(() => setChangedIds(new Set()), 5000);
+            }
+            return newOrders;
+          });
+        })
+        .catch(() => {});
+    }, 10000);
+    return () => clearInterval(t);
   }, [identity]);
 
   return (
@@ -294,7 +349,7 @@ function OrderHistory({ identity, onClose }: { identity: { nickname: string; dor
           </div>
         ) : (
           orders.map(order => (
-            <div key={order.id} className={`bg-white rounded-2xl border transition-all ${order.status === 'pending' ? 'border-orange-200' : 'border-slate-100'}`}>
+            <div key={order.id} className={`bg-white rounded-2xl border transition-all ${changedIds.has(order.id) ? 'ring-2 ring-orange-400 shadow-lg' : ''} ${order.status === 'pending' ? 'border-orange-200' : 'border-slate-100'}`}>
               <div className="p-4 cursor-pointer" onClick={() => setExpandedId(expandedId === order.id ? null : order.id)}>
                 <div className="flex justify-between items-start mb-2">
                   <div className="flex items-center gap-2">
@@ -326,6 +381,11 @@ function OrderHistory({ identity, onClose }: { identity: { nickname: string; dor
                     <span>总计</span>
                     <span className="text-orange-600">¥{order.totalPrice.toFixed(2)}</span>
                   </div>
+                  <button
+                    onClick={() => onReorder(order.items)}
+                    className="w-full py-2.5 mt-2 bg-orange-500 text-white rounded-xl font-bold text-sm hover:bg-orange-600 transition-all active:scale-[0.98]">
+                    再来一单
+                  </button>
                 </div>
               )}
             </div>
@@ -341,7 +401,7 @@ function OrderHistory({ identity, onClose }: { identity: { nickname: string; dor
 function CustomerApp() {
   const [identity, setIdentityState] = useState(getIdentity());
   const [products, setProducts] = useState<Product[]>([]);
-  const [cart, setCart] = useState<CartItem[]>([]);
+  const [cart, setCart] = useState<CartItem[]>(loadCartFromStorage);
   const [activeCategory, setActiveCategory] = useState('1');
   const [copied, setCopied] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
@@ -350,6 +410,7 @@ function CustomerApp() {
   const [showOrderHistory, setShowOrderHistory] = useState(false);
   const [isDelivery, setIsDelivery] = useState(false);
   const [isMobileCartOpen, setIsMobileCartOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   // Load products
   const loadProducts = useCallback(() => {
@@ -359,6 +420,11 @@ function CustomerApp() {
   }, []);
 
   useEffect(() => { loadProducts(); }, [loadProducts]);
+
+  // Persist cart to localStorage
+  useEffect(() => {
+    saveCartToStorage(cart);
+  }, [cart]);
 
   // Auto-refresh stock every 30s
   useEffect(() => {
@@ -371,6 +437,8 @@ function CustomerApp() {
   const handleSaveIdentity = (nickname: string, dorm: string) => {
     setIdentityState({ nickname, dorm });
     setShowIdentityForm(false);
+    // Load cart for the new identity
+    setCart(loadCartFromStorage());
   };
 
   const addToCart = (product: Product, isBrewing?: boolean, isFreezing?: boolean) => {
@@ -402,6 +470,29 @@ function CustomerApp() {
   };
 
   const clearCart = () => setCart([]);
+
+  const handleReorder = (items: CartItem[]) => {
+    setCart(prev => {
+      const merged = [...prev];
+      for (const item of items) {
+        const key = getCartKey(item);
+        const existing = merged.find(i => getCartKey(i) === key);
+        if (existing) {
+          existing.quantity += item.quantity;
+        } else {
+          merged.push({ ...item });
+        }
+      }
+      return merged;
+    });
+    setShowOrderHistory(false);
+  };
+
+  const updateCartNote = (item: CartItem, note: string) => {
+    setCart(prev => prev.map(i =>
+      getCartKey(i) === getCartKey(item) ? { ...i, note: note || undefined } : i
+    ));
+  };
 
   const sortedCart = useMemo(() =>
     [...cart].sort((a, b) => a.name.localeCompare(b.name, 'zh-CN')),
@@ -463,8 +554,9 @@ function CustomerApp() {
         if (item.isBrewingSelected) svc.push('帮泡+¥1');
         if (item.isFreezingSelected) svc.push('冰镇+¥0.5');
         const svcStr = svc.length > 0 ? ` [${svc.join(', ')}]` : '';
+        const noteStr = item.note ? ` (${item.note})` : '';
         const up = getItemUnitPrice(item);
-        return `${item.name}${svcStr} x${item.quantity} - ¥${(up * item.quantity).toFixed(2)}`;
+        return `${item.name}${svcStr}${noteStr} x${item.quantity} - ¥${(up * item.quantity).toFixed(2)}`;
       });
       const dInfo = isDelivery
         ? `配送: 送到 ${identity.dorm} (${deliveryFee === 0 ? '免配送费' : '¥1.00'})`
@@ -482,16 +574,21 @@ function CustomerApp() {
     }
   };
 
-  const filteredProducts = useMemo(() =>
-    products.filter(p => p.category === activeCategory).sort((a, b) => a.name.localeCompare(b.name, 'zh-CN')),
-    [products, activeCategory]
-  );
+  const filteredProducts = useMemo(() => {
+    const list = searchQuery
+      ? products.filter(p =>
+          p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          p.description.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+      : products.filter(p => p.category === activeCategory);
+    return list.sort((a, b) => a.name.localeCompare(b.name, 'zh-CN'));
+  }, [products, activeCategory, searchQuery]);
 
   const cartCount = cart.reduce((s, i) => s + i.quantity, 0);
 
   // Order history
   if (showOrderHistory && identity) {
-    return <OrderHistory identity={identity} onClose={() => setShowOrderHistory(false)} />;
+    return <OrderHistory identity={identity} onClose={() => setShowOrderHistory(false)} onReorder={handleReorder} />;
   }
 
   // Order tracker modal
@@ -578,14 +675,33 @@ function CustomerApp() {
         {/* Main content */}
         <main className="flex-1 p-3 sm:p-6 overflow-y-auto flex flex-col gap-3 sm:gap-6 pb-28 lg:pb-6">
 
-          <div className="flex flex-col gap-2 sm:flex-row sm:justify-between sm:items-center">
-            <h2 className="text-xl sm:text-2xl font-bold">
-              {DEFAULT_CATEGORIES.find(c => c.id === activeCategory)?.name}
-            </h2>
-            <div className="self-start text-xs sm:text-sm text-slate-500 bg-white px-3 sm:px-4 py-1.5 rounded-full border border-slate-200 shadow-sm">
-              共 {filteredProducts.length} 款
-            </div>
+          {/* Search bar */}
+          <div className="relative">
+            <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+            <input
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              placeholder="搜索商品..."
+              className="w-full pl-11 pr-4 py-3 bg-white rounded-2xl border border-slate-200 outline-none focus:border-orange-300 transition-colors text-sm"
+            />
           </div>
+
+          {!searchQuery && (
+            <div className="flex flex-col gap-2 sm:flex-row sm:justify-between sm:items-center">
+              <h2 className="text-xl sm:text-2xl font-bold">
+                {DEFAULT_CATEGORIES.find(c => c.id === activeCategory)?.name}
+              </h2>
+              <div className="self-start text-xs sm:text-sm text-slate-500 bg-white px-3 sm:px-4 py-1.5 rounded-full border border-slate-200 shadow-sm">
+                共 {filteredProducts.length} 款
+              </div>
+            </div>
+          )}
+          {searchQuery && (
+            <div className="flex items-center justify-between">
+              <h2 className="text-xl sm:text-2xl font-bold">搜索结果</h2>
+              <span className="text-xs text-slate-400">{filteredProducts.length} 款</span>
+            </div>
+          )}
 
           <div className="grid grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-6 pb-36 lg:pb-0">
             <AnimatePresence mode="popLayout">
@@ -620,6 +736,7 @@ function CustomerApp() {
             itemsTotal={itemsTotal} deliveryFee={deliveryFee} totalPrice={totalPrice}
             onRemove={removeFromCart} onAdd={(item) => addToCart(item, item.isBrewingSelected, item.isFreezingSelected)}
             onClear={clearCart} onConfirm={() => setShowConfirm(true)}
+            onUpdateNote={updateCartNote}
           />
         </aside>
       </div>
@@ -667,6 +784,7 @@ function CustomerApp() {
                   itemsTotal={itemsTotal} deliveryFee={deliveryFee} totalPrice={totalPrice}
                   onRemove={removeFromCart} onAdd={(item) => addToCart(item, item.isBrewingSelected, item.isFreezingSelected)}
                   onClear={clearCart} onConfirm={() => { setIsMobileCartOpen(false); setShowConfirm(true); }}
+                  onUpdateNote={updateCartNote}
                   compact
                 />
               </div>
@@ -734,7 +852,7 @@ function CustomerApp() {
 
 // ── Cart Panel (shared between desktop sidebar and mobile sheet) ──
 
-function CartPanel({ cart, products, identity, isDelivery, setIsDelivery, itemsTotal, deliveryFee, totalPrice, onRemove, onAdd, onClear, onConfirm, compact }: {
+function CartPanel({ cart, products, identity, isDelivery, setIsDelivery, itemsTotal, deliveryFee, totalPrice, onRemove, onAdd, onClear, onConfirm, onUpdateNote, compact }: {
   cart: CartItem[];
   products: Product[];
   identity: { nickname: string; dorm: string } | null;
@@ -747,6 +865,7 @@ function CartPanel({ cart, products, identity, isDelivery, setIsDelivery, itemsT
   onAdd: (item: CartItem) => void;
   onClear: () => void;
   onConfirm: () => void;
+  onUpdateNote: (item: CartItem, note: string) => void;
   compact?: boolean;
 }) {
   return (
@@ -791,6 +910,12 @@ function CartPanel({ cart, products, identity, isDelivery, setIsDelivery, itemsT
                       {item.isFreezingSelected && <span className="text-[8px] bg-indigo-100 text-indigo-600 px-1 py-0.5 rounded font-black">冰镇+¥0.5</span>}
                     </div>
                   )}
+                  <input
+                    value={item.note || ''}
+                    onChange={e => onUpdateNote(item, e.target.value)}
+                    placeholder="备注（选填）"
+                    className="w-full text-[10px] px-2 py-1 mb-1.5 bg-white rounded-md border border-slate-200 outline-none focus:border-orange-300 placeholder:text-slate-300"
+                  />
                   <div className="flex justify-between items-center">
                     <span className="text-[10px] text-slate-400 font-medium px-2 py-0.5 bg-white rounded-md border border-slate-200">x{item.quantity}</span>
                     <div className="flex gap-1.5">

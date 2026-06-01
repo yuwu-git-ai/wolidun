@@ -14,6 +14,7 @@ export interface CartItem extends Product {
   quantity: number;
   isBrewingSelected?: boolean;
   isFreezingSelected?: boolean;
+  note?: string;
 }
 
 export interface Category {
