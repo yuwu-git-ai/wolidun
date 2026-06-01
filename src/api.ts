@@ -166,3 +166,97 @@ export async function updateOrderStatus(orderId: string, status: string, adminKe
     body: JSON.stringify({ status }),
   });
 }
+
+// ── Posts (Square / 广场) ──
+
+export interface Post {
+  id: string;
+  user_id: string;
+  type: 'help' | 'skill' | 'treehole' | 'teamup';
+  title: string;
+  content: string;
+  tags: string;
+  price: string;
+  status: 'open' | 'claimed' | 'done' | 'cancelled';
+  claimed_by: string;
+  players: number;
+  max_players: number;
+  anonymous: number;
+  likes_count: number;
+  comments_count: number;
+  created_at: string;
+  comments?: Comment[];
+}
+
+export interface Comment {
+  id: string;
+  post_id: string;
+  user_id: string;
+  content: string;
+  anonymous: number;
+  created_at: string;
+}
+
+export async function fetchPosts(params?: { type?: string; status?: string; page?: number; sort?: string }): Promise<{
+  posts: Post[];
+  total: number;
+  page: number;
+  limit: number;
+}> {
+  const qs = new URLSearchParams();
+  if (params?.type) qs.set('type', params.type);
+  if (params?.status) qs.set('status', params.status);
+  if (params?.page) qs.set('page', String(params.page));
+  if (params?.sort) qs.set('sort', params.sort);
+  const q = qs.toString();
+  return request(`${BASE}/posts${q ? '?' + q : ''}`);
+}
+
+export async function fetchPostById(id: string): Promise<Post> {
+  return request(`${BASE}/posts/${id}`);
+}
+
+export async function createPost(data: {
+  user_id: string;
+  type: string;
+  title: string;
+  content?: string;
+  tags?: string;
+  price?: string;
+  anonymous?: boolean;
+  players?: number;
+  max_players?: number;
+}): Promise<Post> {
+  return request(`${BASE}/posts`, {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+}
+
+export async function updatePost(id: string, data: { status: string; claimed_by?: string; user_id: string }): Promise<Post> {
+  return request(`${BASE}/posts/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify(data),
+  });
+}
+
+export async function addComment(postId: string, data: { user_id: string; content: string; anonymous?: boolean }): Promise<Comment> {
+  return request(`${BASE}/posts/${postId}/comments`, {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+}
+
+export async function toggleLike(postId: string, userId: string): Promise<{ liked: boolean }> {
+  return request(`${BASE}/posts/${postId}/like`, {
+    method: 'POST',
+    body: JSON.stringify({ user_id: userId }),
+  });
+}
+
+export async function joinPost(postId: string, userId: string): Promise<Post> {
+  return request(`${BASE}/posts/${postId}/join`, {
+    method: 'POST',
+    body: JSON.stringify({ user_id: userId }),
+  });
+}

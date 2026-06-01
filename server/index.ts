@@ -8,6 +8,7 @@ import productRoutes from './routes/products';
 import orderRoutes from './routes/orders';
 import statsRoutes from './routes/stats';
 import authRoutes from './routes/auth';
+import postRoutes from './routes/posts';
 import { rateLimit } from './middleware/rateLimit';
 
 const app = express();
@@ -30,6 +31,7 @@ app.use('/api', productRoutes);
 app.use('/api', orderRoutes);
 app.use('/api', statsRoutes);
 app.use('/api', authRoutes);
+app.use('/api', postRoutes);
 
 // Health check
 app.get('/api/health', (_req, res) => {

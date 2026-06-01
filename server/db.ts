@@ -98,6 +98,55 @@ function runMigrations() {
     db.prepare('INSERT INTO schema_version (version) VALUES (3)').run();
     console.log('[DB] Migrated to schema v3 (users table).');
   }
+
+  if (current < 4) {
+    db.exec(`
+      CREATE TABLE IF NOT EXISTS posts (
+        id TEXT PRIMARY KEY,
+        user_id TEXT NOT NULL,
+        type TEXT NOT NULL CHECK(type IN ('help','skill','treehole','teamup')),
+        title TEXT NOT NULL,
+        content TEXT DEFAULT '',
+        tags TEXT DEFAULT '',
+        price TEXT DEFAULT '',
+        status TEXT DEFAULT 'open' CHECK(status IN ('open','claimed','done','cancelled')),
+        claimed_by TEXT DEFAULT '',
+        players INT DEFAULT 1,
+        max_players INT DEFAULT 0,
+        anonymous INT DEFAULT 0,
+        likes_count INT DEFAULT 0,
+        comments_count INT DEFAULT 0,
+        created_at TEXT DEFAULT (datetime('now'))
+      );
+
+      CREATE TABLE IF NOT EXISTS comments (
+        id TEXT PRIMARY KEY,
+        post_id TEXT NOT NULL,
+        user_id TEXT NOT NULL,
+        content TEXT NOT NULL,
+        anonymous INT DEFAULT 0,
+        created_at TEXT DEFAULT (datetime('now')),
+        FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE
+      );
+
+      CREATE TABLE IF NOT EXISTS likes (
+        id TEXT PRIMARY KEY,
+        post_id TEXT NOT NULL,
+        user_id TEXT NOT NULL,
+        created_at TEXT DEFAULT (datetime('now')),
+        UNIQUE(post_id, user_id),
+        FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE
+      );
+
+      CREATE INDEX IF NOT EXISTS idx_posts_type ON posts(type);
+      CREATE INDEX IF NOT EXISTS idx_posts_status ON posts(status);
+      CREATE INDEX IF NOT EXISTS idx_posts_created ON posts(created_at);
+      CREATE INDEX IF NOT EXISTS idx_comments_post ON comments(post_id);
+      CREATE INDEX IF NOT EXISTS idx_likes_post ON likes(post_id);
+    `);
+    db.prepare('INSERT INTO schema_version (version) VALUES (4)').run();
+    console.log('[DB] Migrated to schema v4 (posts, comments, likes).');
+  }
 }
 
 function initTables() {
