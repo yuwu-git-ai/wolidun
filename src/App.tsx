@@ -9,11 +9,16 @@ import {
 import { Product, CartItem, Order } from './types';
 import { DEFAULT_PRODUCTS, DEFAULT_CATEGORIES } from './constants';
 import {
-  getIdentity, setIdentity as saveIdentity,
+  getIdentity, setIdentity as saveIdentity, clearIdentity,
   getAdminKey, setAdminKey as saveAdminKey,
   fetchProducts, createProduct, updateProduct, deleteProduct,
   createOrder, fetchOrders, fetchOrderById, updateOrderStatus,
-  verifyAdmin
+  verifyAdmin,
+  fetchStats,
+  register,
+  login,
+  updateProfile,
+  changePassword
 } from './api';
 
 const ICON_MAP: Record<string, any> = { Flame, Utensils, Pizza, Coffee, IceCream, Package };
@@ -66,27 +71,148 @@ function saveCartToStorage(items: CartItem[]) {
   } catch {}
 }
 
+// ── Profile Form ──
+
+function ProfileForm({ identity, onSave, onClose }: {
+  identity: { nickname: string; dorm: string };
+  onSave: (nickname: string, dorm: string) => void;
+  onClose: () => void;
+}) {
+  const [dorm, setDorm] = useState(identity.dorm);
+  const [password, setPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const [saving, setSaving] = useState(false);
+
+  const handleSaveInfo = async (e: FormEvent) => {
+    e.preventDefault();
+    if (!dorm.trim() || !password) { setError('请填写宿舍号和密码'); return; }
+    setSaving(true); setError(''); setSuccess('');
+    try {
+      await updateProfile(identity.nickname, dorm.trim(), password);
+      saveIdentity(identity.nickname, dorm.trim());
+      onSave(identity.nickname, dorm.trim());
+      setSuccess('信息已更新');
+      setTimeout(() => setSuccess(''), 2000);
+    } catch (err: any) {
+      setError(err.message);
+    } finally { setSaving(false); }
+  };
+
+  const handleChangePwd = async (e: FormEvent) => {
+    e.preventDefault();
+    if (!password || !newPassword) { setError('请填写新旧密码'); return; }
+    setSaving(true); setError(''); setSuccess('');
+    try {
+      await changePassword(identity.nickname, password, newPassword);
+      setSuccess('密码已修改');
+      setPassword(''); setNewPassword('');
+      setTimeout(() => setSuccess(''), 2000);
+    } catch (err: any) {
+      setError(err.message);
+    } finally { setSaving(false); }
+  };
+
+  return (
+    <div className="min-h-[100dvh] bg-slate-50 font-sans">
+      <nav className="h-14 bg-white border-b border-slate-200 flex items-center px-4 gap-3 shadow-sm">
+        <button onClick={onClose} className="w-9 h-9 flex items-center justify-center bg-slate-100 rounded-full hover:bg-slate-200 transition-colors">
+          <ArrowLeft size={18} />
+        </button>
+        <h1 className="font-bold text-lg">个人信息</h1>
+      </nav>
+      <div className="max-w-md mx-auto p-4 space-y-6">
+        {/* Info edit */}
+        <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
+          <h3 className="font-bold text-sm mb-4">修改信息</h3>
+          <form onSubmit={handleSaveInfo} className="space-y-3">
+            <div>
+              <label className="text-xs font-bold text-slate-500 ml-1">昵称</label>
+              <input value={identity.nickname} disabled
+                className="w-full p-3 bg-slate-100 rounded-xl text-slate-500 text-sm mt-1" />
+            </div>
+            <div>
+              <label className="text-xs font-bold text-slate-500 ml-1">宿舍号</label>
+              <input value={dorm} onChange={e => setDorm(e.target.value)}
+                className="w-full p-3 bg-slate-50 rounded-xl border border-slate-200 outline-none focus:border-orange-300 text-sm mt-1" />
+            </div>
+            <div>
+              <label className="text-xs font-bold text-slate-500 ml-1">当前密码（确认身份）</label>
+              <input type="password" value={password} onChange={e => setPassword(e.target.value)}
+                className="w-full p-3 bg-slate-50 rounded-xl border border-slate-200 outline-none focus:border-orange-300 text-sm mt-1" />
+            </div>
+            {error && <p className="text-red-500 text-xs font-bold">{error}</p>}
+            {success && <p className="text-green-500 text-xs font-bold">{success}</p>}
+            <button type="submit" disabled={saving}
+              className="w-full py-3 bg-orange-500 text-white rounded-xl font-bold text-sm hover:bg-orange-600 transition-all disabled:opacity-50">
+              {saving ? '保存中...' : '保存信息'}
+            </button>
+          </form>
+        </div>
+
+        {/* Password change */}
+        <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
+          <h3 className="font-bold text-sm mb-4">修改密码</h3>
+          <form onSubmit={handleChangePwd} className="space-y-3">
+            <div>
+              <label className="text-xs font-bold text-slate-500 ml-1">原密码</label>
+              <input type="password" value={password} onChange={e => setPassword(e.target.value)}
+                className="w-full p-3 bg-slate-50 rounded-xl border border-slate-200 outline-none focus:border-orange-300 text-sm mt-1" />
+            </div>
+            <div>
+              <label className="text-xs font-bold text-slate-500 ml-1">新密码</label>
+              <input type="password" value={newPassword} onChange={e => setNewPassword(e.target.value)}
+                className="w-full p-3 bg-slate-50 rounded-xl border border-slate-200 outline-none focus:border-orange-300 text-sm mt-1" />
+            </div>
+            <button type="submit" disabled={saving}
+              className="w-full py-3 bg-slate-800 text-white rounded-xl font-bold text-sm hover:bg-slate-700 transition-all disabled:opacity-50">
+              {saving ? '保存中...' : '修改密码'}
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ── Identity Form ──
 
-function IdentityForm({ onSave }: { onSave: (nickname: string, dorm: string) => void }) {
+function IdentityForm({ onSave, onSkip }: { onSave: (nickname: string, dorm: string) => void; onSkip: () => void }) {
+  const [mode, setMode] = useState<'login' | 'register'>('login');
   const [nickname, setNickname] = useState('');
   const [dorm, setDorm] = useState('');
-  const existing = getIdentity();
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [checking, setChecking] = useState(false);
 
-  useEffect(() => {
-    if (existing) {
-      setNickname(existing.nickname);
-      setDorm(existing.dorm);
-    }
-  }, []);
-
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     const n = nickname.trim();
     const d = dorm.trim();
-    if (!n || !d) return;
-    saveIdentity(n, d);
-    onSave(n, d);
+    const p = password.trim();
+    if (!n || !p) { setError('请填写昵称和密码'); return; }
+    if (mode === 'register' && !d) { setError('请填写宿舍号'); return; }
+    setChecking(true);
+    setError('');
+    try {
+      if (mode === 'register') {
+        await register(n, d, p);
+      }
+      const result = await login(n, p);
+      saveIdentity(result.nickname, result.dorm);
+      onSave(result.nickname, result.dorm);
+    } catch (err: any) {
+      setError(err.message || '操作失败');
+    } finally {
+      setChecking(false);
+    }
+  };
+
+  const switchMode = () => {
+    setMode(mode === 'login' ? 'register' : 'login');
+    setError('');
+    setPassword('');
   };
 
   return (
@@ -101,30 +227,61 @@ function IdentityForm({ onSave }: { onSave: (nickname: string, dorm: string) => 
             窝
           </div>
           <h1 className="text-xl sm:text-2xl font-black tracking-tight">欢迎光临窝里蹲</h1>
-          <p className="text-slate-400 text-sm mt-1">填写信息开始点单</p>
+          <p className="text-slate-400 text-sm mt-1">{mode === 'login' ? '登录你的账号' : '注册新账号'}</p>
         </div>
+
+        {/* Login/Register tabs */}
+        <div className="flex bg-slate-100 rounded-2xl p-1 mb-5">
+          <button onClick={() => switchMode()}
+            className={`flex-1 py-2.5 rounded-xl font-bold text-sm transition-all ${mode === 'login' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-400'}`}>
+            登录
+          </button>
+          <button onClick={() => switchMode()}
+            className={`flex-1 py-2.5 rounded-xl font-bold text-sm transition-all ${mode === 'register' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-400'}`}>
+            注册
+          </button>
+        </div>
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="text-xs font-bold text-slate-500 ml-1">昵称</label>
             <input
               value={nickname}
-              onChange={e => setNickname(e.target.value)}
+              onChange={e => { setNickname(e.target.value); setError(''); }}
               placeholder="怎么称呼你？"
               autoFocus
               className="w-full p-4 bg-slate-50 rounded-2xl border-2 border-transparent outline-none focus:bg-white focus:border-orange-200 transition-all mt-1"
             />
           </div>
+          {mode === 'register' && (
+            <div>
+              <label className="text-xs font-bold text-slate-500 ml-1">宿舍号</label>
+              <input
+                value={dorm}
+                onChange={e => setDorm(e.target.value)}
+                placeholder="例如：D701"
+                className="w-full p-4 bg-slate-50 rounded-2xl border-2 border-transparent outline-none focus:bg-white focus:border-orange-200 transition-all mt-1"
+              />
+            </div>
+          )}
           <div>
-            <label className="text-xs font-bold text-slate-500 ml-1">宿舍号</label>
+            <label className="text-xs font-bold text-slate-500 ml-1">密码</label>
             <input
-              value={dorm}
-              onChange={e => setDorm(e.target.value)}
-              placeholder="例如：D701"
+              type="password"
+              value={password}
+              onChange={e => { setPassword(e.target.value); setError(''); }}
+              placeholder={mode === 'login' ? '输入密码' : '设置密码'}
               className="w-full p-4 bg-slate-50 rounded-2xl border-2 border-transparent outline-none focus:bg-white focus:border-orange-200 transition-all mt-1"
             />
           </div>
-          <button className="w-full py-4 bg-orange-500 text-white rounded-3xl font-black hover:bg-orange-600 transition-all shadow-xl shadow-orange-500/20 active:scale-[0.98]">
-            开始点单
+          {error && <p className="text-red-500 text-xs font-bold text-center">{error}</p>}
+          <button type="submit" disabled={checking}
+            className="w-full py-4 bg-orange-500 text-white rounded-3xl font-black hover:bg-orange-600 transition-all shadow-xl shadow-orange-500/20 active:scale-[0.98] disabled:opacity-50">
+            {checking ? '验证中...' : mode === 'login' ? '登录' : '注册并登录'}
+          </button>
+          <button type="button" onClick={onSkip}
+            className="w-full py-3 text-slate-400 text-sm font-bold hover:text-slate-600 transition-colors">
+            先逛逛
           </button>
         </form>
       </motion.div>
@@ -134,10 +291,11 @@ function IdentityForm({ onSave }: { onSave: (nickname: string, dorm: string) => 
 
 // ── Product Card ──
 
-function ProductCard({ product, onAdd, quantityInCart }: {
+function ProductCard({ product, onAdd, quantityInCart, isPopular }: {
   product: Product;
   onAdd: (product: Product, brewing?: boolean, freezing?: boolean) => void;
   quantityInCart: number;
+  isPopular?: boolean;
 }) {
   const [isBrewing, setIsBrewing] = useState(false);
   const [isFreezing, setIsFreezing] = useState(false);
@@ -155,7 +313,8 @@ function ProductCard({ product, onAdd, quantityInCart }: {
         ) : (
           <div className="w-full h-full flex items-center justify-center text-3xl sm:text-4xl">🍕</div>
         )}
-        <div className="absolute top-2 sm:top-3 right-2 sm:right-3">
+        <div className="absolute top-2 sm:top-3 left-2 sm:left-3 right-2 sm:right-3 flex justify-between">
+          {isPopular && <span className="text-[10px] sm:text-xs">🔥 热门</span>}
           {availableStock > 0 && availableStock <= 10 ? (
             <div className="px-2 py-0.5 bg-orange-500/90 backdrop-blur-md text-white text-[9px] sm:text-[10px] font-bold rounded-full shadow-lg">仅剩 {availableStock} 件</div>
           ) : availableStock <= 0 ? (
@@ -408,9 +567,11 @@ function CustomerApp() {
   const [showIdentityForm, setShowIdentityForm] = useState(!getIdentity());
   const [showOrderTracker, setShowOrderTracker] = useState(false);
   const [showOrderHistory, setShowOrderHistory] = useState(false);
+  const [showProfileForm, setShowProfileForm] = useState(false);
   const [isDelivery, setIsDelivery] = useState(false);
   const [isMobileCartOpen, setIsMobileCartOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [popularIds, setPopularIds] = useState<Set<string>>(new Set());
 
   // Load products
   const loadProducts = useCallback(() => {
@@ -420,6 +581,11 @@ function CustomerApp() {
   }, []);
 
   useEffect(() => { loadProducts(); }, [loadProducts]);
+
+  // Load popular products
+  useEffect(() => {
+    fetchStats().then(s => setPopularIds(new Set(s.popular.map(p => p.id)))).catch(() => {});
+  }, []);
 
   // Persist cart to localStorage
   useEffect(() => {
@@ -439,6 +605,13 @@ function CustomerApp() {
     setShowIdentityForm(false);
     // Load cart for the new identity
     setCart(loadCartFromStorage());
+  };
+
+  const handleLogout = () => {
+    clearIdentity();
+    setIdentityState(null);
+    setCart([]);
+    setShowIdentityForm(true);
   };
 
   const addToCart = (product: Product, isBrewing?: boolean, isFreezing?: boolean) => {
@@ -586,6 +759,17 @@ function CustomerApp() {
 
   const cartCount = cart.reduce((s, i) => s + i.quantity, 0);
 
+  // Profile editor
+  if (showProfileForm && identity) {
+    return (
+      <ProfileForm
+        identity={identity}
+        onSave={(nickname, dorm) => { setIdentityState({ nickname, dorm }); setShowProfileForm(false); }}
+        onClose={() => setShowProfileForm(false)}
+      />
+    );
+  }
+
   // Order history
   if (showOrderHistory && identity) {
     return <OrderHistory identity={identity} onClose={() => setShowOrderHistory(false)} onReorder={handleReorder} />;
@@ -601,7 +785,7 @@ function CustomerApp() {
       {/* Identity form overlay */}
       {showIdentityForm && (
         <div className="absolute inset-0 z-50">
-          <IdentityForm onSave={handleSaveIdentity} />
+          <IdentityForm onSave={handleSaveIdentity} onSkip={() => setShowIdentityForm(false)} />
         </div>
       )}
 
@@ -620,21 +804,33 @@ function CustomerApp() {
               <span className="text-[10px] font-bold text-slate-600 truncate max-w-[60px]">{identity.nickname}</span>
             </div>
           )}
-          <button onClick={() => setShowOrderHistory(true)}
-            className="w-9 h-9 flex items-center justify-center bg-slate-100 hover:bg-slate-200 rounded-full border border-slate-200 transition-colors"
-            title="我的订单">
-            <Clock size={16} />
-          </button>
-          <button onClick={() => setShowOrderTracker(true)}
-            className="w-9 h-9 flex items-center justify-center bg-slate-100 hover:bg-slate-200 rounded-full border border-slate-200 transition-colors"
-            title="查订单">
-            <Search size={16} />
-          </button>
-          <button onClick={() => { setShowIdentityForm(true); }}
-            className="w-9 h-9 flex items-center justify-center bg-slate-100 hover:bg-red-50 hover:text-red-500 rounded-full border border-slate-200 transition-colors"
-            title="切换身份">
-            <Edit3 size={14} />
-          </button>
+          {identity ? (<>
+            <button onClick={() => setShowOrderHistory(true)}
+              className="w-9 h-9 flex items-center justify-center bg-slate-100 hover:bg-slate-200 rounded-full border border-slate-200 transition-colors"
+              title="我的订单">
+              <Clock size={16} />
+            </button>
+            <button onClick={() => setShowOrderTracker(true)}
+              className="w-9 h-9 flex items-center justify-center bg-slate-100 hover:bg-slate-200 rounded-full border border-slate-200 transition-colors"
+              title="查订单">
+              <Search size={16} />
+            </button>
+            <button onClick={() => { setShowProfileForm(true); }}
+              className="w-9 h-9 flex items-center justify-center bg-slate-100 hover:bg-red-50 hover:text-red-500 rounded-full border border-slate-200 transition-colors"
+              title="个人信息">
+              <Edit3 size={14} />
+            </button>
+            <button onClick={handleLogout}
+              className="w-9 h-9 flex items-center justify-center bg-slate-100 hover:bg-red-50 hover:text-red-500 rounded-full border border-slate-200 transition-colors"
+              title="退出登录">
+              <LogOut size={14} />
+            </button>
+          </>) : (
+            <button onClick={() => setShowIdentityForm(true)}
+              className="px-4 py-2 bg-orange-500 text-white rounded-full font-bold text-sm hover:bg-orange-600 transition-all">
+              登录
+            </button>
+          )}
         </div>
       </nav>
 
@@ -712,7 +908,7 @@ function CustomerApp() {
                 const qty = cart.filter(item => item.id === product.id).reduce((s, i) => s + i.quantity, 0);
                 return (
                   <motion.div layout key={product.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                    <ProductCard product={product} onAdd={addToCart} quantityInCart={qty} />
+                    <ProductCard product={product} onAdd={addToCart} quantityInCart={qty} isPopular={popularIds.has(product.id)} />
                   </motion.div>
                 );
               })}
@@ -969,12 +1165,222 @@ function CartPanel({ cart, products, identity, isDelivery, setIsDelivery, itemsT
   );
 }
 
+// ── Analytics Panel ──
+
+type ChartData = { label: string; orders: number; revenue: number };
+
+function BarChart({ data }: { data: ChartData[] }) {
+  if (data.length === 0) return <p className="text-center text-slate-400 py-10">暂无数据</p>;
+
+  const W = Math.max(500, data.length * 32);
+  const H = 220;
+  const PAD = { top: 24, right: 52, bottom: 36, left: 44 };
+  const innerW = W - PAD.left - PAD.right;
+  const innerH = H - PAD.top - PAD.bottom;
+
+  const maxOrders = Math.max(...data.map(d => d.orders), 1);
+  const maxRevenue = Math.max(...data.map(d => d.revenue), 1);
+  const yMaxOrders = Math.ceil(maxOrders / 5) * 5 || 5;
+  const yMaxRevenue = Math.ceil(maxRevenue / 5) * 5 || 5;
+
+  const scaleYOrders = (v: number) => PAD.top + innerH - (v / yMaxOrders) * innerH;
+  const scaleYRevenue = (v: number) => PAD.top + innerH - (v / yMaxRevenue) * innerH;
+
+  const barGroupW = innerW / data.length;
+  const gap = barGroupW * 0.3;
+  const barW = (barGroupW - gap * 3) / 2;
+  const yTicks = 5;
+
+  return (
+    <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-auto" style={{ maxHeight: '280px' }}>
+      {/* Grid lines */}
+      {Array.from({ length: yTicks + 1 }, (_, i) => (
+        <line key={`g${i}`}
+          x1={PAD.left} x2={W - PAD.right}
+          y1={PAD.top + (innerH / yTicks) * i} y2={PAD.top + (innerH / yTicks) * i}
+          stroke="#f1f5f9" strokeWidth="1" strokeDasharray="4,3" />
+      ))}
+      {/* X axis */}
+      <line x1={PAD.left} x2={W - PAD.right} y1={PAD.top + innerH} y2={PAD.top + innerH} stroke="#e2e8f0" strokeWidth="1" />
+
+      {/* Bars */}
+      {data.map((d, i) => {
+        const gx = PAD.left + barGroupW * i;
+        const ox = gx + gap;
+        const rx = ox + barW + gap;
+        const oh = Math.max(1, (d.orders / yMaxOrders) * innerH);
+        const rh = Math.max(1, (d.revenue / yMaxRevenue) * innerH);
+        return (
+          <g key={i}>
+            <rect x={ox} y={PAD.top + innerH - oh} width={barW} height={oh} rx="2" fill="#6366f1" opacity="0.75">
+              <title>{d.label} 订单: {d.orders} 单</title>
+            </rect>
+            <rect x={rx} y={PAD.top + innerH - rh} width={barW} height={rh} rx="2" fill="#f59e0b" opacity="0.75">
+              <title>{d.label} 营收: ¥{d.revenue.toFixed(2)}</title>
+            </rect>
+          </g>
+        );
+      })}
+
+      {/* X labels */}
+      {data.map((d, i) => {
+        const interval = data.length <= 7 ? 1 : data.length <= 15 ? 2 : data.length <= 31 ? 5 : Math.ceil(data.length / 12);
+        const show = i % interval === 0 || i === data.length - 1;
+        if (!show) return null;
+        const gx = PAD.left + barGroupW * i + barGroupW / 2;
+        return <text key={`xl${i}`} x={gx} y={H - 4} textAnchor="middle" fontSize="10" fill="#94a3b8" fontFamily="system-ui">{d.label}</text>;
+      })}
+
+      {/* Y labels - orders (left) */}
+      {Array.from({ length: yTicks + 1 }, (_, i) => {
+        const v = Math.round((yMaxOrders / yTicks) * i);
+        return <text key={`yl${i}`} x={PAD.left - 6} y={scaleYOrders(v) + 3} textAnchor="end" fontSize="10" fill="#94a3b8" fontFamily="system-ui">{v}</text>;
+      })}
+      {/* Y labels - revenue (right) */}
+      {Array.from({ length: yTicks + 1 }, (_, i) => {
+        const v = Math.round((yMaxRevenue / yTicks) * i);
+        return <text key={`yr${i}`} x={W - PAD.right + 6} y={scaleYRevenue(v) + 3} textAnchor="start" fontSize="10" fill="#94a3b8" fontFamily="system-ui">¥{v}</text>;
+      })}
+
+      {/* Legend */}
+      <g transform={`translate(${PAD.left}, 6)`}>
+        <rect x="0" y="0" width="10" height="10" rx="2" fill="#6366f1" opacity="0.75" />
+        <text x="14" y="9" fontSize="11" fill="#64748b" fontWeight="600" fontFamily="system-ui">订单</text>
+        <rect x="44" y="0" width="10" height="10" rx="2" fill="#f59e0b" opacity="0.75" />
+        <text x="58" y="9" fontSize="11" fill="#64748b" fontWeight="600" fontFamily="system-ui">营收</text>
+      </g>
+    </svg>
+  );
+}
+
+function AnalyticsPanel({ onClose }: { onClose: () => void }) {
+  const now = new Date();
+  const [mode, setMode] = useState<'monthly' | 'yearly'>('monthly');
+  const [year, setYear] = useState(now.getFullYear());
+  const [month, setMonth] = useState(now.getMonth() + 1);
+  const [chartData, setChartData] = useState<ChartData[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const load = useCallback(() => {
+    setLoading(true);
+    const params = mode === 'monthly'
+      ? { view: 'monthly' as const, year, month }
+      : { view: 'yearly' as const, year };
+    fetchStats(params).then(s => {
+      if (mode === 'monthly') {
+        setChartData(s.daily.map(d => ({ label: d.label, orders: d.orders, revenue: d.revenue })));
+      } else {
+        setChartData(s.monthly.map(m => ({ label: m.label, orders: m.orders, revenue: m.revenue })));
+      }
+    }).catch(() => {}).finally(() => setLoading(false));
+  }, [mode, year, month]);
+
+  useEffect(() => { load(); }, [load]);
+  useEffect(() => { const t = setInterval(load, 15000); return () => clearInterval(t); }, [load]);
+
+  // Available years: from 2025 to current
+  const availableYears = Array.from({ length: now.getFullYear() - 2024 }, (_, i) => 2025 + i);
+
+  const totalOrders = chartData.reduce((s, d) => s + d.orders, 0);
+  const totalRevenue = chartData.reduce((s, d) => s + d.revenue, 0);
+
+  return (
+    <div className="space-y-4">
+      {/* Summary cards */}
+      <div className="grid grid-cols-2 gap-3">
+        <div className="bg-white rounded-2xl p-4 border border-slate-100 shadow-sm">
+          <p className="text-xs text-slate-400 font-bold">累计订单</p>
+          <p className="text-2xl font-black">{totalOrders}</p>
+        </div>
+        <div className="bg-white rounded-2xl p-4 border border-slate-100 shadow-sm">
+          <p className="text-xs text-slate-400 font-bold">累计营收</p>
+          <p className="text-2xl font-black text-orange-600">¥{totalRevenue.toFixed(2)}</p>
+        </div>
+      </div>
+
+      {/* Mode toggle + pickers */}
+      <div className="bg-white rounded-2xl p-3 border border-slate-100 shadow-sm space-y-3">
+        {/* Mode toggle */}
+        <div className="flex bg-slate-100 rounded-xl p-1">
+          <button onClick={() => setMode('monthly')}
+            className={`flex-1 py-2 rounded-lg font-bold text-sm transition-all ${mode === 'monthly' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-400'}`}>按月查看</button>
+          <button onClick={() => setMode('yearly')}
+            className={`flex-1 py-2 rounded-lg font-bold text-sm transition-all ${mode === 'yearly' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-400'}`}>按年查看</button>
+        </div>
+
+        {/* Year picker */}
+        <div className="flex items-center gap-2">
+          <span className="text-xs font-bold text-slate-400 w-8">年份</span>
+          <button onClick={() => setYear(y => y - 1)} disabled={year <= 2025}
+            className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center hover:bg-slate-200 disabled:opacity-30 transition-colors">
+            <ChevronUp size={16} className="-rotate-90" />
+          </button>
+          <select value={year} onChange={e => setYear(parseInt(e.target.value))}
+            className="px-3 py-1.5 bg-slate-50 rounded-lg border border-slate-200 text-sm font-bold outline-none focus:border-orange-300">
+            {availableYears.map(y => <option key={y} value={y}>{y}年</option>)}
+          </select>
+          <button onClick={() => setYear(y => y + 1)} disabled={year >= now.getFullYear()}
+            className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center hover:bg-slate-200 disabled:opacity-30 transition-colors">
+            <ChevronUp size={16} className="rotate-90" />
+          </button>
+
+          {/* Month picker (only in monthly mode) */}
+          {mode === 'monthly' && (<>
+            <span className="text-xs font-bold text-slate-400 ml-3 w-8">月份</span>
+            <button onClick={() => setMonth(m => m === 1 ? 12 : m - 1)}
+              className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center hover:bg-slate-200 transition-colors">
+              <ChevronUp size={16} className="-rotate-90" />
+            </button>
+            <select value={month} onChange={e => setMonth(parseInt(e.target.value))}
+              className="px-3 py-1.5 bg-slate-50 rounded-lg border border-slate-200 text-sm font-bold outline-none focus:border-orange-300">
+              {Array.from({ length: 12 }, (_, i) => i + 1).map(m => <option key={m} value={m}>{m}月</option>)}
+            </select>
+            <button onClick={() => setMonth(m => m === 12 ? 1 : m + 1)}
+              className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center hover:bg-slate-200 transition-colors">
+              <ChevronUp size={16} className="rotate-90" />
+            </button>
+          </>)}
+        </div>
+      </div>
+
+      {/* Chart */}
+      <div className="bg-white rounded-2xl p-4 border border-slate-100 shadow-sm overflow-x-auto">
+        {loading ? <p className="text-center text-slate-400 py-10">加载中...</p> : <BarChart data={chartData} />}
+      </div>
+
+      {/* Data table */}
+      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+        <div className="overflow-x-auto max-h-80 overflow-y-auto">
+          <table className="w-full text-sm">
+            <thead className="sticky top-0 bg-white">
+              <tr className="border-b border-slate-50 text-slate-400">
+                <th className="text-left px-4 py-2 font-bold text-xs">{mode === 'monthly' ? '日期' : '月份'}</th>
+                <th className="text-center px-4 py-2 font-bold text-xs">订单数</th>
+                <th className="text-right px-4 py-2 font-bold text-xs">营业额</th>
+              </tr>
+            </thead>
+            <tbody>
+              {chartData.map(d => (
+                <tr key={d.label} className="border-b border-slate-50 last:border-0 hover:bg-slate-50">
+                  <td className="px-4 py-2.5">{d.label}</td>
+                  <td className="text-center px-4 py-2.5">{d.orders}</td>
+                  <td className="text-right px-4 py-2.5">{d.revenue > 0 ? `¥${d.revenue.toFixed(2)}` : '-'}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ── Admin App ──
 
 const NOTIFICATION_SOUND = 'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACAf39/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/g';
 
 function AdminPanel({ adminKey }: { adminKey: string }) {
-  const [tab, setTab] = useState<'orders' | 'products'>('orders');
+  const [tab, setTab] = useState<'orders' | 'products' | 'analytics'>('orders');
   const [orders, setOrders] = useState<Order[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
@@ -982,6 +1388,7 @@ function AdminPanel({ adminKey }: { adminKey: string }) {
   const [notified, setNotified] = useState(false);
   const [titleFlashing, setTitleFlashing] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [todayStats, setTodayStats] = useState({ orders: 0, revenue: 0 });
 
   // Filter state
   const [statusFilter, setStatusFilter] = useState<string>('');
@@ -1003,6 +1410,7 @@ function AdminPanel({ adminKey }: { adminKey: string }) {
   useEffect(() => {
     loadOrders();
     loadProducts();
+    fetchStats().then(s => { setTodayStats(s.today); }).catch(() => {});
   }, [loadOrders, loadProducts]);
 
   // Poll for new orders every 5 seconds
@@ -1020,8 +1428,9 @@ function AdminPanel({ adminKey }: { adminKey: string }) {
         }
         setPendingCount(count);
       }).catch(() => {});
-      // Also refresh all orders
+      // Also refresh all orders and stats
       loadOrders();
+      fetchStats().then(s => { setTodayStats(s.today); }).catch(() => {});
     }, 5000);
     return () => clearInterval(t);
   }, [pendingCount, loadOrders]);
@@ -1143,6 +1552,14 @@ function AdminPanel({ adminKey }: { adminKey: string }) {
         </a>
       </nav>
 
+      {/* Stats bar */}
+      <div className="max-w-6xl mx-auto px-4 pt-4">
+        <div className="bg-gradient-to-br from-orange-50 to-white rounded-2xl p-4 border border-orange-100 shadow-sm max-w-xs">
+          <p className="text-xs text-slate-400 font-bold mb-1">今日营业额</p>
+          <p className="text-2xl font-black text-orange-600">¥{todayStats.revenue.toFixed(2)}</p>
+        </div>
+      </div>
+
       {/* Tabs */}
       <div className="flex gap-2 p-4 max-w-6xl mx-auto">
         <button onClick={() => setTab('orders')}
@@ -1154,8 +1571,17 @@ function AdminPanel({ adminKey }: { adminKey: string }) {
           className={`px-5 py-2.5 rounded-2xl font-bold text-sm transition-all ${tab === 'products' ? 'bg-slate-800 text-white' : 'bg-white text-slate-500 border border-slate-200'}`}>
           商品管理
         </button>
+        <button onClick={() => setTab('analytics')}
+          className={`px-5 py-2.5 rounded-2xl font-bold text-sm transition-all ${tab === 'analytics' ? 'bg-slate-800 text-white' : 'bg-white text-slate-500 border border-slate-200'}`}>
+          数据分析
+        </button>
       </div>
 
+      {tab === 'analytics' ? (
+        <div className="max-w-6xl mx-auto px-4 pb-20">
+          <AnalyticsPanel onClose={() => setTab('orders')} />
+        </div>
+      ) : (
       <div className="max-w-6xl mx-auto px-4 pb-20">
         {tab === 'orders' && (
           <div className="space-y-4">
@@ -1337,6 +1763,7 @@ function AdminPanel({ adminKey }: { adminKey: string }) {
           </div>
         )}
       </div>
+      )}
     </div>
   );
 }

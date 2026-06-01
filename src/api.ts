@@ -1,5 +1,34 @@
 const BASE = '/api';
 
+// ── Auth (register + login) ──
+export async function register(nickname: string, dorm: string, password: string): Promise<{ nickname: string; dorm: string }> {
+  return request(`${BASE}/auth/register`, {
+    method: 'POST',
+    body: JSON.stringify({ nickname, dorm, password }),
+  });
+}
+
+export async function login(nickname: string, password: string): Promise<{ nickname: string; dorm: string }> {
+  return request(`${BASE}/auth/login`, {
+    method: 'POST',
+    body: JSON.stringify({ nickname, password }),
+  });
+}
+
+export async function updateProfile(nickname: string, dorm: string, password: string) {
+  return request(`${BASE}/auth/profile`, {
+    method: 'PUT',
+    body: JSON.stringify({ nickname, dorm, password }),
+  });
+}
+
+export async function changePassword(nickname: string, oldPassword: string, newPassword: string) {
+  return request(`${BASE}/auth/password`, {
+    method: 'PUT',
+    body: JSON.stringify({ nickname, oldPassword, newPassword }),
+  });
+}
+
 // ── Identity (replaces auth) ──
 const IDENTITY_KEY = 'wolidun_identity';
 
@@ -113,6 +142,21 @@ export async function fetchOrders(params?: { status?: string; nickname?: string;
 
 export async function fetchOrderById(id: string) {
   return request(`${BASE}/orders/${id}`);
+}
+
+// ── Stats ──
+export async function fetchStats(params?: { view?: 'monthly' | 'yearly'; year?: number; month?: number }): Promise<{
+  popular: { id: string; count: number }[];
+  today: { orders: number; revenue: number };
+  daily: { label: string; date: string; orders: number; revenue: number }[];
+  monthly: { label: string; month: string; orders: number; revenue: number }[];
+}> {
+  const qs = new URLSearchParams();
+  if (params?.view) qs.set('view', params.view);
+  if (params?.year) qs.set('year', String(params.year));
+  if (params?.month) qs.set('month', String(params.month));
+  const q = qs.toString();
+  return request(`${BASE}/stats${q ? '?' + q : ''}`);
 }
 
 export async function updateOrderStatus(orderId: string, status: string, adminKey: string) {

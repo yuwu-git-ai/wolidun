@@ -84,6 +84,20 @@ function runMigrations() {
     db.prepare('INSERT INTO schema_version (version) VALUES (2)').run();
     console.log('[DB] Migrated to schema v2.');
   }
+
+  if (current < 3) {
+    db.exec(`
+      CREATE TABLE IF NOT EXISTS users (
+        id TEXT PRIMARY KEY,
+        nickname TEXT UNIQUE NOT NULL,
+        dorm TEXT NOT NULL,
+        password_hash TEXT NOT NULL,
+        created_at TEXT DEFAULT (datetime('now'))
+      );
+    `);
+    db.prepare('INSERT INTO schema_version (version) VALUES (3)').run();
+    console.log('[DB] Migrated to schema v3 (users table).');
+  }
 }
 
 function initTables() {
