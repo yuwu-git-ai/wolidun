@@ -638,19 +638,6 @@ function CustomerApp() {
         </div>
       </nav>
 
-      {/* Search bar — fixed below header */}
-      <div className="px-3 sm:px-6 py-2.5 bg-white border-b border-slate-100 shrink-0">
-        <div className="relative max-w-2xl mx-auto">
-          <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-          <input
-            value={searchQuery}
-            onChange={e => { setSearchQuery(e.target.value); setActiveCategory(DEFAULT_CATEGORIES[0].id); }}
-            placeholder="搜索商品..."
-            className="w-full pl-11 pr-4 py-2.5 bg-slate-50 rounded-2xl border border-slate-100 outline-none focus:bg-white focus:border-orange-300 transition-all text-sm"
-          />
-        </div>
-      </div>
-
       {/* Mobile category bar — outside scroll, always visible below header */}
       <div className="flex md:hidden gap-2 overflow-x-auto px-3 py-2.5 bg-white border-b border-slate-100 shrink-0">
         {DEFAULT_CATEGORIES.map(cat => {
@@ -685,8 +672,23 @@ function CustomerApp() {
           </div>
         </aside>
 
-        {/* Main content */}
-        <main className="flex-1 p-3 sm:p-6 overflow-y-auto flex flex-col gap-3 sm:gap-6 pb-28 lg:pb-6">
+        {/* Search + Main content (aligned with sidebar on desktop) */}
+        <div className="flex-1 flex flex-col overflow-hidden">
+          {/* Search bar — fixed, aligned with content */}
+          <div className="px-3 sm:px-6 py-2.5 bg-white border-b border-slate-100 shrink-0">
+            <div className="relative">
+              <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+              <input
+                value={searchQuery}
+                onChange={e => { setSearchQuery(e.target.value); setActiveCategory(DEFAULT_CATEGORIES[0].id); }}
+                placeholder="搜索商品..."
+                className="w-full pl-11 pr-4 py-2.5 bg-slate-50 rounded-2xl border border-slate-100 outline-none focus:bg-white focus:border-orange-300 transition-all text-sm"
+              />
+            </div>
+          </div>
+
+          {/* Main content */}
+          <main className="flex-1 p-3 sm:p-6 overflow-y-auto flex flex-col gap-3 sm:gap-6 pb-28 lg:pb-6">
 
           {searchQuery ? (
             <div className="flex items-center justify-between">
@@ -728,6 +730,7 @@ function CustomerApp() {
             </div>
           </div>
         </main>
+        </div>
 
         {/* Desktop cart sidebar */}
         <aside className="w-80 bg-white border-l border-slate-200 hidden lg:flex flex-col shrink-0 shadow-xl">
