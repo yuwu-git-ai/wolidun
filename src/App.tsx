@@ -813,6 +813,13 @@ function CustomerApp() {
           <h1 className="min-w-0 truncate text-base sm:text-xl font-bold tracking-tight">窝里蹲点单</h1>
         </div>
         <div className="flex shrink-0 items-center gap-2">
+          {/* Square tab — desktop */}
+          {identity && (
+            <button onClick={() => setMainTab(mainTab === 'order' ? 'square' : 'order')}
+              className={`hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-all ${mainTab === 'square' ? 'bg-orange-500 text-white' : 'bg-slate-100 text-slate-500 hover:bg-slate-200'}`}>
+              <MessageCircle size={14} /> 广场
+            </button>
+          )}
           {identity && (
             <div className="flex items-center gap-1.5 px-2 py-1 bg-slate-50 border border-slate-100 rounded-full">
               <div className="w-5 h-5 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center">
