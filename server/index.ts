@@ -6,6 +6,7 @@ import path from 'path';
 import { getDb } from './db';
 import productRoutes from './routes/products';
 import orderRoutes from './routes/orders';
+import { rateLimit } from './middleware/rateLimit';
 
 const app = express();
 const PORT = parseInt(process.env.PORT || '3001', 10);
@@ -15,6 +16,12 @@ getDb();
 
 // Middleware
 app.use(express.json({ limit: '10mb' }));
+
+// Global rate limit: 60 requests per minute per IP
+app.use('/api', rateLimit(60_000, 60));
+
+// Stricter rate limit for order creation (POST only): 10 per minute per IP
+app.use('/api/orders', rateLimit(60_000, 10, ['POST']));
 
 // API routes
 app.use('/api', productRoutes);

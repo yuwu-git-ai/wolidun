@@ -4,7 +4,7 @@ import {
   ShoppingBag, Plus, Minus, Trash2, Copy, Check, Settings,
   ArrowLeft, Flame, Utensils, Pizza, Coffee, IceCream, Package,
   User as UserIcon, Home, ChevronDown, ChevronUp, Bell, Search,
-  Edit3, X, LogOut, Clock
+  Edit3, X, LogOut, Clock, Download
 } from 'lucide-react';
 import { Product, CartItem, Order } from './types';
 import { DEFAULT_PRODUCTS, DEFAULT_CATEGORIES } from './constants';
@@ -31,6 +31,16 @@ const STATUS_COLORS: Record<string, string> = {
   delivered: 'bg-green-100 text-green-700',
   cancelled: 'bg-slate-100 text-slate-500',
 };
+
+// ── Helpers ──
+
+function getCartKey(item: { id: string; isBrewingSelected?: boolean; isFreezingSelected?: boolean }): string {
+  return `${item.id}-${item.isBrewingSelected ? 'b' : ''}-${item.isFreezingSelected ? 'f' : ''}`;
+}
+
+function getItemUnitPrice(item: { price: number; isBrewingSelected?: boolean; isFreezingSelected?: boolean }): number {
+  return item.price + (item.isBrewingSelected ? 1 : 0) + (item.isFreezingSelected ? 0.5 : 0);
+}
 
 // ── Identity Form ──
 
@@ -248,6 +258,84 @@ function OrderTracker({ onClose }: { onClose: () => void }) {
   );
 }
 
+// ── Order History ──
+
+function OrderHistory({ identity, onClose }: { identity: { nickname: string; dorm: string }; onClose: () => void }) {
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetchOrders({ nickname: identity.nickname, dorm: identity.dorm })
+      .then(setOrders)
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }, [identity]);
+
+  return (
+    <div className="min-h-[100dvh] bg-slate-50 font-sans">
+      <nav className="h-14 bg-white border-b border-slate-200 flex items-center px-4 gap-3 shadow-sm">
+        <button onClick={onClose} className="w-9 h-9 flex items-center justify-center bg-slate-100 rounded-full hover:bg-slate-200 transition-colors">
+          <ArrowLeft size={18} />
+        </button>
+        <h1 className="font-bold text-lg">我的订单</h1>
+        {!loading && <span className="text-xs text-slate-400 ml-auto">{orders.length} 单</span>}
+      </nav>
+      <div className="max-w-lg mx-auto p-4 space-y-3 pb-20">
+        {loading ? (
+          <div className="text-center text-slate-400 py-20">
+            <p className="font-bold">加载中...</p>
+          </div>
+        ) : orders.length === 0 ? (
+          <div className="text-center text-slate-400 py-20">
+            <div className="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">📋</div>
+            <p className="font-bold">暂无订单</p>
+            <p className="text-xs mt-1">下单后在这里查看订单状态</p>
+          </div>
+        ) : (
+          orders.map(order => (
+            <div key={order.id} className={`bg-white rounded-2xl border transition-all ${order.status === 'pending' ? 'border-orange-200' : 'border-slate-100'}`}>
+              <div className="p-4 cursor-pointer" onClick={() => setExpandedId(expandedId === order.id ? null : order.id)}>
+                <div className="flex justify-between items-start mb-2">
+                  <div className="flex items-center gap-2">
+                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${STATUS_COLORS[order.status]}`}>
+                      {STATUS_LABELS[order.status]}
+                    </span>
+                    <span className="text-xs text-slate-400">{order.isDelivery ? '配送' : '自提'}</span>
+                  </div>
+                  <span className="font-bold text-orange-600">¥{order.totalPrice.toFixed(2)}</span>
+                </div>
+                <p className="text-sm text-slate-600 truncate">
+                  {order.items.map((i: any) => `${i.name}x${i.quantity}`).join('、')}
+                </p>
+                <div className="flex items-center gap-1 mt-1.5 text-[10px] text-slate-400">
+                  <Clock size={10} />
+                  {new Date(order.createdAt).toLocaleString('zh-CN')}
+                </div>
+              </div>
+              {expandedId === order.id && (
+                <div className="px-4 pb-4 border-t border-slate-50 pt-3 space-y-2">
+                  <p className="text-xs text-slate-400">订单号：{order.id}</p>
+                  {order.items.map((item: any, i: number) => (
+                    <div key={i} className="flex justify-between text-sm">
+                      <span>{item.name} x{item.quantity}</span>
+                      <span className="font-bold">¥{(getItemUnitPrice(item) * item.quantity).toFixed(2)}</span>
+                    </div>
+                  ))}
+                  <div className="flex justify-between font-bold text-sm pt-2 border-t border-slate-50">
+                    <span>总计</span>
+                    <span className="text-orange-600">¥{order.totalPrice.toFixed(2)}</span>
+                  </div>
+                </div>
+              )}
+            </div>
+          ))
+        )}
+      </div>
+    </div>
+  );
+}
+
 // ── Customer App ──
 
 function CustomerApp() {
@@ -259,6 +347,7 @@ function CustomerApp() {
   const [showConfirm, setShowConfirm] = useState(false);
   const [showIdentityForm, setShowIdentityForm] = useState(!getIdentity());
   const [showOrderTracker, setShowOrderTracker] = useState(false);
+  const [showOrderHistory, setShowOrderHistory] = useState(false);
   const [isDelivery, setIsDelivery] = useState(false);
   const [isMobileCartOpen, setIsMobileCartOpen] = useState(false);
 
@@ -286,13 +375,11 @@ function CustomerApp() {
 
   const addToCart = (product: Product, isBrewing?: boolean, isFreezing?: boolean) => {
     setCart(prev => {
-      const key = `${product.id}-${isBrewing ? 'b' : ''}-${isFreezing ? 'f' : ''}`;
-      const existing = prev.find(item =>
-        `${item.id}-${item.isBrewingSelected ? 'b' : ''}-${item.isFreezingSelected ? 'f' : ''}` === key
-      );
+      const key = getCartKey({ id: product.id, isBrewingSelected: isBrewing, isFreezingSelected: isFreezing });
+      const existing = prev.find(item => getCartKey(item) === key);
       if (existing) {
         return prev.map(item =>
-          `${item.id}-${item.isBrewingSelected ? 'b' : ''}-${item.isFreezingSelected ? 'f' : ''}` === key
+          getCartKey(item) === key
             ? { ...item, quantity: item.quantity + 1 } : item
         );
       }
@@ -302,19 +389,15 @@ function CustomerApp() {
 
   const removeFromCart = (item: CartItem) => {
     setCart(prev => {
-      const key = `${item.id}-${item.isBrewingSelected ? 'b' : ''}-${item.isFreezingSelected ? 'f' : ''}`;
-      const existing = prev.find(i =>
-        `${i.id}-${i.isBrewingSelected ? 'b' : ''}-${i.isFreezingSelected ? 'f' : ''}` === key
-      );
+      const key = getCartKey(item);
+      const existing = prev.find(i => getCartKey(i) === key);
       if (existing && existing.quantity > 1) {
         return prev.map(i =>
-          `${i.id}-${i.isBrewingSelected ? 'b' : ''}-${i.isFreezingSelected ? 'f' : ''}` === key
+          getCartKey(i) === key
             ? { ...i, quantity: i.quantity - 1 } : i
         );
       }
-      return prev.filter(i =>
-        `${i.id}-${i.isBrewingSelected ? 'b' : ''}-${i.isFreezingSelected ? 'f' : ''}` !== key
-      );
+      return prev.filter(i => getCartKey(i) !== key);
     });
   };
 
@@ -380,7 +463,7 @@ function CustomerApp() {
         if (item.isBrewingSelected) svc.push('帮泡+¥1');
         if (item.isFreezingSelected) svc.push('冰镇+¥0.5');
         const svcStr = svc.length > 0 ? ` [${svc.join(', ')}]` : '';
-        const up = item.price + (item.isBrewingSelected ? 1 : 0) + (item.isFreezingSelected ? 0.5 : 0);
+        const up = getItemUnitPrice(item);
         return `${item.name}${svcStr} x${item.quantity} - ¥${(up * item.quantity).toFixed(2)}`;
       });
       const dInfo = isDelivery
@@ -405,6 +488,11 @@ function CustomerApp() {
   );
 
   const cartCount = cart.reduce((s, i) => s + i.quantity, 0);
+
+  // Order history
+  if (showOrderHistory && identity) {
+    return <OrderHistory identity={identity} onClose={() => setShowOrderHistory(false)} />;
+  }
 
   // Order tracker modal
   if (showOrderTracker) {
@@ -435,6 +523,11 @@ function CustomerApp() {
               <span className="text-[10px] font-bold text-slate-600 truncate max-w-[60px]">{identity.nickname}</span>
             </div>
           )}
+          <button onClick={() => setShowOrderHistory(true)}
+            className="w-9 h-9 flex items-center justify-center bg-slate-100 hover:bg-slate-200 rounded-full border border-slate-200 transition-colors"
+            title="我的订单">
+            <Clock size={16} />
+          </button>
           <button onClick={() => setShowOrderTracker(true)}
             className="w-9 h-9 flex items-center justify-center bg-slate-100 hover:bg-slate-200 rounded-full border border-slate-200 transition-colors"
             title="查订单">
@@ -593,7 +686,7 @@ function CustomerApp() {
               <h3 className="font-black text-xl mb-4">确认订单</h3>
               <div className="space-y-3">
                 {sortedCart.map((item, i) => {
-                  const up = item.price + (item.isBrewingSelected ? 1 : 0) + (item.isFreezingSelected ? 0.5 : 0);
+                  const up = getItemUnitPrice(item);
                   return (
                     <div key={i} className="flex justify-between text-sm">
                       <span className="truncate">{item.name} x{item.quantity}</span>
@@ -681,7 +774,7 @@ function CartPanel({ cart, products, identity, isDelivery, setIsDelivery, itemsT
             </motion.div>
           ) : (
             cart.map(item => (
-              <motion.div key={`${item.id}-${item.isBrewingSelected}-${item.isFreezingSelected}`}
+              <motion.div key={getCartKey(item)}
                 initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }}
                 className="flex items-center gap-3 p-3 bg-slate-50 rounded-2xl border border-slate-100">
                 <div className="w-14 h-14 bg-white rounded-xl overflow-hidden shrink-0 shadow-sm border border-slate-200">
@@ -690,7 +783,7 @@ function CartPanel({ cart, products, identity, isDelivery, setIsDelivery, itemsT
                 <div className="flex-1 min-w-0">
                   <div className="flex justify-between font-bold text-sm mb-1">
                     <span className="truncate">{item.name}</span>
-                    <span className="ml-2">¥{((item.price + (item.isBrewingSelected ? 1 : 0) + (item.isFreezingSelected ? 0.5 : 0)) * item.quantity).toFixed(2)}</span>
+                    <span className="ml-2">¥{(getItemUnitPrice(item) * item.quantity).toFixed(2)}</span>
                   </div>
                   {(item.isBrewingSelected || item.isFreezingSelected) && (
                     <div className="flex gap-2 mb-1">
@@ -760,6 +853,10 @@ function AdminPanel({ adminKey }: { adminKey: string }) {
   const [notified, setNotified] = useState(false);
   const [titleFlashing, setTitleFlashing] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  // Filter state
+  const [statusFilter, setStatusFilter] = useState<string>('');
+  const [searchQuery, setSearchQuery] = useState('');
 
   // Editing product state
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
@@ -877,6 +974,29 @@ function AdminPanel({ adminKey }: { adminKey: string }) {
   const pendingOrders = orders.filter(o => o.status === 'pending');
   const otherOrders = orders.filter(o => o.status !== 'pending');
 
+  // Apply admin filters
+  const filteredOrders = orders.filter(o => {
+    if (statusFilter && o.status !== statusFilter) return false;
+    if (searchQuery && !o.nickname.includes(searchQuery) && !o.dorm.includes(searchQuery) && !o.id.includes(searchQuery)) return false;
+    return true;
+  });
+
+  const exportCSV = () => {
+    const header = '订单号,昵称,宿舍,方式,商品,总价,状态,时间\n';
+    const rows = orders.map(o => {
+      const items = o.items.map((i: any) => `${i.name}x${i.quantity}`).join(';');
+      return [o.id, o.nickname, o.dorm, o.isDelivery ? '配送' : '自提', `"${items}"`, o.totalPrice.toFixed(2), STATUS_LABELS[o.status], new Date(o.createdAt).toLocaleString('zh-CN')].join(',');
+    }).join('\n');
+    const BOM = '﻿';
+    const blob = new Blob([BOM + header + rows], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `窝里蹲订单_${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div className="min-h-[100dvh] bg-slate-50 font-sans">
       <audio ref={audioRef} src={NOTIFICATION_SOUND} preload="auto" />
@@ -910,8 +1030,34 @@ function AdminPanel({ adminKey }: { adminKey: string }) {
       <div className="max-w-6xl mx-auto px-4 pb-20">
         {tab === 'orders' && (
           <div className="space-y-4">
-            {/* Pending orders */}
-            {pendingOrders.length > 0 && (
+            {/* Filter bar */}
+            <div className="flex flex-wrap items-center gap-2 bg-white p-3 rounded-2xl border border-slate-100">
+              <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)}
+                className="px-3 py-2 bg-slate-50 rounded-xl border border-slate-200 text-sm font-bold outline-none focus:border-orange-300">
+                <option value="">全部状态</option>
+                <option value="pending">待处理</option>
+                <option value="preparing">备货中</option>
+                <option value="delivered">已送达</option>
+                <option value="cancelled">已取消</option>
+              </select>
+              <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
+                placeholder="搜索昵称/宿舍/订单号"
+                className="flex-1 min-w-[160px] px-3 py-2 bg-slate-50 rounded-xl border border-slate-200 text-sm outline-none focus:border-orange-300" />
+              <button onClick={exportCSV} disabled={orders.length === 0}
+                className="px-3 py-2 bg-green-500 text-white rounded-xl font-bold text-xs hover:bg-green-600 transition-all disabled:bg-slate-200 disabled:text-slate-400 flex items-center gap-1">
+                <Download size={14} /> 导出 CSV
+              </button>
+            </div>
+
+            {/* Filtered count */}
+            {(statusFilter || searchQuery) && (
+              <p className="text-xs text-slate-400">
+                筛选结果：{filteredOrders.length} / {orders.length} 单
+              </p>
+            )}
+
+            {/* Pending orders — show only when no filter active */}
+            {!statusFilter && !searchQuery && pendingOrders.length > 0 && (
               <div>
                 <h3 className="font-bold text-red-500 mb-3 flex items-center gap-2">
                   <Bell size={16} /> 待处理 ({pendingOrders.length})
@@ -928,20 +1074,32 @@ function AdminPanel({ adminKey }: { adminKey: string }) {
               </div>
             )}
 
-            {/* Other orders */}
-            {otherOrders.length > 0 && (
-              <div>
-                <h3 className="font-bold text-slate-500 mb-3 mt-6">全部订单</h3>
-                <div className="space-y-3">
-                  {otherOrders.map((order: Order) => (
-                    <div key={order.id}>
-                      <OrderCard order={order} expanded={expandedOrder === order.id}
-                        onToggle={() => setExpandedOrder(expandedOrder === order.id ? null : order.id)}
-                        onStatusChange={handleStatusChange} />
-                    </div>
-                  ))}
-                </div>
+            {/* Filtered or all other orders */}
+            {(statusFilter || searchQuery) ? (
+              <div className="space-y-3">
+                {filteredOrders.map((order: Order) => (
+                  <div key={order.id}>
+                    <OrderCard order={order} expanded={expandedOrder === order.id}
+                      onToggle={() => setExpandedOrder(expandedOrder === order.id ? null : order.id)}
+                      onStatusChange={handleStatusChange} />
+                  </div>
+                ))}
               </div>
+            ) : (
+              otherOrders.length > 0 && (
+                <div>
+                  <h3 className="font-bold text-slate-500 mb-3 mt-6">全部订单</h3>
+                  <div className="space-y-3">
+                    {otherOrders.map((order: Order) => (
+                      <div key={order.id}>
+                        <OrderCard order={order} expanded={expandedOrder === order.id}
+                          onToggle={() => setExpandedOrder(expandedOrder === order.id ? null : order.id)}
+                          onStatusChange={handleStatusChange} />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )
             )}
 
             {orders.length === 0 && (
@@ -1104,7 +1262,7 @@ function OrderCard({ order, expanded, onToggle, onStatusChange }: {
           {order.items.map((item: any, i: number) => (
             <div key={i} className="flex justify-between text-sm">
               <span>{item.name} x{item.quantity}</span>
-              <span className="font-bold">¥{((item.price + (item.isBrewingSelected ? 1 : 0) + (item.isFreezingSelected ? 0.5 : 0)) * item.quantity).toFixed(2)}</span>
+              <span className="font-bold">¥{(getItemUnitPrice(item) * item.quantity).toFixed(2)}</span>
             </div>
           ))}
           <div className="flex justify-between font-bold text-sm pt-2 border-t border-slate-50">
