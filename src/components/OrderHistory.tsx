@@ -1,0 +1,196 @@
+import { useState, useEffect, FormEvent } from 'react';
+import { ArrowLeft, Clock, Search } from 'lucide-react';
+import { Order, CartItem } from '../types';
+import { fetchOrders, fetchOrderById } from '../api';
+import { STATUS_LABELS, STATUS_COLORS, getItemUnitPrice, getErrorMessage } from '../utils';
+
+interface OrderHistoryProps {
+  identity: { nickname: string; dorm: string };
+  onClose: () => void;
+  onReorder: (items: CartItem[]) => void;
+}
+
+export default function OrderHistory({ identity, onClose, onReorder }: OrderHistoryProps) {
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [changedIds, setChangedIds] = useState<Set<string>>(new Set());
+
+  // Order tracker state
+  const [trackId, setTrackId] = useState('');
+  const [trackedOrder, setTrackedOrder] = useState<Order | null>(null);
+  const [trackError, setTrackError] = useState('');
+  const [trackLoading, setTrackLoading] = useState(false);
+  const [showTracker, setShowTracker] = useState(false);
+
+  // Initial load
+  useEffect(() => {
+    fetchOrders({ nickname: identity.nickname, dorm: identity.dorm })
+      .then(setOrders)
+      .catch(err => console.warn('Failed to load order history:', err))
+      .finally(() => setLoading(false));
+  }, [identity]);
+
+  // Auto-refresh every 10s, detect status changes
+  useEffect(() => {
+    const t = setInterval(() => {
+      fetchOrders({ nickname: identity.nickname, dorm: identity.dorm })
+        .then(newOrders => {
+          setOrders(prev => {
+            const prevMap = new Map(prev.map(o => [o.id, o.status]));
+            const changed = new Set<string>();
+            for (const o of newOrders) {
+              if (prevMap.has(o.id) && prevMap.get(o.id) !== o.status) {
+                changed.add(o.id);
+              }
+            }
+            if (changed.size > 0) {
+              setChangedIds(changed);
+              setTimeout(() => setChangedIds(new Set()), 5000);
+            }
+            return newOrders;
+          });
+        })
+        .catch(err => console.warn('Failed to load order history:', err));
+    }, 10000);
+    return () => clearInterval(t);
+  }, [identity]);
+
+  const handleTrack = async (e: FormEvent) => {
+    e.preventDefault();
+    const id = trackId.trim();
+    if (!id) return;
+    setTrackLoading(true);
+    setTrackError('');
+    try {
+      const result = await fetchOrderById(id);
+      setTrackedOrder(result);
+    } catch (err) {
+      setTrackError(getErrorMessage(err) || '找不到该订单');
+      setTrackedOrder(null);
+    } finally {
+      setTrackLoading(false);
+    }
+  };
+
+  return (
+    <div className="min-h-[100dvh] bg-slate-50 font-sans">
+      <nav className="h-14 bg-white border-b border-slate-200 flex items-center px-4 gap-3 shadow-sm sticky top-0 z-10">
+        <button onClick={onClose} className="w-9 h-9 flex items-center justify-center bg-slate-100 rounded-full hover:bg-slate-200 transition-colors shrink-0">
+          <ArrowLeft size={18} />
+        </button>
+        <h1 className="font-bold text-lg">历史订单</h1>
+        {!loading && <span className="text-xs text-slate-400">{orders.length} 单</span>}
+        <button
+          onClick={() => setShowTracker(!showTracker)}
+          className={`ml-auto w-9 h-9 flex items-center justify-center rounded-full transition-colors ${showTracker ? 'bg-orange-100 text-orange-500' : 'bg-slate-100 text-slate-500 hover:bg-slate-200'}`}
+          title="查找订单"
+        >
+          <Search size={16} />
+        </button>
+      </nav>
+
+      {/* Order tracker — collapsible */}
+      {showTracker && (
+        <div className="bg-white border-b border-slate-100 px-4 py-3">
+          <form onSubmit={handleTrack} className="flex gap-2">
+            <input
+              value={trackId}
+              onChange={e => setTrackId(e.target.value)}
+              placeholder="输入订单号查找..."
+              className="flex-1 p-2.5 bg-slate-50 rounded-xl border border-slate-200 outline-none focus:border-orange-300 transition-colors text-sm"
+            />
+            <button
+              type="submit"
+              disabled={trackLoading}
+              className="px-4 py-2.5 bg-orange-500 text-white rounded-xl font-bold text-sm hover:bg-orange-600 transition-all disabled:opacity-50 shrink-0"
+            >
+              {trackLoading ? '查询中...' : '查找'}
+            </button>
+          </form>
+          {trackError && <p className="text-red-500 text-xs font-bold mt-2">{trackError}</p>}
+          {trackedOrder && (
+            <div className="mt-3 p-4 bg-slate-50 rounded-2xl border border-slate-100 space-y-2">
+              <div className="flex justify-between items-center">
+                <span className="text-xs text-slate-400">订单号：{trackedOrder.id.slice(0, 8)}...</span>
+                <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${STATUS_COLORS[trackedOrder.status]}`}>
+                  {STATUS_LABELS[trackedOrder.status] || trackedOrder.status}
+                </span>
+              </div>
+              {trackedOrder.items.map((item, i: number) => (
+                <div key={i} className="flex justify-between text-sm">
+                  <span>{item.name} x{item.quantity}</span>
+                  <span className="font-bold">¥{(getItemUnitPrice(item) * item.quantity).toFixed(2)}</span>
+                </div>
+              ))}
+              <div className="flex justify-between font-bold text-sm pt-2 border-t border-slate-200">
+                <span>总计</span>
+                <span className="text-orange-600">¥{trackedOrder.totalPrice.toFixed(2)}</span>
+              </div>
+              <p className="text-[10px] text-slate-400">
+                {new Date(trackedOrder.createdAt).toLocaleString('zh-CN')}
+              </p>
+            </div>
+          )}
+        </div>
+      )}
+
+      <div className="max-w-lg mx-auto p-4 space-y-3 pb-20">
+        {loading ? (
+          <div className="text-center text-slate-400 py-20">
+            <p className="font-bold">加载中...</p>
+          </div>
+        ) : orders.length === 0 ? (
+          <div className="text-center text-slate-400 py-20">
+            <div className="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">📋</div>
+            <p className="font-bold">暂无订单</p>
+            <p className="text-xs mt-1">下单后在这里查看订单状态</p>
+          </div>
+        ) : (
+          orders.map(order => (
+            <div key={order.id} className={`bg-white rounded-2xl border transition-all ${changedIds.has(order.id) ? 'ring-2 ring-orange-400 shadow-lg' : ''} ${order.status === 'pending' ? 'border-orange-200' : 'border-slate-100'}`}>
+              <div className="p-4 cursor-pointer" onClick={() => setExpandedId(expandedId === order.id ? null : order.id)}>
+                <div className="flex justify-between items-start mb-2">
+                  <div className="flex items-center gap-2">
+                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${STATUS_COLORS[order.status]}`}>
+                      {STATUS_LABELS[order.status]}
+                    </span>
+                    <span className="text-xs text-slate-400">{order.isDelivery ? '配送' : '自提'}</span>
+                  </div>
+                  <span className="font-bold text-orange-600">¥{order.totalPrice.toFixed(2)}</span>
+                </div>
+                <p className="text-sm text-slate-600 truncate">
+                  {order.items.map(i => `${i.name}x${i.quantity}`).join('、')}
+                </p>
+                <div className="flex items-center gap-1 mt-1.5 text-[10px] text-slate-400">
+                  <Clock size={10} />
+                  {new Date(order.createdAt).toLocaleString('zh-CN')}
+                </div>
+              </div>
+              {expandedId === order.id && (
+                <div className="px-4 pb-4 border-t border-slate-50 pt-3 space-y-2">
+                  <p className="text-xs text-slate-400">订单号：{order.id}</p>
+                  {order.items.map((item, i: number) => (
+                    <div key={i} className="flex justify-between text-sm">
+                      <span>{item.name} x{item.quantity}</span>
+                      <span className="font-bold">¥{(getItemUnitPrice(item) * item.quantity).toFixed(2)}</span>
+                    </div>
+                  ))}
+                  <div className="flex justify-between font-bold text-sm pt-2 border-t border-slate-50">
+                    <span>总计</span>
+                    <span className="text-orange-600">¥{order.totalPrice.toFixed(2)}</span>
+                  </div>
+                  <button
+                    onClick={() => onReorder(order.items)}
+                    className="w-full py-2.5 mt-2 bg-orange-500 text-white rounded-xl font-bold text-sm hover:bg-orange-600 transition-all active:scale-[0.98]">
+                    再来一单
+                  </button>
+                </div>
+              )}
+            </div>
+          ))
+        )}
+      </div>
+    </div>
+  );
+}

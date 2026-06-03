@@ -1,3 +1,5 @@
+import type { Product, CartItem, Order } from './types';
+
 const BASE = '/api';
 
 // ── Auth (register + login) ──
@@ -15,14 +17,14 @@ export async function login(nickname: string, password: string): Promise<{ nickn
   });
 }
 
-export async function updateProfile(nickname: string, dorm: string, password: string) {
+export async function updateProfile(nickname: string, dorm: string, password: string): Promise<{ nickname: string; dorm: string }> {
   return request(`${BASE}/auth/profile`, {
     method: 'PUT',
     body: JSON.stringify({ nickname, dorm, password }),
   });
 }
 
-export async function changePassword(nickname: string, oldPassword: string, newPassword: string) {
+export async function changePassword(nickname: string, oldPassword: string, newPassword: string): Promise<{ success: boolean }> {
   return request(`${BASE}/auth/password`, {
     method: 'PUT',
     body: JSON.stringify({ nickname, oldPassword, newPassword }),
@@ -63,7 +65,26 @@ export function setAdminKey(key: string) {
 }
 
 // ── Request helper ──
-async function request(url: string, options: RequestInit = {}): Promise<any> {
+
+function isRetryableError(err: unknown): boolean {
+  // Retry on network errors (fetch rejects with TypeError)
+  if (err instanceof TypeError) return true;
+  // Retry on 5xx server errors
+  if (err instanceof Error) {
+    const statusMatch = err.message.match(/^\[(\d+)\]/);
+    if (statusMatch) {
+      const status = parseInt(statusMatch[1], 10);
+      return status >= 500 && status < 600;
+    }
+  }
+  return false;
+}
+
+async function delay(ms: number): Promise<void> {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function request<T = unknown>(url: string, options: RequestInit = {}, retries = 3): Promise<T> {
   const headers: Record<string, string> = {
     ...(options.headers as Record<string, string>),
   };
@@ -72,18 +93,44 @@ async function request(url: string, options: RequestInit = {}): Promise<any> {
     headers['Content-Type'] = headers['Content-Type'] || 'application/json';
   }
 
-  const res = await fetch(url, { ...options, headers });
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    try {
+      const res = await fetch(url, { ...options, headers });
 
-  if (!res.ok) {
-    const data = await res.json().catch(() => ({ error: '请求失败' }));
-    throw new Error(data.error || '请求失败');
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({ error: '请求失败' }));
+        const errMsg = `[${res.status}] ${data.error || '请求失败'}`;
+        // Only retry on 5xx; 4xx errors fail immediately
+        if (res.status >= 500 && res.status < 600 && attempt < retries) {
+          console.warn(`API ${res.status} (attempt ${attempt + 1}/${retries + 1}), retrying in ${Math.pow(2, attempt)}s...`);
+          await delay(Math.pow(2, attempt) * 1000);
+          continue;
+        }
+        throw new Error(errMsg);
+      }
+
+      return res.json();
+    } catch (err) {
+      if (attempt < retries && isRetryableError(err)) {
+        console.warn(`API request failed (attempt ${attempt + 1}/${retries + 1}), retrying in ${Math.pow(2, attempt)}s...`, getErrorMessage(err));
+        await delay(Math.pow(2, attempt) * 1000);
+        continue;
+      }
+      throw err;
+    }
   }
 
-  return res.json();
+  throw new Error('请求失败：已达到最大重试次数');
+}
+
+function getErrorMessage(err: unknown): string {
+  if (err instanceof Error) return err.message;
+  if (typeof err === 'string') return err;
+  return '未知错误';
 }
 
 // ── Admin ──
-export async function verifyAdmin(adminKey: string) {
+export async function verifyAdmin(adminKey: string): Promise<{ valid: boolean }> {
   return request(`${BASE}/admin/verify`, {
     method: 'POST',
     headers: { 'X-Admin-Key': adminKey },
@@ -91,11 +138,11 @@ export async function verifyAdmin(adminKey: string) {
 }
 
 // ── Products ──
-export async function fetchProducts() {
+export async function fetchProducts(): Promise<Product[]> {
   return request(`${BASE}/products`);
 }
 
-export async function createProduct(product: any, adminKey: string) {
+export async function createProduct(product: Omit<Product, 'id'>, adminKey: string): Promise<Product> {
   return request(`${BASE}/products`, {
     method: 'POST',
     headers: { 'X-Admin-Key': adminKey },
@@ -103,7 +150,7 @@ export async function createProduct(product: any, adminKey: string) {
   });
 }
 
-export async function updateProduct(id: string, product: any, adminKey: string) {
+export async function updateProduct(id: string, product: Partial<Product>, adminKey: string): Promise<Product> {
   return request(`${BASE}/products/${id}`, {
     method: 'PUT',
     headers: { 'X-Admin-Key': adminKey },
@@ -111,7 +158,7 @@ export async function updateProduct(id: string, product: any, adminKey: string) 
   });
 }
 
-export async function deleteProduct(id: string, adminKey: string) {
+export async function deleteProduct(id: string, adminKey: string): Promise<{ success: boolean }> {
   return request(`${BASE}/products/${id}`, {
     method: 'DELETE',
     headers: { 'X-Admin-Key': adminKey },
@@ -123,15 +170,15 @@ export async function createOrder(params: {
   nickname: string;
   dorm: string;
   isDelivery: boolean;
-  items: any[];
-}) {
+  items: CartItem[];
+}): Promise<Order> {
   return request(`${BASE}/orders`, {
     method: 'POST',
     body: JSON.stringify(params),
   });
 }
 
-export async function fetchOrders(params?: { status?: string; nickname?: string; dorm?: string }) {
+export async function fetchOrders(params?: { status?: string; nickname?: string; dorm?: string }): Promise<Order[]> {
   const qs = new URLSearchParams();
   if (params?.status) qs.set('status', params.status);
   if (params?.nickname) qs.set('nickname', params.nickname);
@@ -140,7 +187,7 @@ export async function fetchOrders(params?: { status?: string; nickname?: string;
   return request(`${BASE}/orders${q ? '?' + q : ''}`);
 }
 
-export async function fetchOrderById(id: string) {
+export async function fetchOrderById(id: string): Promise<Order> {
   return request(`${BASE}/orders/${id}`);
 }
 
@@ -159,7 +206,7 @@ export async function fetchStats(params?: { view?: 'monthly' | 'yearly'; year?: 
   return request(`${BASE}/stats${q ? '?' + q : ''}`);
 }
 
-export async function updateOrderStatus(orderId: string, status: string, adminKey: string) {
+export async function updateOrderStatus(orderId: string, status: string, adminKey: string): Promise<Order> {
   return request(`${BASE}/orders/${orderId}`, {
     method: 'PUT',
     headers: { 'X-Admin-Key': adminKey },
