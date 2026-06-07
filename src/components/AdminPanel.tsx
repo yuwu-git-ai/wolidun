@@ -330,8 +330,38 @@ export default function AdminPanel({ adminKey }: { adminKey: string }) {
                   </div>
                   <input value={productForm.description} onChange={e => setProductForm(p => ({ ...p, description: e.target.value }))}
                     placeholder="商品描述" className="w-full p-3 bg-slate-50 rounded-xl border border-slate-200 outline-none focus:border-orange-300" />
+                  {/* Image: paste or URL */}
+                  {productForm.image ? (
+                    <div className="relative">
+                      <img src={productForm.image} className="w-full h-40 object-cover rounded-xl border border-slate-200" />
+                      <button type="button" onClick={() => setProductForm(p => ({ ...p, image: '' }))}
+                        className="absolute top-2 right-2 w-7 h-7 bg-black/50 text-white rounded-full flex items-center justify-center hover:bg-black/70 text-xs">✕</button>
+                    </div>
+                  ) : (
+                    <div
+                      onPaste={e => {
+                        const items = e.clipboardData?.items;
+                        if (!items) return;
+                        for (let i = 0; i < items.length; i++) {
+                          if (items[i].type.startsWith('image/')) {
+                            e.preventDefault();
+                            const blob = items[i].getAsFile();
+                            if (!blob) continue;
+                            const reader = new FileReader();
+                            reader.onload = () => setProductForm(p => ({ ...p, image: reader.result as string }));
+                            reader.readAsDataURL(blob);
+                            break;
+                          }
+                        }
+                      }}
+                      className="w-full p-8 border-2 border-dashed border-slate-300 rounded-xl text-center cursor-text hover:border-orange-300 transition-colors bg-slate-50"
+                    >
+                      <p className="text-sm text-slate-400 font-bold">📋 在此处 Ctrl+V 粘贴图片</p>
+                      <p className="text-xs text-slate-300 mt-1">或下方输入图片 URL</p>
+                    </div>
+                  )}
                   <input value={productForm.image} onChange={e => setProductForm(p => ({ ...p, image: e.target.value }))}
-                    placeholder="图片URL" className="w-full p-3 bg-slate-50 rounded-xl border border-slate-200 outline-none focus:border-orange-300" />
+                    placeholder="图片URL（也可以在上面粘贴图片）" className="w-full p-3 bg-slate-50 rounded-xl border border-slate-200 outline-none focus:border-orange-300 text-sm" />
                   <input type="number" value={productForm.stock} onChange={e => setProductForm(p => ({ ...p, stock: e.target.value }))}
                     placeholder="库存数量" className="w-full p-3 bg-slate-50 rounded-xl border border-slate-200 outline-none focus:border-orange-300" />
                   <div className="flex gap-4">
