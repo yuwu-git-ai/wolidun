@@ -147,6 +147,23 @@ function runMigrations() {
     db.prepare('INSERT INTO schema_version (version) VALUES (4)').run();
     console.log('[DB] Migrated to schema v4 (posts, comments, likes).');
   }
+
+  if (current < 5) {
+    db.exec(`
+      CREATE TABLE IF NOT EXISTS teamup_members (
+        id TEXT PRIMARY KEY,
+        post_id TEXT NOT NULL,
+        user_id TEXT NOT NULL,
+        created_at TEXT DEFAULT (datetime('now')),
+        UNIQUE(post_id, user_id),
+        FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE
+      );
+      CREATE INDEX IF NOT EXISTS idx_teamup_members_user ON teamup_members(user_id);
+      CREATE INDEX IF NOT EXISTS idx_teamup_members_post ON teamup_members(post_id);
+    `);
+    db.prepare('INSERT INTO schema_version (version) VALUES (5)').run();
+    console.log('[DB] Migrated to schema v5 (teamup_members).');
+  }
 }
 
 function initTables() {

@@ -233,6 +233,7 @@ export interface Post {
   comments_count: number;
   created_at: string;
   comments?: Comment[];
+  joined?: boolean;
 }
 
 export interface Comment {
@@ -259,8 +260,9 @@ export async function fetchPosts(params?: { type?: string; status?: string; page
   return request(`${BASE}/posts${q ? '?' + q : ''}`);
 }
 
-export async function fetchPostById(id: string): Promise<Post> {
-  return request(`${BASE}/posts/${id}`);
+export async function fetchPostById(id: string, userId?: string): Promise<Post> {
+  const qs = userId ? `?user_id=${encodeURIComponent(userId)}` : '';
+  return request(`${BASE}/posts/${id}${qs}`);
 }
 
 export async function createPost(data: {
@@ -299,6 +301,11 @@ export async function toggleLike(postId: string, userId: string): Promise<{ like
     method: 'POST',
     body: JSON.stringify({ user_id: userId }),
   });
+}
+
+export async function fetchJoinedPostIds(userId: string): Promise<string[]> {
+  const data = await request<{ joined_ids: string[] }>(`${BASE}/posts/joined?user_id=${encodeURIComponent(userId)}`);
+  return data.joined_ids;
 }
 
 export async function joinPost(postId: string, userId: string): Promise<Post> {

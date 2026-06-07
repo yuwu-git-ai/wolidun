@@ -33,6 +33,21 @@ router.get('/posts', (req: Request, res: Response) => {
   res.json({ posts, total, page: parseInt(page), limit: parseInt(limit) });
 });
 
+// GET /api/posts/joined — get IDs of teamup posts a user has joined
+router.get('/posts/joined', (req: Request, res: Response) => {
+  const db = getDb();
+  const { user_id } = req.query;
+  if (!user_id) return res.status(400).json({ error: '缺少 user_id' });
+
+  const rows = db.prepare(`
+    SELECT tm.post_id FROM teamup_members tm
+    JOIN posts p ON tm.post_id = p.id
+    WHERE tm.user_id = ?
+  `).all(user_id) as { post_id: string }[];
+
+  res.json({ joined_ids: rows.map(r => r.post_id) });
+});
+
 // GET /api/posts/:id — single post with comments
 router.get('/posts/:id', (req: Request, res: Response) => {
   const db = getDb();
@@ -43,7 +58,17 @@ router.get('/posts/:id', (req: Request, res: Response) => {
     'SELECT * FROM comments WHERE post_id = ? ORDER BY created_at ASC'
   ).all(req.params.id);
 
-  res.json({ ...post, comments });
+  // Check if requesting user has joined this teamup post
+  let joined = false;
+  const { user_id } = req.query;
+  if (user_id && post.type === 'teamup') {
+    const member = db.prepare(
+      'SELECT 1 FROM teamup_members WHERE post_id = ? AND user_id = ?'
+    ).get(req.params.id, user_id);
+    joined = !!member;
+  }
+
+  res.json({ ...post, comments, joined });
 });
 
 // POST /api/posts — create a post
@@ -147,10 +172,29 @@ router.post('/posts/:id/join', (req: Request, res: Response) => {
   const post = db.prepare('SELECT * FROM posts WHERE id = ?').get(req.params.id) as any;
   if (!post) return res.status(404).json({ error: '帖子不存在' });
   if (post.type !== 'teamup') return res.status(400).json({ error: '仅组队帖支持加入' });
-  if (post.status !== 'open') return res.status(400).json({ error: '队伍已满或已结束' });
 
   const { user_id } = req.body;
   if (!user_id) return res.status(400).json({ error: '缺少 user_id' });
+
+  // Check if user already joined this post (before status check, for clearer error)
+  const alreadyInPost = db.prepare(
+    'SELECT * FROM teamup_members WHERE post_id = ? AND user_id = ?'
+  ).get(req.params.id, user_id);
+  if (alreadyInPost) return res.status(400).json({ error: '你已经在这个队伍里了' });
+
+  // Check if user already joined any other open teamup
+  const otherTeam = db.prepare(`
+    SELECT tm.* FROM teamup_members tm
+    JOIN posts p ON tm.post_id = p.id
+    WHERE tm.user_id = ? AND p.status = 'open' AND p.id != ?
+  `).get(user_id, req.params.id);
+  if (otherTeam) return res.status(400).json({ error: '你已经加入了一个队伍，不能同时加入多个' });
+
+  if (post.status !== 'open') return res.status(400).json({ error: '队伍已满或已结束' });
+
+  // Record membership
+  db.prepare('INSERT INTO teamup_members (id, post_id, user_id) VALUES (?, ?, ?)')
+    .run(randomUUID(), req.params.id, user_id);
 
   const newPlayers = post.players + 1;
   if (newPlayers >= post.max_players) {

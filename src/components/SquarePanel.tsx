@@ -1,8 +1,8 @@
-import { useState, useEffect, useCallback, FormEvent } from 'react';
+import { useState, useEffect, useCallback, useRef, FormEvent } from 'react';
 import { Plus, Heart, MessageCircle, HelpCircle, Wrench, EyeOff, Users, X, Send } from 'lucide-react';
 import {
   fetchPosts, createPost, updatePost, toggleLike,
-  addComment, joinPost, fetchPostById
+  addComment, joinPost, fetchPostById, fetchJoinedPostIds
 } from '../api';
 import type { Post } from '../api';
 import { getErrorMessage } from '../utils';
@@ -21,6 +21,7 @@ export default function SquarePanel({ identity }: { identity: { nickname: string
   const [activeTab, setActiveTab] = useState<string>('help');
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
+  const initialLoadRef = useRef(true);
   const [showCreate, setShowCreate] = useState(false);
   const [selectedPost, setSelectedPost] = useState<Post | null>(null);
   const [sort, setSort] = useState<'newest' | 'hot'>('newest');
@@ -34,19 +35,30 @@ export default function SquarePanel({ identity }: { identity: { nickname: string
   const [createAnonymous, setCreateAnonymous] = useState(false);
   const [createError, setCreateError] = useState('');
 
-  // Like tracking
+  // Like & join tracking
   const [likedPostIds, setLikedPostIds] = useState<Set<string>>(new Set());
+  const [joinedPostIds, setJoinedPostIds] = useState<Set<string>>(new Set());
 
   // Comment
   const [commentText, setCommentText] = useState('');
 
   const loadPosts = useCallback(() => {
-    setLoading(true);
-    fetchPosts({ type: activeTab, sort }).then(r => setPosts(r.posts as Post[])).catch(err => console.warn('Failed to load posts:', err)).finally(() => setLoading(false));
-  }, [activeTab, sort]);
+    if (initialLoadRef.current) setLoading(true);
+    fetchPosts({ type: activeTab, sort }).then(r => setPosts(r.posts as Post[])).catch(err => console.warn('Failed to load posts:', err)).finally(() => {
+      setLoading(false);
+      initialLoadRef.current = false;
+    });
+    // Refresh joined status in background
+    fetchJoinedPostIds(identity.nickname).then(ids => setJoinedPostIds(new Set(ids))).catch(() => {});
+  }, [activeTab, sort, identity.nickname]);
 
-  useEffect(() => { loadPosts(); }, [loadPosts]); // eslint-disable-line react-hooks/set-state-in-effect
+  useEffect(() => { initialLoadRef.current = true; loadPosts(); }, [loadPosts]);
   useEffect(() => { const t = setInterval(loadPosts, 15000); return () => clearInterval(t); }, [loadPosts]);
+
+  // Load joined teamup IDs
+  useEffect(() => {
+    fetchJoinedPostIds(identity.nickname).then(ids => setJoinedPostIds(new Set(ids))).catch(() => {});
+  }, [identity.nickname]);
 
   const handleCreate = async (e: FormEvent) => {
     e.preventDefault();
@@ -91,7 +103,7 @@ export default function SquarePanel({ identity }: { identity: { nickname: string
       setSelectedPost(prev => prev?.id === postId ? { ...prev, likes_count: prev.likes_count + (r.liked ? 1 : -1) } : prev);
       setLikedPostIds(prev => {
         const next = new Set(prev);
-        r.liked ? next.add(postId) : next.delete(postId);
+        if (r.liked) next.add(postId); else next.delete(postId);
         return next;
       });
     } catch { /* toggle failed, ignore */ }
@@ -111,14 +123,19 @@ export default function SquarePanel({ identity }: { identity: { nickname: string
   const handleJoin = async (postId: string) => {
     try {
       await joinPost(postId, identity.nickname);
+      setJoinedPostIds(prev => new Set(prev).add(postId));
       loadPosts();
     } catch (err) { alert(getErrorMessage(err)); }
   };
 
   const openDetail = async (post: Post) => {
     try {
-      const full = await fetchPostById(post.id);
+      const full = await fetchPostById(post.id, identity.nickname);
       setSelectedPost(full);
+      // Sync joined status from server response
+      if (full.joined) {
+        setJoinedPostIds(prev => new Set(prev).add(post.id));
+      }
     } catch { setSelectedPost(post); }
   };
 
@@ -192,6 +209,7 @@ export default function SquarePanel({ identity }: { identity: { nickname: string
                     <span className={`text-[10px] px-1.5 py-0.5 rounded font-bold ${TYPE_COLORS[post.type]}`}>{TYPE_LABELS[post.type]}</span>
                     {post.price && <span className="text-[10px] font-bold text-orange-500">{post.price}</span>}
                     {post.type === 'teamup' && <span className="text-[10px] text-slate-400">{post.players}/{post.max_players || '∞'}人</span>}
+                    {post.type === 'teamup' && joinedPostIds.has(post.id) && <span className="text-[10px] text-amber-500 font-bold">已加入</span>}
                     {post.status === 'done' && <span className="text-[10px] text-green-500 font-bold">已完成</span>}
                     {post.status === 'claimed' && <span className="text-[10px] text-blue-500 font-bold">已接单</span>}
                   </div>
@@ -305,8 +323,12 @@ export default function SquarePanel({ identity }: { identity: { nickname: string
               {selectedPost.status === 'claimed' && selectedPost.user_id === identity.nickname && (
                 <button onClick={() => handleDone(selectedPost)} className="ml-auto px-3 py-1.5 bg-green-500 text-white rounded-lg text-xs font-bold">标记完成</button>
               )}
-              {selectedPost.type === 'teamup' && selectedPost.status === 'open' && (
-                <button onClick={() => handleJoin(selectedPost.id)} className="ml-auto px-3 py-1.5 bg-amber-500 text-white rounded-lg text-xs font-bold">加入</button>
+              {selectedPost.type === 'teamup' && (
+                joinedPostIds.has(selectedPost.id) ? (
+                  <span className="ml-auto px-3 py-1.5 bg-amber-50 text-amber-600 rounded-lg text-xs font-bold">已加入</span>
+                ) : selectedPost.status === 'open' ? (
+                  <button onClick={() => handleJoin(selectedPost.id)} className="ml-auto px-3 py-1.5 bg-amber-500 text-white rounded-lg text-xs font-bold hover:bg-amber-600 active:scale-95 transition-all">加入</button>
+                ) : null
               )}
             </div>
 
