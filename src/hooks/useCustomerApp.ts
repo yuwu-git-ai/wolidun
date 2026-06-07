@@ -119,12 +119,13 @@ export function useCustomerApp(): { state: CustomerAppState; actions: CustomerAp
   const totalPrice = itemsTotal + deliveryFee;
 
   const filteredProducts = useMemo(() => {
+    const inStock = rawState.products.filter(p => p.stock > 0);
     const list = rawState.searchQuery
-      ? rawState.products.filter(p =>
+      ? inStock.filter(p =>
           p.name.toLowerCase().includes(rawState.searchQuery.toLowerCase()) ||
           p.description.toLowerCase().includes(rawState.searchQuery.toLowerCase())
         )
-      : rawState.products.filter(p => p.category === rawState.activeCategory);
+      : inStock.filter(p => p.category === rawState.activeCategory);
     return list.sort((a, b) => a.name.localeCompare(b.name, 'zh-CN'));
   }, [rawState.products, rawState.activeCategory, rawState.searchQuery]);
 

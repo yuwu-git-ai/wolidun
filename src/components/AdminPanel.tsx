@@ -101,13 +101,18 @@ export default function AdminPanel({ adminKey }: { adminKey: string }) {
 
   const handleProductSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    const stock = parseInt(productForm.stock);
+    if (isNaN(stock) || stock < 0) {
+      alert('库存数量不能为负数');
+      return;
+    }
     const data = {
       name: productForm.name,
       price: parseFloat(productForm.price),
       category: productForm.category,
       description: productForm.description,
       image: productForm.image,
-      stock: parseInt(productForm.stock) || 999,
+      stock,
       allowBrewing: productForm.allowBrewing,
       allowFreezing: productForm.allowFreezing,
     };
