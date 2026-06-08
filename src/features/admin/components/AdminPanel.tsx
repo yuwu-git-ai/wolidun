@@ -8,14 +8,15 @@ import {
   fetchOrders, fetchProducts, fetchStats,
   updateOrderStatus, createProduct, updateProduct, deleteProduct,
 } from '../../../shared/api';
-import type { Order, Product } from '../../../shared/types';
+import type { Order, Product, Combo } from '../../../shared/types';
+import { fetchCombos, createCombo, updateCombo, deleteCombo } from '../../../shared/api';
 import { DEFAULT_CATEGORIES } from '../../../shared/constants';
 import { STATUS_LABELS, getErrorMessage } from '../../../shared/utils';
 
 const NOTIFICATION_SOUND = 'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACAf39/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/g';
 
 export default function AdminPanel({ adminKey }: { adminKey: string }) {
-  const [tab, setTab] = useState<'orders' | 'products' | 'analytics'>('orders');
+  const [tab, setTab] = useState<'orders' | 'products' | 'analytics' | 'combos'>('orders');
   const [orders, setOrders] = useState<Order[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
@@ -34,6 +35,12 @@ export default function AdminPanel({ adminKey }: { adminKey: string }) {
   const [showProductForm, setShowProductForm] = useState(false);
   interface VariantFormItem { id?: string; name: string; price: string; stock: string; }
   const [productForm, setProductForm] = useState({ name: '', price: '', category: '1', description: '', image: '', stock: '999', allowBrewing: false, allowFreezing: false, variants: [] as VariantFormItem[] });
+
+  // Combo state
+  const [combos, setCombos] = useState<Combo[]>([]);
+  const [editingCombo, setEditingCombo] = useState<Combo | null>(null);
+  const [showComboForm, setShowComboForm] = useState(false);
+  const [comboForm, setComboForm] = useState({ name: '', discount: '', items: [] as { productId: string; variantId: string }[] });
 
   const loadOrders = useCallback(() => {
     fetchOrders().then(setOrders).catch(err => console.warn('Failed to load orders (admin):', err));
@@ -155,6 +162,65 @@ export default function AdminPanel({ adminKey }: { adminKey: string }) {
     }
   };
 
+  // Combo handlers
+  const loadCombos = useCallback(() => {
+    fetchCombos().then(setCombos).catch(err => console.warn('Failed to load combos:', err));
+  }, []);
+
+  useEffect(() => {
+    loadCombos();
+  }, [loadCombos]);
+
+  const resetComboForm = () => {
+    setComboForm({ name: '', discount: '', items: [] });
+    setEditingCombo(null);
+    setShowComboForm(false);
+  };
+
+  const handleComboSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    const discount = parseFloat(comboForm.discount);
+    if (isNaN(discount) || discount < 0) { alert('请输入有效的优惠金额'); return; }
+    if (comboForm.items.length < 2) { alert('至少需要2个子商品'); return; }
+    const items = comboForm.items.map(i => ({ productId: i.productId, variantId: i.variantId || null }));
+    try {
+      if (editingCombo) {
+        await updateCombo(editingCombo.id, { name: comboForm.name, discount, items }, adminKey);
+      } else {
+        await createCombo({ name: comboForm.name, discount, items }, adminKey);
+      }
+      resetComboForm();
+      loadCombos();
+    } catch (err) {
+      alert(getErrorMessage(err));
+    }
+  };
+
+  const handleDeleteCombo = async (id: string) => {
+    if (!confirm('确定删除该套餐？')) return;
+    try {
+      await deleteCombo(id, adminKey);
+      loadCombos();
+    } catch (err) {
+      alert(getErrorMessage(err));
+    }
+  };
+
+  const addComboItem = () => {
+    setComboForm({ ...comboForm, items: [...comboForm.items, { productId: '', variantId: '' }] });
+  };
+
+  const removeComboItem = (idx: number) => {
+    setComboForm({ ...comboForm, items: comboForm.items.filter((_, i) => i !== idx) });
+  };
+
+  const updateComboItem = (idx: number, field: 'productId' | 'variantId', value: string) => {
+    const newItems = comboForm.items.map((item, i) =>
+      i === idx ? { ...item, [field]: value } : item
+    );
+    setComboForm({ ...comboForm, items: newItems });
+  };
+
   const pendingOrders = orders.filter(o => o.status === 'pending');
   const otherOrders = orders.filter(o => o.status !== 'pending');
 
@@ -220,6 +286,10 @@ export default function AdminPanel({ adminKey }: { adminKey: string }) {
         <button onClick={() => setTab('analytics')}
           className={`px-5 py-2.5 rounded-2xl font-bold text-sm transition-all ${tab === 'analytics' ? 'bg-slate-800 text-white' : 'bg-white text-slate-500 border border-slate-200'}`}>
           数据分析
+        </button>
+        <button onClick={() => setTab('combos')}
+          className={`px-5 py-2.5 rounded-2xl font-bold text-sm transition-all ${tab === 'combos' ? 'bg-slate-800 text-white' : 'bg-white text-slate-500 border border-slate-200'}`}>
+          🍱 套餐管理
         </button>
       </div>
 
@@ -507,6 +577,110 @@ export default function AdminPanel({ adminKey }: { adminKey: string }) {
                 </div>
               ))}
               {products.length === 0 && <p className="text-center text-slate-400 py-10">暂无商品</p>}
+            </div>
+          </div>
+        )}
+
+        {tab === 'combos' && (
+          <div className="space-y-4">
+            {/* Combo list */}
+            <div className="md:grid md:grid-cols-12 gap-4">
+              <div className={`${showComboForm ? 'md:col-span-6' : 'md:col-span-12'} space-y-3`}>
+                <div className="flex justify-between items-center">
+                  <h3 className="font-bold text-lg">套餐列表</h3>
+                  <button onClick={() => { setEditingCombo(null); setComboForm({ name: '', discount: '', items: [] }); setShowComboForm(true); }}
+                    className="px-4 py-2 bg-amber-500 text-white rounded-xl font-bold text-sm hover:bg-amber-600 transition-all">
+                    新增套餐
+                  </button>
+                </div>
+
+                {combos.length === 0 ? (
+                  <p className="text-center text-slate-400 py-10">暂无套餐，点击右上角新增</p>
+                ) : (
+                  <div className="space-y-2">
+                    {combos.map(combo => (
+                      <div key={combo.id} className="flex items-center gap-3 sm:gap-4 p-3 sm:p-4 bg-white rounded-2xl border border-slate-100 shadow-sm">
+                        <div className="w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center shrink-0">
+                          <span className="text-xl">🍱</span>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-bold text-sm truncate">{combo.name}</p>
+                          <div className="flex gap-2 mt-1 flex-wrap">
+                            {combo.items.map(ci => (
+                              <span key={ci.productId} className="text-[10px] bg-amber-50 text-amber-700 px-2 py-0.5 rounded-full">
+                                {ci.productName || ci.productId}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                        <div className="text-right shrink-0">
+                          <p className="text-xs line-through text-slate-300">¥{combo.originalPrice.toFixed(1)}</p>
+                          <p className="font-bold text-amber-600">¥{combo.comboPrice.toFixed(1)}</p>
+                          <p className="text-[10px] text-green-600 font-bold">省 ¥{combo.discount.toFixed(1)}</p>
+                        </div>
+                        <div className="flex gap-1.5">
+                          <button onClick={() => { setEditingCombo(combo); setComboForm({ name: combo.name, discount: String(combo.discount), items: combo.items.map(ci => ({ productId: ci.productId, variantId: ci.variantId || '' })) }); setShowComboForm(true); }}
+                            className="w-8 h-8 bg-slate-100 hover:bg-slate-200 rounded-lg flex items-center justify-center transition-colors">
+                            <Edit3 size={14} /></button>
+                          <button onClick={() => handleDeleteCombo(combo.id)}
+                            className="w-8 h-8 bg-slate-100 hover:bg-red-50 hover:text-red-500 rounded-lg flex items-center justify-center transition-colors">
+                            <X size={14} /></button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Combo form sidebar */}
+              {showComboForm && (
+                <div className="md:col-span-6">
+                  <form onSubmit={handleComboSubmit}
+                    className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 sm:p-6 space-y-4">
+                    <div className="flex justify-between items-center">
+                      <h4 className="font-bold">{editingCombo ? '编辑套餐' : '新增套餐'}</h4>
+                      <button type="button" onClick={resetComboForm} className="text-slate-400 hover:text-slate-600"><X size={18} /></button>
+                    </div>
+                    <input value={comboForm.name} onChange={e => setComboForm({ ...comboForm, name: e.target.value })}
+                      placeholder="套餐名称" required
+                      className="w-full px-4 py-3 bg-slate-50 rounded-xl border border-slate-200 text-sm outline-none focus:border-amber-300" />
+                    <input value={comboForm.discount} onChange={e => setComboForm({ ...comboForm, discount: e.target.value })}
+                      placeholder="优惠金额（元）" type="number" step="0.1" min="0" required
+                      className="w-full px-4 py-3 bg-slate-50 rounded-xl border border-slate-200 text-sm outline-none focus:border-amber-300" />
+
+                    {/* Sub-items */}
+                    <div className="space-y-2">
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm font-bold text-slate-600">套餐子商品</span>
+                        <button type="button" onClick={addComboItem}
+                          className="text-xs font-bold text-amber-600 hover:text-amber-700">+ 添加商品</button>
+                      </div>
+                      {comboForm.items.map((item, idx) => (
+                        <div key={idx} className="flex gap-2 items-center">
+                          <select value={item.productId} onChange={e => updateComboItem(idx, 'productId', e.target.value)}
+                            className="flex-1 px-3 py-2 bg-slate-50 rounded-xl border border-slate-200 text-xs outline-none focus:border-amber-300">
+                            <option value="">选择商品</option>
+                            {products.map(p => (
+                              <option key={p.id} value={p.id}>{p.name} (¥{p.price})</option>
+                            ))}
+                          </select>
+                          <button type="button" onClick={() => removeComboItem(idx)}
+                            className="w-7 h-7 bg-red-50 text-red-400 hover:bg-red-100 rounded-lg flex items-center justify-center shrink-0">
+                            <X size={12} /></button>
+                        </div>
+                      ))}
+                      {comboForm.items.length === 0 && (
+                        <p className="text-[10px] text-slate-400">请添加至少2个商品组成套餐</p>
+                      )}
+                    </div>
+
+                    <button type="submit"
+                      className="w-full py-3 bg-amber-500 text-white rounded-xl font-bold hover:bg-amber-600 transition-all">
+                      {editingCombo ? '保存修改' : '创建套餐'}
+                    </button>
+                  </form>
+                </div>
+              )}
             </div>
           </div>
         )}
