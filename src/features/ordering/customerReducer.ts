@@ -1,6 +1,6 @@
-import { Product, CartItem } from './types';
-import { getCartKey } from './utils';
-import type { Identity } from './api';
+import { Product, CartItem } from '../../shared/types';
+import { getCartKey } from '../../shared/utils';
+import type { Identity } from '../../shared/api';
 
 // ── State ──
 
@@ -18,7 +18,6 @@ export interface CustomerRawState {
   isMobileCartOpen: boolean;
   searchQuery: string;
   popularIds: Set<string>;
-  mainTab: 'order' | 'square';
 }
 
 export function createInitialState(): CustomerRawState {
@@ -36,7 +35,6 @@ export function createInitialState(): CustomerRawState {
     isMobileCartOpen: false,
     searchQuery: '',
     popularIds: new Set(),
-    mainTab: 'order',
   };
 }
 
@@ -47,7 +45,7 @@ export type CustomerAction =
   | { type: 'CLEAR_IDENTITY' }
   | { type: 'SET_PRODUCTS'; payload: Product[] }
   | { type: 'SET_CART'; payload: CartItem[] }
-  | { type: 'ADD_TO_CART'; payload: { product: Product; isBrewing?: boolean; isFreezing?: boolean } }
+  | { type: 'ADD_TO_CART'; payload: { product: Product; variantId?: string; isBrewing?: boolean; isFreezing?: boolean } }
   | { type: 'REMOVE_FROM_CART'; payload: CartItem }
   | { type: 'CLEAR_CART' }
   | { type: 'REORDER'; payload: CartItem[] }
@@ -61,8 +59,7 @@ export type CustomerAction =
   | { type: 'SET_SHOW_PROFILE_FORM'; payload: boolean }
   | { type: 'SET_IS_DELIVERY'; payload: boolean }
   | { type: 'SET_IS_MOBILE_CART_OPEN'; payload: boolean }
-  | { type: 'SET_POPULAR_IDS'; payload: Set<string> }
-  | { type: 'SET_MAIN_TAB'; payload: 'order' | 'square' };
+  | { type: 'SET_POPULAR_IDS'; payload: Set<string> };
 
 // ── Reducer ──
 
@@ -81,8 +78,10 @@ export function customerReducer(state: CustomerRawState, action: CustomerAction)
       return { ...state, cart: action.payload };
 
     case 'ADD_TO_CART': {
-      const { product, isBrewing, isFreezing } = action.payload;
-      const key = getCartKey({ id: product.id, isBrewingSelected: isBrewing, isFreezingSelected: isFreezing });
+      const { product, variantId, isBrewing, isFreezing } = action.payload;
+      const variant = variantId ? product.variants?.find(v => v.id === variantId) : undefined;
+      const variantPrice = variant?.price;
+      const key = getCartKey({ id: product.id, variantId, isBrewingSelected: isBrewing, isFreezingSelected: isFreezing });
       const existingIdx = state.cart.findIndex(item => getCartKey(item) === key);
       if (existingIdx >= 0) {
         return {
@@ -94,7 +93,15 @@ export function customerReducer(state: CustomerRawState, action: CustomerAction)
       }
       return {
         ...state,
-        cart: [...state.cart, { ...product, quantity: 1, isBrewingSelected: isBrewing, isFreezingSelected: isFreezing }],
+        cart: [...state.cart, {
+          ...product,
+          quantity: 1,
+          variantId,
+          variantName: variant?.name,
+          price: variantPrice != null ? variantPrice : product.price,
+          isBrewingSelected: isBrewing,
+          isFreezingSelected: isFreezing,
+        }],
       };
     }
 
@@ -170,9 +177,6 @@ export function customerReducer(state: CustomerRawState, action: CustomerAction)
 
     case 'SET_POPULAR_IDS':
       return { ...state, popularIds: action.payload };
-
-    case 'SET_MAIN_TAB':
-      return { ...state, mainTab: action.payload };
 
     default:
       return state;

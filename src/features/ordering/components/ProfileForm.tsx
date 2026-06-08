@@ -1,7 +1,7 @@
 import { useState, FormEvent } from 'react';
 import { ArrowLeft } from 'lucide-react';
-import { updateProfile, changePassword, setIdentity as saveIdentity } from '../api';
-import { getErrorMessage } from '../utils';
+import { updateProfile, changePassword, setIdentity as saveIdentity } from '../../../shared/api';
+import { getErrorMessage } from '../../../shared/utils';
 
 interface ProfileFormProps {
   identity: { nickname: string; dorm: string };

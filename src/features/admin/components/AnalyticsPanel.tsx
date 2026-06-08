@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { ChevronUp } from 'lucide-react';
 import BarChart from './BarChart';
-import { fetchStats } from '../api';
+import { fetchStats } from '../../../shared/api';
 
 type ChartData = { label: string; orders: number; revenue: number };
 

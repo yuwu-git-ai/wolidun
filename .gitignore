@@ -13,3 +13,4 @@ coverage/
 data/
 deploy.tar.gz
 deploy.cjs
+.understand-anything/

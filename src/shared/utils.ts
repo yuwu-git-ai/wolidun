@@ -19,12 +19,17 @@ export const STATUS_COLORS: Record<string, string> = {
 
 // ── Cart helpers ──
 
-export function getCartKey(item: { id: string; isBrewingSelected?: boolean; isFreezingSelected?: boolean }): string {
-  return `${item.id}-${item.isBrewingSelected ? 'b' : ''}-${item.isFreezingSelected ? 'f' : ''}`;
+export function getCartKey(item: { id: string; variantId?: string; isBrewingSelected?: boolean; isFreezingSelected?: boolean }): string {
+  return `${item.id}-${item.variantId || ''}-${item.isBrewingSelected ? 'b' : ''}-${item.isFreezingSelected ? 'f' : ''}`;
 }
 
-export function getItemUnitPrice(item: { price: number; isBrewingSelected?: boolean; isFreezingSelected?: boolean }): number {
-  return item.price + (item.isBrewingSelected ? 1 : 0) + (item.isFreezingSelected ? 0.5 : 0);
+export function getItemUnitPrice(item: { price: number; variants?: { id?: string; price?: number }[]; variantId?: string; isBrewingSelected?: boolean; isFreezingSelected?: boolean }): number {
+  let base = item.price;
+  if (item.variantId && item.variants) {
+    const v = item.variants.find(v => v.id === item.variantId);
+    if (v && v.price != null) base = v.price;
+  }
+  return base + (item.isBrewingSelected ? 1 : 0) + (item.isFreezingSelected ? 0.5 : 0);
 }
 
 // ── Cart Storage ──

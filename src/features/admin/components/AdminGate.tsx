@@ -3,7 +3,7 @@ import { motion } from 'motion/react';
 import { Settings } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import AdminPanel from './AdminPanel';
-import { getAdminKey, setAdminKey as saveAdminKey, verifyAdmin } from '../api';
+import { getAdminKey, setAdminKey as saveAdminKey, verifyAdmin } from '../../../shared/api';
 
 export default function AdminGate() {
   const [authorized, setAuthorized] = useState(false);

@@ -1,11 +1,11 @@
 import { useReducer, useEffect, useMemo, useCallback } from 'react';
-import { Product, CartItem } from '../types';
-import { DEFAULT_PRODUCTS } from '../constants';
+import { Product, CartItem } from '../../../shared/types';
+import { DEFAULT_PRODUCTS } from '../../../shared/constants';
 import {
   getIdentity, clearIdentity,
   fetchProducts, createOrder, fetchStats,
-} from '../api';
-import { getItemUnitPrice, loadCartFromStorage, saveCartToStorage, getErrorMessage } from '../utils';
+} from '../../../shared/api';
+import { getItemUnitPrice, loadCartFromStorage, saveCartToStorage, getErrorMessage } from '../../../shared/utils';
 import {
   customerReducer, createInitialState,
   type CustomerRawState,
@@ -25,7 +25,7 @@ export interface CustomerAppState extends CustomerRawState {
 // ── Actions interface ──
 
 export interface CustomerAppActions {
-  addToCart: (product: Product, isBrewing?: boolean, isFreezing?: boolean) => void;
+  addToCart: (product: Product, variantId?: string, isBrewing?: boolean, isFreezing?: boolean) => void;
   removeFromCart: (item: CartItem) => void;
   clearCart: () => void;
   reorder: (items: CartItem[]) => void;
@@ -39,7 +39,6 @@ export interface CustomerAppActions {
   setShowProfileForm: (v: boolean) => void;
   setIsDelivery: (v: boolean) => void;
   setIsMobileCartOpen: (v: boolean) => void;
-  setMainTab: (tab: 'order' | 'square') => void;
   copyToClipboard: (text: string) => boolean;
   confirmAndCopy: () => Promise<void>;
   handleSaveIdentity: (nickname: string, dorm: string) => void;
@@ -119,7 +118,12 @@ export function useCustomerApp(): { state: CustomerAppState; actions: CustomerAp
   const totalPrice = itemsTotal + deliveryFee;
 
   const filteredProducts = useMemo(() => {
-    const inStock = rawState.products.filter(p => p.stock > 0);
+    const inStock = rawState.products.filter(p => {
+      if (p.variants && p.variants.length > 0) {
+        return p.variants.reduce((sum, v) => sum + v.stock, 0) > 0;
+      }
+      return p.stock > 0;
+    });
     const list = rawState.searchQuery
       ? inStock.filter(p =>
           p.name.toLowerCase().includes(rawState.searchQuery.toLowerCase()) ||
@@ -143,8 +147,8 @@ export function useCustomerApp(): { state: CustomerAppState; actions: CustomerAp
 
   // ── Action creators ──
 
-  const addToCart = (product: Product, isBrewing?: boolean, isFreezing?: boolean) =>
-    dispatch({ type: 'ADD_TO_CART', payload: { product, isBrewing, isFreezing } });
+  const addToCart = (product: Product, variantId?: string, isBrewing?: boolean, isFreezing?: boolean) =>
+    dispatch({ type: 'ADD_TO_CART', payload: { product, variantId, isBrewing, isFreezing } });
 
   const removeFromCart = (item: CartItem) =>
     dispatch({ type: 'REMOVE_FROM_CART', payload: item });
@@ -173,8 +177,6 @@ export function useCustomerApp(): { state: CustomerAppState; actions: CustomerAp
   const setIsDelivery = (v: boolean) => dispatch({ type: 'SET_IS_DELIVERY', payload: v });
 
   const setIsMobileCartOpen = (v: boolean) => dispatch({ type: 'SET_IS_MOBILE_CART_OPEN', payload: v });
-
-  const setMainTab = (tab: 'order' | 'square') => dispatch({ type: 'SET_MAIN_TAB', payload: tab });
 
   // Robust clipboard copy — works in WeChat browser, HTTP, and HTTPS
   const copyToClipboard = (text: string): boolean => {
@@ -234,9 +236,10 @@ export function useCustomerApp(): { state: CustomerAppState; actions: CustomerAp
         if (item.isBrewingSelected) svc.push('帮泡+¥1');
         if (item.isFreezingSelected) svc.push('冰镇+¥0.5');
         const svcStr = svc.length > 0 ? ` [${svc.join(', ')}]` : '';
+        const variantStr = item.variantName ? ` · ${item.variantName}` : '';
         const noteStr = item.note ? ` (${item.note})` : '';
         const up = getItemUnitPrice(item);
-        return `${item.name}${svcStr}${noteStr} x${item.quantity} - ¥${(up * item.quantity).toFixed(2)}`;
+        return `${item.name}${variantStr}${svcStr}${noteStr} x${item.quantity} - ¥${(up * item.quantity).toFixed(2)}`;
       });
       const dInfo = rawState.isDelivery
         ? `配送: 送到 ${rawState.identity.dorm} (${deliveryFee === 0 ? '免配送费' : '¥1.00'})`
@@ -276,7 +279,6 @@ export function useCustomerApp(): { state: CustomerAppState; actions: CustomerAp
     setShowProfileForm,
     setIsDelivery,
     setIsMobileCartOpen,
-    setMainTab,
     copyToClipboard,
     confirmAndCopy,
     handleSaveIdentity,

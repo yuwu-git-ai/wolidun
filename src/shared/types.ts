@@ -1,3 +1,10 @@
+export interface ProductVariant {
+  id?: string;
+  name: string;
+  price?: number;
+  stock: number;
+}
+
 export interface Product {
   id: string;
   name: string;
@@ -8,12 +15,15 @@ export interface Product {
   stock: number;
   allowBrewing?: boolean;
   allowFreezing?: boolean;
+  variants?: ProductVariant[];
 }
 
 export interface CartItem extends Product {
   quantity: number;
   isBrewingSelected?: boolean;
   isFreezingSelected?: boolean;
+  variantId?: string;
+  variantName?: string;
   note?: string;
 }
 

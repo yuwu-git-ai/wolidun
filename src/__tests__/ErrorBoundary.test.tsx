@@ -2,7 +2,7 @@
 
 import { describe, it, expect, vi, beforeAll, afterAll } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import ErrorBoundary from '../components/ErrorBoundary';
+import ErrorBoundary from '../shared/components/ErrorBoundary';
 
 const BrokenComponent = ({ shouldThrow }: { shouldThrow: boolean }) => {
   if (shouldThrow) {

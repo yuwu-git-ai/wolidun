@@ -1,7 +1,7 @@
 import { useState, FormEvent } from 'react';
 import { motion } from 'motion/react';
-import { register, login, setIdentity as saveIdentity } from '../api';
-import { getErrorMessage } from '../utils';
+import { register, login, setIdentity as saveIdentity } from '../../../shared/api';
+import { getErrorMessage } from '../../../shared/utils';
 
 interface IdentityFormProps {
   onSave: (nickname: string, dorm: string) => void;

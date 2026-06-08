@@ -3,9 +3,9 @@ import { Plus, Heart, MessageCircle, HelpCircle, Wrench, EyeOff, Users, X, Send 
 import {
   fetchPosts, createPost, updatePost, toggleLike,
   addComment, joinPost, fetchPostById, fetchJoinedPostIds
-} from '../api';
-import type { Post } from '../api';
-import { getErrorMessage } from '../utils';
+} from '../../../shared/api';
+import type { Post } from '../../../shared/api';
+import { getErrorMessage } from '../../../shared/utils';
 
 const SQUARE_TABS = [
   { key: 'help', label: '求助', icon: HelpCircle, color: 'text-rose-500', bg: 'bg-rose-50' },

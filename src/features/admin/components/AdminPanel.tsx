@@ -7,10 +7,10 @@ import AnalyticsPanel from './AnalyticsPanel';
 import {
   fetchOrders, fetchProducts, fetchStats,
   updateOrderStatus, createProduct, updateProduct, deleteProduct,
-} from '../api';
-import type { Order, Product } from '../types';
-import { DEFAULT_CATEGORIES } from '../constants';
-import { STATUS_LABELS, getErrorMessage } from '../utils';
+} from '../../../shared/api';
+import type { Order, Product } from '../../../shared/types';
+import { DEFAULT_CATEGORIES } from '../../../shared/constants';
+import { STATUS_LABELS, getErrorMessage } from '../../../shared/utils';
 
 const NOTIFICATION_SOUND = 'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACAf39/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/g';
 
@@ -32,7 +32,8 @@ export default function AdminPanel({ adminKey }: { adminKey: string }) {
   // Editing product state
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [showProductForm, setShowProductForm] = useState(false);
-  const [productForm, setProductForm] = useState({ name: '', price: '', category: '1', description: '', image: '', stock: '999', allowBrewing: false, allowFreezing: false });
+  interface VariantFormItem { id?: string; name: string; price: string; stock: string; }
+  const [productForm, setProductForm] = useState({ name: '', price: '', category: '1', description: '', image: '', stock: '999', allowBrewing: false, allowFreezing: false, variants: [] as VariantFormItem[] });
 
   const loadOrders = useCallback(() => {
     fetchOrders().then(setOrders).catch(err => console.warn('Failed to load orders (admin):', err));
@@ -94,7 +95,7 @@ export default function AdminPanel({ adminKey }: { adminKey: string }) {
   };
 
   const resetProductForm = () => {
-    setProductForm({ name: '', price: '', category: '1', description: '', image: '', stock: '999', allowBrewing: false, allowFreezing: false });
+    setProductForm({ name: '', price: '', category: '1', description: '', image: '', stock: '999', allowBrewing: false, allowFreezing: false, variants: [] });
     setEditingProduct(null);
     setShowProductForm(false);
   };
@@ -106,6 +107,9 @@ export default function AdminPanel({ adminKey }: { adminKey: string }) {
       alert('库存数量不能为负数');
       return;
     }
+    const variants = productForm.variants
+      .filter(v => v.name.trim())
+      .map(v => ({ name: v.name.trim(), price: v.price ? parseFloat(v.price) : undefined, stock: parseInt(v.stock) || 0 }));
     const data = {
       name: productForm.name,
       price: parseFloat(productForm.price),
@@ -115,6 +119,7 @@ export default function AdminPanel({ adminKey }: { adminKey: string }) {
       stock,
       allowBrewing: productForm.allowBrewing,
       allowFreezing: productForm.allowFreezing,
+      variants,
     };
     try {
       if (editingProduct) {
@@ -135,6 +140,7 @@ export default function AdminPanel({ adminKey }: { adminKey: string }) {
       name: p.name, price: String(p.price), category: p.category,
       description: p.description, image: p.image || '', stock: String(p.stock),
       allowBrewing: p.allowBrewing || false, allowFreezing: p.allowFreezing || false,
+      variants: (p.variants || []).map(v => ({ id: v.id, name: v.name, price: v.price != null ? String(v.price) : '', stock: String(v.stock) })),
     });
     setShowProductForm(true);
   };
@@ -162,7 +168,7 @@ export default function AdminPanel({ adminKey }: { adminKey: string }) {
   const exportCSV = () => {
     const header = '订单号,昵称,宿舍,方式,商品,总价,状态,时间\n';
     const rows = orders.map(o => {
-      const items = o.items.map(i => `${i.name}x${i.quantity}`).join(';');
+      const items = o.items.map(i => `${i.name}${i.variantName ? `·${i.variantName}` : ''}x${i.quantity}`).join(';');
       return [o.id, o.nickname, o.dorm, o.isDelivery ? '配送' : '自提', `"${items}"`, o.totalPrice.toFixed(2), STATUS_LABELS[o.status], new Date(o.createdAt).toLocaleString('zh-CN')].join(',');
     }).join('\n');
     const BOM = '﻿';
@@ -367,8 +373,73 @@ export default function AdminPanel({ adminKey }: { adminKey: string }) {
                   )}
                   <input value={productForm.image} onChange={e => setProductForm(p => ({ ...p, image: e.target.value }))}
                     placeholder="图片URL（也可以在上面粘贴图片）" className="w-full p-3 bg-slate-50 rounded-xl border border-slate-200 outline-none focus:border-orange-300 text-sm" />
-                  <input type="number" value={productForm.stock} onChange={e => setProductForm(p => ({ ...p, stock: e.target.value }))}
-                    placeholder="库存数量" className="w-full p-3 bg-slate-50 rounded-xl border border-slate-200 outline-none focus:border-orange-300" />
+                  {productForm.variants.length > 0 ? (
+                    <div className="w-full p-3 bg-slate-100 rounded-xl border border-slate-200 text-sm text-slate-500">
+                      总库存（自动计算）：{productForm.variants.reduce((sum, v) => sum + (parseInt(v.stock) || 0), 0)}
+                    </div>
+                  ) : (
+                    <input type="number" value={productForm.stock} onChange={e => setProductForm(p => ({ ...p, stock: e.target.value }))}
+                      placeholder="库存数量" className="w-full p-3 bg-slate-50 rounded-xl border border-slate-200 outline-none focus:border-orange-300" />
+                  )}
+
+                  {/* ── Variant Management ── */}
+                  <div className="space-y-3 p-4 bg-slate-50 rounded-xl border border-slate-100">
+                    <div className="flex justify-between items-center">
+                      <h5 className="font-bold text-sm text-slate-700">规格管理</h5>
+                      <button type="button" onClick={() => setProductForm(p => ({
+                        ...p, variants: [...p.variants, { name: '', price: '', stock: '0' }]
+                      }))}
+                        className="px-3 py-1.5 bg-orange-500 text-white rounded-lg text-xs font-bold hover:bg-orange-600 transition-all">
+                        + 添加规格
+                      </button>
+                    </div>
+                    {productForm.variants.length === 0 && (
+                      <p className="text-xs text-slate-400">无需规格则留空（如普通商品）。有规格时库存以规格为准。</p>
+                    )}
+                    {productForm.variants.map((v, idx) => (
+                      <div key={idx} className="flex gap-2 items-center">
+                        <input
+                          value={v.name}
+                          onChange={e => {
+                            const next = [...productForm.variants];
+                            next[idx] = { ...next[idx], name: e.target.value };
+                            setProductForm(p => ({ ...p, variants: next }));
+                          }}
+                          placeholder="规格名称（如：红烧牛肉味）"
+                          className="flex-1 p-2 bg-white rounded-lg border border-slate-200 text-sm outline-none focus:border-orange-300"
+                        />
+                        <input
+                          type="number" step="0.01"
+                          value={v.price}
+                          onChange={e => {
+                            const next = [...productForm.variants];
+                            next[idx] = { ...next[idx], price: e.target.value };
+                            setProductForm(p => ({ ...p, variants: next }));
+                          }}
+                          placeholder="价格（留空=继承基础价）"
+                          className="w-28 p-2 bg-white rounded-lg border border-slate-200 text-sm outline-none focus:border-orange-300"
+                        />
+                        <input
+                          type="number"
+                          value={v.stock}
+                          onChange={e => {
+                            const next = [...productForm.variants];
+                            next[idx] = { ...next[idx], stock: e.target.value };
+                            setProductForm(p => ({ ...p, variants: next }));
+                          }}
+                          placeholder="库存"
+                          className="w-16 p-2 bg-white rounded-lg border border-slate-200 text-sm outline-none focus:border-orange-300"
+                        />
+                        <button type="button" onClick={() => setProductForm(p => ({
+                          ...p, variants: p.variants.filter((_, i) => i !== idx)
+                        }))}
+                          className="w-8 h-8 bg-red-50 hover:bg-red-100 text-red-500 rounded-lg flex items-center justify-center text-xs font-bold transition-colors shrink-0">
+                          ✕
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+
                   <div className="flex gap-4">
                     <label className="flex items-center gap-2 cursor-pointer">
                       <input type="checkbox" checked={productForm.allowBrewing} onChange={e => setProductForm(p => ({ ...p, allowBrewing: e.target.checked }))}
@@ -413,7 +484,14 @@ export default function AdminPanel({ adminKey }: { adminKey: string }) {
                       <span className="text-[10px] text-slate-400 bg-slate-50 px-2 py-0.5 rounded-full">
                         {DEFAULT_CATEGORIES.find(c => c.id === p.category)?.name}
                       </span>
-                      <span className="text-[10px] text-slate-400 bg-slate-50 px-2 py-0.5 rounded-full">库存: {p.stock}</span>
+                      <span className="text-[10px] text-slate-400 bg-slate-50 px-2 py-0.5 rounded-full">
+                        库存: {p.variants?.length ? p.variants.reduce((s, v) => s + v.stock, 0) : p.stock}
+                      </span>
+                      {p.variants && p.variants.length > 0 && (
+                        <span className="text-[10px] bg-green-100 text-green-700 px-2 py-0.5 rounded-full">
+                          {p.variants.length}个规格
+                        </span>
+                      )}
                       {p.allowBrewing && <span className="text-[10px] bg-orange-100 text-orange-600 px-2 py-0.5 rounded-full">帮泡</span>}
                       {p.allowFreezing && <span className="text-[10px] bg-indigo-100 text-indigo-600 px-2 py-0.5 rounded-full">冰镇</span>}
                     </div>

@@ -16,7 +16,20 @@ router.post('/admin/verify', (req: Request, res: Response) => {
   res.json({ success: true });
 });
 
+function loadVariants(productId: string) {
+  const db = getDb();
+  const rows = db.prepare('SELECT id, name, price, stock FROM product_variants WHERE product_id = ? ORDER BY name ASC').all(productId) as any[];
+  return rows.map((v: any) => ({
+    id: v.id,
+    name: v.name,
+    price: v.price ?? undefined,
+    stock: v.stock,
+  }));
+}
+
 function serializeProduct(p: any) {
+  const variants = loadVariants(p.id);
+  const computedStock = variants.length > 0 ? variants.reduce((sum, v) => sum + v.stock, 0) : p.stock;
   return {
     id: p.id,
     name: p.name,
@@ -24,10 +37,24 @@ function serializeProduct(p: any) {
     category: p.category,
     description: p.description || '',
     image: p.image || '',
-    stock: p.stock,
+    stock: computedStock,
     allowBrewing: p.allow_brewing === 1 || p.allow_brewing === true,
     allowFreezing: p.allow_freezing === 1 || p.allow_freezing === true,
+    variants,
   };
+}
+
+function upsertVariants(productId: string, variants: { name: string; price?: number; stock?: number }[]) {
+  const db = getDb();
+  // Delete existing variants for this product
+  db.prepare('DELETE FROM product_variants WHERE product_id = ?').run(productId);
+  // Insert new variants
+  const stmt = db.prepare(
+    'INSERT INTO product_variants (id, product_id, name, price, stock) VALUES (?, ?, ?, ?, ?)'
+  );
+  for (const v of variants) {
+    stmt.run(uuid(), productId, v.name, v.price ?? null, v.stock ?? 0);
+  }
 }
 
 router.get('/products', (_req: Request, res: Response) => {
@@ -37,7 +64,7 @@ router.get('/products', (_req: Request, res: Response) => {
 });
 
 router.post('/products', requireAdmin, (req: Request, res: Response) => {
-  const { name, price, category, description, image, stock, allowBrewing, allowFreezing } = req.body;
+  const { name, price, category, description, image, stock, allowBrewing, allowFreezing, variants } = req.body;
 
   if (!name || price == null || !category) {
     res.status(400).json({ error: '请填写商品名称、价格和分类' });
@@ -56,13 +83,18 @@ router.post('/products', requireAdmin, (req: Request, res: Response) => {
     allowBrewing ? 1 : 0, allowFreezing ? 1 : 0
   );
 
+  // Insert variants if provided
+  if (variants && Array.isArray(variants) && variants.length > 0) {
+    upsertVariants(id, variants);
+  }
+
   const row = db.prepare('SELECT * FROM products WHERE id = ?').get(id);
   res.json(serializeProduct(row));
 });
 
 router.put('/products/:id', requireAdmin, (req: Request, res: Response) => {
   const { id } = req.params;
-  const { name, price, category, description, image, stock, allowBrewing, allowFreezing } = req.body;
+  const { name, price, category, description, image, stock, allowBrewing, allowFreezing, variants } = req.body;
 
   const db = getDb();
   const existing = db.prepare('SELECT * FROM products WHERE id = ?').get(id) as any;
@@ -83,6 +115,11 @@ router.put('/products/:id', requireAdmin, (req: Request, res: Response) => {
     allowFreezing !== undefined ? (allowFreezing ? 1 : 0) : existing.allow_freezing,
     id
   );
+
+  // Upsert variants if provided
+  if (variants !== undefined) {
+    upsertVariants(id, variants || []);
+  }
 
   const row = db.prepare('SELECT * FROM products WHERE id = ?').get(id);
   res.json(serializeProduct(row));

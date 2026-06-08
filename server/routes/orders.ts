@@ -46,13 +46,29 @@ router.post('/orders', (req: Request, res: Response) => {
       if (item.isBrewingSelected) unitPrice += 1;
       if (item.isFreezingSelected) unitPrice += 0.5;
 
-      itemsTotal += unitPrice * item.quantity;
-
-      const newStock = product.stock - item.quantity;
-      if (newStock < 0) {
-        throw new Error(`商品 "${product.name}" 库存不足，仅剩 ${product.stock} 件`);
+      // If variant selected, use variant price override and deduct variant stock
+      if (item.variantId) {
+        const variant = db.prepare('SELECT * FROM product_variants WHERE id = ? AND product_id = ?').get(item.variantId, item.id) as any;
+        if (!variant) {
+          throw new Error(`商品 "${product.name}" 的规格 "${item.variantName || '未知'}" 已下架`);
+        }
+        if (variant.price != null) unitPrice = variant.price;
+        if (item.isBrewingSelected) unitPrice += 1;
+        if (item.isFreezingSelected) unitPrice += 0.5;
+        const newStock = variant.stock - item.quantity;
+        if (newStock < 0) {
+          throw new Error(`商品 "${product.name}（${variant.name}）" 库存不足，仅剩 ${variant.stock} 件`);
+        }
+        db.prepare('UPDATE product_variants SET stock = ? WHERE id = ?').run(newStock, item.variantId);
+      } else {
+        const newStock = product.stock - item.quantity;
+        if (newStock < 0) {
+          throw new Error(`商品 "${product.name}" 库存不足，仅剩 ${product.stock} 件`);
+        }
+        db.prepare('UPDATE products SET stock = ? WHERE id = ?').run(newStock, product.id);
       }
-      db.prepare('UPDATE products SET stock = ? WHERE id = ?').run(newStock, product.id);
+
+      itemsTotal += unitPrice * item.quantity;
     }
 
     const deliveryFee = isDelivery && itemsTotal < 20 ? 1 : 0;
@@ -120,7 +136,11 @@ router.put('/orders/:id', requireAdmin, (req: Request, res: Response) => {
     const items = JSON.parse(existing.items);
     const restoreTx = db.transaction(() => {
       for (const item of items) {
-        db.prepare('UPDATE products SET stock = stock + ? WHERE id = ?').run(item.quantity, item.id);
+        if (item.variantId) {
+          db.prepare('UPDATE product_variants SET stock = stock + ? WHERE id = ?').run(item.quantity, item.variantId);
+        } else {
+          db.prepare('UPDATE products SET stock = stock + ? WHERE id = ?').run(item.quantity, item.id);
+        }
       }
       db.prepare('UPDATE orders SET status = ? WHERE id = ?').run(status, id);
     });

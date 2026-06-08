@@ -3,16 +3,16 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import IdentityForm from '../components/IdentityForm';
+import IdentityForm from '../features/ordering/components/IdentityForm';
 
 // Mock api module
-vi.mock('../api', () => ({
+vi.mock('../shared/api', () => ({
   register: vi.fn(),
   login: vi.fn(),
   setIdentity: vi.fn(),
 }));
 
-import { login } from '../api';
+import { login } from '../shared/api';
 
 describe('IdentityForm', () => {
   const onSave = vi.fn();

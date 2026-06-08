@@ -1,8 +1,8 @@
 import { useState, useEffect, FormEvent } from 'react';
 import { ArrowLeft, Clock, Search } from 'lucide-react';
-import { Order, CartItem } from '../types';
-import { fetchOrders, fetchOrderById } from '../api';
-import { STATUS_LABELS, STATUS_COLORS, getItemUnitPrice, getErrorMessage } from '../utils';
+import { Order, CartItem } from '../../../shared/types';
+import { fetchOrders, fetchOrderById } from '../../../shared/api';
+import { STATUS_LABELS, STATUS_COLORS, getItemUnitPrice, getErrorMessage } from '../../../shared/utils';
 
 interface OrderHistoryProps {
   identity: { nickname: string; dorm: string };
@@ -119,7 +119,7 @@ export default function OrderHistory({ identity, onClose, onReorder }: OrderHist
               </div>
               {trackedOrder.items.map((item, i: number) => (
                 <div key={i} className="flex justify-between text-sm">
-                  <span>{item.name} x{item.quantity}</span>
+                  <span>{item.name}{item.variantName ? ` · ${item.variantName}` : ''} x{item.quantity}</span>
                   <span className="font-bold">¥{(getItemUnitPrice(item) * item.quantity).toFixed(2)}</span>
                 </div>
               ))}
@@ -172,7 +172,7 @@ export default function OrderHistory({ identity, onClose, onReorder }: OrderHist
                   <p className="text-xs text-slate-400">订单号：{order.id}</p>
                   {order.items.map((item, i: number) => (
                     <div key={i} className="flex justify-between text-sm">
-                      <span>{item.name} x{item.quantity}</span>
+                      <span>{item.name}{item.variantName ? ` · ${item.variantName}` : ''} x{item.quantity}</span>
                       <span className="font-bold">¥{(getItemUnitPrice(item) * item.quantity).toFixed(2)}</span>
                     </div>
                   ))}

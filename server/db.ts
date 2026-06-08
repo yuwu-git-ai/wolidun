@@ -164,6 +164,23 @@ function runMigrations() {
     db.prepare('INSERT INTO schema_version (version) VALUES (5)').run();
     console.log('[DB] Migrated to schema v5 (teamup_members).');
   }
+
+  if (current < 6) {
+    db.exec(`
+      CREATE TABLE IF NOT EXISTS product_variants (
+        id TEXT PRIMARY KEY,
+        product_id TEXT NOT NULL,
+        name TEXT NOT NULL,
+        price REAL,
+        stock INTEGER DEFAULT 0,
+        created_at TEXT DEFAULT (datetime('now')),
+        FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
+      );
+      CREATE INDEX IF NOT EXISTS idx_variants_product ON product_variants(product_id);
+    `);
+    db.prepare('INSERT INTO schema_version (version) VALUES (6)').run();
+    console.log('[DB] Migrated to schema v6 (product_variants).');
+  }
 }
 
 function initTables() {

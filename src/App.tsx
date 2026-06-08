@@ -1,22 +1,98 @@
+import { lazy, Suspense } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   ShoppingBag, Check, Flame, Utensils, Pizza, Coffee, IceCream, Package,
   User as UserIcon, Search, Edit3, X, LogOut, Clock, MessageCircle,
 } from 'lucide-react';
-import { DEFAULT_CATEGORIES } from './constants';
-import ProductCard from './components/ProductCard';
-import SquarePanel from './components/SquarePanel';
-import AdminGate from './components/AdminGate';
-import IdentityForm from './components/IdentityForm';
-import ProfileForm from './components/ProfileForm';
-import OrderHistory from './components/OrderHistory';
-import CartPanel from './components/CartPanel';
-import { getItemUnitPrice } from './utils';
-import { Routes, Route } from 'react-router-dom';
-import ErrorBoundary from './components/ErrorBoundary';
-import { useCustomerApp } from './hooks/useCustomerApp';
+import { DEFAULT_CATEGORIES } from './shared/constants';
+import ProductCard from './features/ordering/components/ProductCard';
+import IdentityForm from './features/ordering/components/IdentityForm';
+import ProfileForm from './features/ordering/components/ProfileForm';
+import OrderHistory from './features/ordering/components/OrderHistory';
+import CartPanel from './features/ordering/components/CartPanel';
+import { getItemUnitPrice } from './shared/utils';
+import { Routes, Route, Link, useNavigate } from 'react-router-dom';
+import ErrorBoundary from './shared/components/ErrorBoundary';
+import { useCustomerApp } from './features/ordering/hooks/useCustomerApp';
+import { getIdentity } from './shared/api';
 
 const ICON_MAP: Record<string, React.ComponentType<{ size?: number; className?: string }>> = { Flame, Utensils, Pizza, Coffee, IceCream, Package };
+
+// ── Loading fallback ──
+
+function PageLoading() {
+  return (
+    <div className="min-h-[100dvh] flex items-center justify-center bg-slate-50">
+      <div className="w-10 h-10 border-4 border-orange-200 border-t-orange-500 rounded-full animate-spin" />
+    </div>
+  );
+}
+
+// ── Square App (lazy-loaded) ──
+
+const SquarePanel = lazy(() => import('./features/square/components/SquarePanel'));
+
+function SquareApp() {
+  const identity = getIdentity();
+  const navigate = useNavigate();
+
+  if (!identity) {
+    return (
+      <div className="min-h-[100dvh] flex flex-col items-center justify-center bg-slate-50 gap-4 p-4">
+        <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center text-3xl">🔑</div>
+        <p className="font-bold text-slate-600">请先在点单页面填写身份信息</p>
+        <button onClick={() => navigate('/')}
+          className="px-6 py-3 bg-orange-500 text-white rounded-2xl font-bold hover:bg-orange-600 transition-all">
+          去填写身份信息
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="app-viewport flex flex-col bg-slate-50 text-slate-800 font-sans overflow-hidden h-[100dvh] relative">
+      {/* Header */}
+      <nav className="h-14 sm:h-16 bg-white border-b border-slate-200 flex items-center justify-between px-3 sm:px-6 shrink-0 shadow-sm relative z-10">
+        <div className="flex min-w-0 flex-1 items-center gap-2 sm:gap-3 select-none">
+          <Link to="/" className="w-9 h-9 sm:w-10 sm:h-10 bg-purple-500 rounded-xl flex items-center justify-center text-white font-bold text-lg sm:text-xl shrink-0">窝</Link>
+          <h1 className="min-w-0 truncate text-base sm:text-xl font-bold tracking-tight">窝里蹲广场</h1>
+        </div>
+        <div className="flex shrink-0 items-center gap-2">
+          <div className="flex items-center gap-1.5 px-2 py-1 bg-slate-50 border border-slate-100 rounded-full">
+            <div className="w-5 h-5 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center">
+              <UserIcon size={10} />
+            </div>
+            <span className="text-[10px] font-bold text-slate-600 truncate max-w-[60px]">{identity.nickname}</span>
+          </div>
+          <Link to="/"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-orange-500 text-white hover:bg-orange-600 transition-all">
+            <ShoppingBag size={14} />
+            <span className="hidden sm:inline">点单</span>
+          </Link>
+        </div>
+      </nav>
+
+      {/* Square content */}
+      <div className="flex-1 overflow-hidden">
+        <Suspense fallback={<PageLoading />}>
+          <SquarePanel identity={identity} />
+        </Suspense>
+      </div>
+    </div>
+  );
+}
+
+// ── Admin (lazy-loaded) ──
+
+const AdminGate = lazy(() => import('./features/admin/components/AdminGate'));
+
+function AdminPage() {
+  return (
+    <Suspense fallback={<PageLoading />}>
+      <AdminGate />
+    </Suspense>
+  );
+}
 
 // ── Customer App ──
 
@@ -39,8 +115,6 @@ function CustomerApp() {
     return <OrderHistory identity={state.identity} onClose={() => actions.setShowOrderHistory(false)} onReorder={actions.reorder} />;
   }
 
-  const isOrderTab = state.mainTab === 'order';
-
   return (
     <div className="app-viewport flex flex-col bg-slate-50 text-slate-800 font-sans overflow-hidden h-[100dvh] relative">
       {/* Identity form overlay */}
@@ -57,13 +131,13 @@ function CustomerApp() {
           <h1 className="min-w-0 truncate text-base sm:text-xl font-bold tracking-tight">窝里蹲点单</h1>
         </div>
         <div className="flex shrink-0 items-center gap-2">
-          {/* Square / Order toggle — always visible */}
+          {/* Square entrance */}
           {state.identity && (
-            <button onClick={() => actions.setMainTab(isOrderTab ? 'square' : 'order')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-all ${!isOrderTab ? 'bg-orange-500 text-white' : 'bg-slate-100 text-slate-500 hover:bg-slate-200'}`}>
+            <Link to="/square"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-slate-100 text-slate-500 hover:bg-slate-200 transition-all">
               <MessageCircle size={14} />
-              <span className="hidden sm:inline">{isOrderTab ? '广场' : '点单'}</span>
-            </button>
+              <span className="hidden sm:inline">广场</span>
+            </Link>
           )}
           {state.identity && (
             <div className="flex items-center gap-1.5 px-2 py-1 bg-slate-50 border border-slate-100 rounded-full">
@@ -98,15 +172,8 @@ function CustomerApp() {
         </div>
       </nav>
 
-      {/* ── Square view ── */}
-      {!isOrderTab && state.identity && (
-        <div className="flex-1 overflow-hidden">
-          <SquarePanel identity={state.identity} />
-        </div>
-      )}
-
-      {/* ── Order view ── */}
-      {isOrderTab && (<>
+      {/* ── Order view (always shown) ── */}
+      <>
         {/* Mobile category bar */}
         <div className="flex md:hidden gap-2 overflow-x-auto px-3 py-2.5 bg-white border-b border-slate-100 shrink-0">
           {DEFAULT_CATEGORIES.map(cat => {
@@ -177,14 +244,11 @@ function CustomerApp() {
 
             <div className="grid grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-6 lg:pb-0">
               <AnimatePresence mode="popLayout">
-                {state.filteredProducts.map(product => {
-                  const qty = state.cart.filter(item => item.id === product.id).reduce((s, i) => s + i.quantity, 0);
-                  return (
-                    <motion.div layout key={product.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                      <ProductCard product={product} onAdd={actions.addToCart} quantityInCart={qty} isPopular={state.popularIds.has(product.id)} />
-                    </motion.div>
-                  );
-                })}
+                {state.filteredProducts.map(product => (
+                  <motion.div layout key={product.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                    <ProductCard product={product} onAdd={actions.addToCart} cart={state.cart} isPopular={state.popularIds.has(product.id)} />
+                  </motion.div>
+                ))}
               </AnimatePresence>
             </div>
 
@@ -207,7 +271,7 @@ function CustomerApp() {
               cart={state.sortedCart} products={state.products}
               identity={state.identity} isDelivery={state.isDelivery} setIsDelivery={actions.setIsDelivery}
               itemsTotal={state.itemsTotal} deliveryFee={state.deliveryFee} totalPrice={state.totalPrice}
-              onRemove={actions.removeFromCart} onAdd={(item) => actions.addToCart(item, item.isBrewingSelected, item.isFreezingSelected)}
+              onRemove={actions.removeFromCart} onAdd={(item) => actions.addToCart(item, item.variantId, item.isBrewingSelected, item.isFreezingSelected)}
               onClear={actions.clearCart} onConfirm={() => actions.setShowConfirm(true)}
               onUpdateNote={actions.updateCartNote}
             />
@@ -237,7 +301,7 @@ function CustomerApp() {
             </div>
           </div>
         </div>
-      </>)} {/* End order view */}
+      </>
 
       {/* Mobile cart bottom sheet */}
       <AnimatePresence>
@@ -256,7 +320,7 @@ function CustomerApp() {
                   cart={state.sortedCart} products={state.products}
                   identity={state.identity} isDelivery={state.isDelivery} setIsDelivery={actions.setIsDelivery}
                   itemsTotal={state.itemsTotal} deliveryFee={state.deliveryFee} totalPrice={state.totalPrice}
-                  onRemove={actions.removeFromCart} onAdd={(item) => actions.addToCart(item, item.isBrewingSelected, item.isFreezingSelected)}
+                  onRemove={actions.removeFromCart} onAdd={(item) => actions.addToCart(item, item.variantId, item.isBrewingSelected, item.isFreezingSelected)}
                   onClear={actions.clearCart} onConfirm={() => { actions.setIsMobileCartOpen(false); actions.setShowConfirm(true); }}
                   onUpdateNote={actions.updateCartNote}
                   compact
@@ -329,10 +393,13 @@ function CustomerApp() {
 export default function App() {
   return (
     <ErrorBoundary>
-      <Routes>
-        <Route path="/" element={<CustomerApp />} />
-        <Route path="/admin" element={<AdminGate />} />
-      </Routes>
+      <Suspense fallback={<PageLoading />}>
+        <Routes>
+          <Route path="/" element={<CustomerApp />} />
+          <Route path="/square" element={<SquareApp />} />
+          <Route path="/admin" element={<AdminPage />} />
+        </Routes>
+      </Suspense>
     </ErrorBoundary>
   );
 }

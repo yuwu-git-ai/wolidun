@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import {
   getErrorMessage, getCartKey, getItemUnitPrice,
   STATUS_LABELS, STATUS_COLORS,
-} from '../utils';
+} from '../shared/utils';
 
 // ── getErrorMessage ──
 

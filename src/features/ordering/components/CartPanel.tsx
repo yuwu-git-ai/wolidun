@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from 'motion/react';
 import { Plus, Minus, Trash2 } from 'lucide-react';
-import { Product, CartItem } from '../types';
-import { getCartKey, getItemUnitPrice } from '../utils';
+import { Product, CartItem } from '../../../shared/types';
+import { getCartKey, getItemUnitPrice } from '../../../shared/utils';
 
 interface CartPanelProps {
   cart: CartItem[];
@@ -54,9 +54,12 @@ export default function CartPanel({ cart, products, identity, isDelivery, setIsD
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex justify-between font-bold text-sm mb-1">
-                    <span className="truncate">{item.name}</span>
+                    <span className="truncate">{item.name}{item.variantName ? ` · ${item.variantName}` : ''}</span>
                     <span className="ml-2">¥{(getItemUnitPrice(item) * item.quantity).toFixed(2)}</span>
                   </div>
+                  {item.variantName && (
+                    <div className="text-[10px] text-slate-400 mb-1">{item.variantName}</div>
+                  )}
                   {(item.isBrewingSelected || item.isFreezingSelected) && (
                     <div className="flex gap-2 mb-1">
                       {item.isBrewingSelected && <span className="text-[8px] bg-orange-100 text-orange-600 px-1 py-0.5 rounded font-black">帮泡+¥1</span>}
@@ -78,14 +81,20 @@ export default function CartPanel({ cart, products, identity, isDelivery, setIsD
                       </button>
                       <button onClick={() => {
                         const p = products.find(p => p.id === item.id);
-                        const totalInCart = cart.filter(c => c.id === item.id).reduce((s, i) => s + i.quantity, 0);
-                        if (!p || (p.stock || 0) > totalInCart) onAdd(item);
+                        const totalInCart = cart.filter(c => c.id === item.id && c.variantId === item.variantId).reduce((s, i) => s + i.quantity, 0);
+                        const maxStock = item.variantId && p?.variants
+                          ? (p.variants.find(v => v.id === item.variantId)?.stock || 0)
+                          : (p?.stock || 0);
+                        if (maxStock > totalInCart) onAdd(item);
                       }}
                         className="w-7 h-7 bg-slate-800 text-white hover:bg-slate-700 rounded-lg flex items-center justify-center transition-colors disabled:bg-slate-200 disabled:text-slate-400"
                         disabled={(() => {
                           const p = products.find(p => p.id === item.id);
-                          const totalInCart = cart.filter(c => c.id === item.id).reduce((s, i) => s + i.quantity, 0);
-                          return !p || (p.stock || 0) <= totalInCart;
+                          const totalInCart = cart.filter(c => c.id === item.id && c.variantId === item.variantId).reduce((s, i) => s + i.quantity, 0);
+                          const maxStock = item.variantId && p?.variants
+                            ? (p.variants.find(v => v.id === item.variantId)?.stock || 0)
+                            : (p?.stock || 0);
+                          return maxStock <= totalInCart;
                         })()}>
                         <Plus size={12} />
                       </button>

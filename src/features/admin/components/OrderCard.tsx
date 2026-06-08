@@ -1,6 +1,6 @@
 import { ChevronUp, ChevronDown } from 'lucide-react';
-import { Order } from '../types';
-import { STATUS_LABELS, STATUS_COLORS, getItemUnitPrice } from '../utils';
+import { Order } from '../../../shared/types';
+import { STATUS_LABELS, STATUS_COLORS, getItemUnitPrice } from '../../../shared/utils';
 
 interface OrderCardProps {
   order: Order;
@@ -24,7 +24,7 @@ export default function OrderCard({ order, expanded, onToggle, onStatusChange }:
             </span>
           </div>
           <p className="text-xs text-slate-400 mt-0.5">
-            {order.items.map(i => `${i.name}x${i.quantity}`).join('、')}
+            {order.items.map(i => `${i.name}${i.variantName ? `·${i.variantName}` : ''}x${i.quantity}`).join('、')}
           </p>
           <p className="text-[10px] text-slate-300 mt-0.5">
             {new Date(order.createdAt).toLocaleString('zh-CN')} · ¥{order.totalPrice}
@@ -51,7 +51,7 @@ export default function OrderCard({ order, expanded, onToggle, onStatusChange }:
           <p className="text-xs text-slate-400">订单号: {order.id}</p>
           {order.items.map((item, i: number) => (
             <div key={i} className="flex justify-between text-sm">
-              <span>{item.name} x{item.quantity}</span>
+              <span>{item.name}{item.variantName ? ` · ${item.variantName}` : ''} x{item.quantity}</span>
               <span className="font-bold">¥{(getItemUnitPrice(item) * item.quantity).toFixed(2)}</span>
             </div>
           ))}
