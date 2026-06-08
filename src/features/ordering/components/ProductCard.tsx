@@ -60,7 +60,7 @@ export default function ProductCard({ product, onAdd, cart, isPopular }: Product
           ) : null}
         </div>
       </div>
-      <div className="flex flex-col gap-1.5 sm:gap-2">
+      <div className="flex flex-col gap-1.5 sm:gap-2 flex-1">
         <div className="flex justify-between items-start gap-1">
           <div className="min-w-0">
             <h3 className="font-bold text-xs sm:text-lg leading-tight group-hover:text-orange-600 transition-colors line-clamp-2">{product.name}</h3>

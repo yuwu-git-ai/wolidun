@@ -40,12 +40,13 @@ export default function ComboCard({ combo, cart, onAddCombo }: ComboCardProps) {
         <span className="text-[9px] sm:text-[10px] font-black text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full">套餐</span>
       </div>
 
-      <h3 className="font-bold text-xs sm:text-lg leading-tight group-hover:text-amber-600 transition-colors">
-        {combo.name}
-      </h3>
+      <div className="flex flex-col gap-2 sm:gap-4 flex-1">
+        <h3 className="font-bold text-xs sm:text-lg leading-tight group-hover:text-amber-600 transition-colors">
+          {combo.name}
+        </h3>
 
-      {/* Sub-items */}
-      <div className="flex flex-col gap-2">
+        {/* Sub-items */}
+        <div className="flex flex-col gap-2">
         {combo.items.map(ci => (
           <div key={ci.productId} className="flex flex-col gap-1">
             <div className="flex items-center gap-2 p-2 bg-slate-50 rounded-xl">
@@ -91,6 +92,7 @@ export default function ComboCard({ combo, cart, onAddCombo }: ComboCardProps) {
         <span className="text-slate-400 line-through text-[10px] sm:text-xs">¥{combo.originalPrice.toFixed(1)}</span>
         <span className="font-bold text-amber-600 text-base sm:text-xl">¥{combo.comboPrice.toFixed(1)}</span>
         <span className="text-[9px] sm:text-[10px] text-green-600 font-bold">省 ¥{combo.discount.toFixed(1)}</span>
+      </div>
       </div>
 
       <button
