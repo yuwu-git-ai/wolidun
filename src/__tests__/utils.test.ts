@@ -27,19 +27,19 @@ describe('getErrorMessage', () => {
 
 describe('getCartKey', () => {
   it('returns id-only key for plain items', () => {
-    expect(getCartKey({ id: 'p1' })).toBe('p1--');
+    expect(getCartKey({ id: 'p1' })).toBe('p1---');
   });
 
   it('appends b suffix when brewing selected', () => {
-    expect(getCartKey({ id: 'p2', isBrewingSelected: true })).toBe('p2-b-');
+    expect(getCartKey({ id: 'p2', isBrewingSelected: true })).toBe('p2--b-');
   });
 
   it('appends f suffix when freezing selected', () => {
-    expect(getCartKey({ id: 'p3', isFreezingSelected: true })).toBe('p3--f');
+    expect(getCartKey({ id: 'p3', isFreezingSelected: true })).toBe('p3---f');
   });
 
   it('appends both suffixes when both selected', () => {
-    expect(getCartKey({ id: 'p4', isBrewingSelected: true, isFreezingSelected: true })).toBe('p4-b-f');
+    expect(getCartKey({ id: 'p4', isBrewingSelected: true, isFreezingSelected: true })).toBe('p4--b-f');
   });
 });
 
