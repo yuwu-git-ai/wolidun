@@ -186,7 +186,17 @@ export function customerReducer(state: CustomerRawState, action: CustomerAction)
 
     case 'ADD_COMBO_TO_CART': {
       const { combo, brewingIds, freezingIds } = action.payload;
-      const existingIdx = state.cart.findIndex(item => item.comboId === combo.id);
+      const tempComboItems = combo.items.map(ci => ({
+        productId: ci.productId,
+        variantId: ci.variantId || null,
+        productName: ci.productName,
+        productPrice: ci.productPrice,
+        image: ci.image,
+        selectedBrewing: brewingIds.has(ci.productId),
+        selectedFreezing: freezingIds.has(ci.productId),
+      }));
+      const lookupKey = getCartKey({ id: combo.id, comboId: combo.id, comboItems: tempComboItems });
+      const existingIdx = state.cart.findIndex(item => getCartKey(item) === lookupKey);
       let newCart: CartItem[];
       if (existingIdx >= 0) {
         newCart = state.cart.map((item, idx) =>
@@ -202,15 +212,7 @@ export function customerReducer(state: CustomerRawState, action: CustomerAction)
           stock: 999,
           quantity: 1,
           comboId: combo.id,
-          comboItems: combo.items.map(ci => ({
-            productId: ci.productId,
-            variantId: ci.variantId || null,
-            productName: ci.productName,
-            productPrice: ci.productPrice,
-            image: ci.image,
-            selectedBrewing: brewingIds.has(ci.productId),
-            selectedFreezing: freezingIds.has(ci.productId),
-          })),
+          comboItems: tempComboItems,
           comboDiscount: combo.discount,
         };
         newCart = [...state.cart, comboItem];

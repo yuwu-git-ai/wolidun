@@ -19,7 +19,13 @@ export const STATUS_COLORS: Record<string, string> = {
 
 // ── Cart helpers ──
 
-export function getCartKey(item: { id: string; variantId?: string; isBrewingSelected?: boolean; isFreezingSelected?: boolean; comboId?: string }): string {
+export function getCartKey(item: { id: string; variantId?: string; isBrewingSelected?: boolean; isFreezingSelected?: boolean; comboId?: string; comboItems?: { productId: string; selectedBrewing?: boolean; selectedFreezing?: boolean }[] }): string {
+  if (item.comboId && item.comboItems) {
+    // Encode per-sub-item brewing/freezing so different selections create different cart entries
+    const brew = item.comboItems.filter(ci => ci.selectedBrewing).map(ci => ci.productId).join(',');
+    const freez = item.comboItems.filter(ci => ci.selectedFreezing).map(ci => ci.productId).join(',');
+    return `c${item.comboId}-b:${brew}-f:${freez}`;
+  }
   return `${item.comboId ? 'c' + item.comboId : item.id}-${item.variantId || ''}-${item.isBrewingSelected ? 'b' : ''}-${item.isFreezingSelected ? 'f' : ''}`;
 }
 
