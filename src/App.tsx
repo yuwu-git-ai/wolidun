@@ -349,6 +349,28 @@ function CustomerApp() {
               <h3 className="font-black text-xl mb-4">确认订单</h3>
               <div className="space-y-3">
                 {state.sortedCart.map((item, i) => {
+                  if (item.comboId) {
+                    return (
+                      <div key={i} className="text-sm">
+                        <div className="flex justify-between font-bold">
+                          <span className="truncate">🍱 {item.name} x{item.quantity}</span>
+                          <span className="ml-2 text-amber-600">¥{(item.price * item.quantity).toFixed(2)}</span>
+                        </div>
+                        {(item.comboItems || []).map(ci => (
+                          <div key={ci.productId} className="flex justify-between text-[11px] text-slate-400 ml-4">
+                            <span>└ {ci.productName}</span>
+                            <span>¥{((ci.productPrice || 0) * item.quantity).toFixed(2)}</span>
+                          </div>
+                        ))}
+                        {item.comboDiscount && item.comboDiscount > 0 && (
+                          <div className="flex justify-between text-[11px] text-green-600 font-bold ml-4">
+                            <span>套餐优惠</span>
+                            <span>-¥{((item.comboDiscount || 0) * item.quantity).toFixed(2)}</span>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  }
                   const up = getItemUnitPrice(item);
                   return (
                     <div key={i} className="flex justify-between text-sm">

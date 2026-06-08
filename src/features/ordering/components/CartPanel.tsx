@@ -48,23 +48,52 @@ export default function CartPanel({ cart, products, identity, isDelivery, setIsD
             cart.map(item => (
               <motion.div key={getCartKey(item)}
                 initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }}
-                className="flex items-center gap-3 p-3 bg-slate-50 rounded-2xl border border-slate-100">
-                <div className="w-14 h-14 bg-white rounded-xl overflow-hidden shrink-0 shadow-sm border border-slate-200">
-                  <img src={item.image} referrerPolicy="no-referrer" alt="" className="w-full h-full object-cover" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex justify-between font-bold text-sm mb-1">
-                    <span className="truncate">{item.name}{item.variantName ? ` · ${item.variantName}` : ''}</span>
-                    <span className="ml-2">¥{(getItemUnitPrice(item) * item.quantity).toFixed(2)}</span>
+                className={`flex items-center gap-3 p-3 rounded-2xl border ${item.comboId ? 'bg-amber-50 border-amber-200' : 'bg-slate-50 border-slate-100'}`}>
+                {item.comboId ? (
+                  <div className="w-14 h-14 bg-amber-100 rounded-xl overflow-hidden shrink-0 shadow-sm border border-amber-200 flex items-center justify-center">
+                    <span className="text-2xl">🍱</span>
                   </div>
-                  {item.variantName && (
-                    <div className="text-[10px] text-slate-400 mb-1">{item.variantName}</div>
-                  )}
-                  {(item.isBrewingSelected || item.isFreezingSelected) && (
-                    <div className="flex gap-2 mb-1">
-                      {item.isBrewingSelected && <span className="text-[8px] bg-orange-100 text-orange-600 px-1 py-0.5 rounded font-black">帮泡+¥1</span>}
-                      {item.isFreezingSelected && <span className="text-[8px] bg-indigo-100 text-indigo-600 px-1 py-0.5 rounded font-black">冰镇+¥0.5</span>}
-                    </div>
+                ) : (
+                  <div className="w-14 h-14 bg-white rounded-xl overflow-hidden shrink-0 shadow-sm border border-slate-200">
+                    <img src={item.image} referrerPolicy="no-referrer" alt="" className="w-full h-full object-cover" />
+                  </div>
+                )}
+                <div className="flex-1 min-w-0">
+                  {item.comboId ? (
+                    <>
+                      <div className="flex justify-between font-bold text-sm mb-1">
+                        <span className="truncate">{item.name}</span>
+                        <span className="ml-2 text-amber-600">¥{(item.price * item.quantity).toFixed(2)}</span>
+                      </div>
+                      {(item.comboItems || []).map(ci => (
+                        <div key={ci.productId} className="text-[9px] text-slate-400 flex justify-between">
+                          <span>  └ {ci.productName}</span>
+                          <span>¥{((ci.productPrice || 0) * item.quantity).toFixed(2)}</span>
+                        </div>
+                      ))}
+                      {item.comboDiscount && item.comboDiscount > 0 && (
+                        <div className="text-[9px] text-green-600 font-bold flex justify-between">
+                          <span>  套餐优惠</span>
+                          <span>-¥{((item.comboDiscount || 0) * item.quantity).toFixed(2)}</span>
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    <>
+                      <div className="flex justify-between font-bold text-sm mb-1">
+                        <span className="truncate">{item.name}{item.variantName ? ` · ${item.variantName}` : ''}</span>
+                        <span className="ml-2">¥{(getItemUnitPrice(item) * item.quantity).toFixed(2)}</span>
+                      </div>
+                      {item.variantName && (
+                        <div className="text-[10px] text-slate-400 mb-1">{item.variantName}</div>
+                      )}
+                      {(item.isBrewingSelected || item.isFreezingSelected) && (
+                        <div className="flex gap-2 mb-1">
+                          {item.isBrewingSelected && <span className="text-[8px] bg-orange-100 text-orange-600 px-1 py-0.5 rounded font-black">帮泡+¥1</span>}
+                          {item.isFreezingSelected && <span className="text-[8px] bg-indigo-100 text-indigo-600 px-1 py-0.5 rounded font-black">冰镇+¥0.5</span>}
+                        </div>
+                      )}
+                    </>
                   )}
                   <input
                     value={item.note || ''}
@@ -80,6 +109,7 @@ export default function CartPanel({ cart, products, identity, isDelivery, setIsD
                         <Minus size={12} />
                       </button>
                       <button onClick={() => {
+                        if (item.comboId) { onAdd(item); return; }
                         const p = products.find(p => p.id === item.id);
                         const totalInCart = cart.filter(c => c.id === item.id && c.variantId === item.variantId).reduce((s, i) => s + i.quantity, 0);
                         const maxStock = item.variantId && p?.variants
@@ -88,7 +118,7 @@ export default function CartPanel({ cart, products, identity, isDelivery, setIsD
                         if (maxStock > totalInCart) onAdd(item);
                       }}
                         className="w-7 h-7 bg-slate-800 text-white hover:bg-slate-700 rounded-lg flex items-center justify-center transition-colors disabled:bg-slate-200 disabled:text-slate-400"
-                        disabled={(() => {
+                        disabled={item.comboId ? false : (() => {
                           const p = products.find(p => p.id === item.id);
                           const totalInCart = cart.filter(c => c.id === item.id && c.variantId === item.variantId).reduce((s, i) => s + i.quantity, 0);
                           const maxStock = item.variantId && p?.variants
