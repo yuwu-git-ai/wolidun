@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { DEFAULT_CATEGORIES } from './shared/constants';
 import ProductCard from './features/ordering/components/ProductCard';
+import ComboCard from './features/ordering/components/ComboCard';
 import IdentityForm from './features/ordering/components/IdentityForm';
 import ProfileForm from './features/ordering/components/ProfileForm';
 import OrderHistory from './features/ordering/components/OrderHistory';
@@ -244,6 +245,12 @@ function CustomerApp() {
 
             <div className="grid grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-6 lg:pb-0">
               <AnimatePresence mode="popLayout">
+                {/* Combo cards */}
+                {!state.searchQuery && state.combos.map(combo => (
+                  <motion.div layout key={`combo-${combo.id}`} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                    <ComboCard combo={combo} cart={state.cart} onAddCombo={actions.addComboToCart} />
+                  </motion.div>
+                ))}
                 {state.filteredProducts.map(product => (
                   <motion.div layout key={product.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
                     <ProductCard product={product} onAdd={actions.addToCart} cart={state.cart} isPopular={state.popularIds.has(product.id)} />
