@@ -37,6 +37,45 @@ router.post('/orders', (req: Request, res: Response) => {
     let itemsTotal = 0;
 
     for (const item of items) {
+      // ── Combo handling ──
+      if (item.comboId) {
+        const combo = db.prepare('SELECT * FROM combos WHERE id = ?').get(item.comboId) as any;
+        if (!combo) {
+          throw new Error(`套餐 "${item.name}" 已下架`);
+        }
+        const comboItems: { productId: string; variantId?: string | null }[] =
+          typeof combo.items === 'string' ? JSON.parse(combo.items) : combo.items;
+        const comboDiscount: number = combo.discount;
+
+        let comboSubtotal = 0;
+        for (const ci of comboItems) {
+          const cp = db.prepare('SELECT * FROM products WHERE id = ?').get(ci.productId) as any;
+          if (!cp) {
+            throw new Error('套餐中的商品已下架');
+          }
+          let unitPrice = cp.price;
+          if (item.isBrewingSelected) unitPrice += 1;
+          if (item.isFreezingSelected) unitPrice += 0.5;
+
+          if (ci.variantId) {
+            const v = db.prepare('SELECT * FROM product_variants WHERE id = ? AND product_id = ?').get(ci.variantId, ci.productId) as any;
+            if (v) {
+              if (v.price != null) unitPrice = v.price;
+              const newStock = v.stock - item.quantity;
+              if (newStock < 0) throw new Error(`商品 "${cp.name}（${v.name}）" 库存不足`);
+              db.prepare('UPDATE product_variants SET stock = ? WHERE id = ?').run(newStock, ci.variantId);
+            }
+          } else {
+            const newStock = cp.stock - item.quantity;
+            if (newStock < 0) throw new Error(`商品 "${cp.name}" 库存不足`);
+            db.prepare('UPDATE products SET stock = ? WHERE id = ?').run(newStock, cp.id);
+          }
+          comboSubtotal += unitPrice;
+        }
+        itemsTotal += (comboSubtotal - comboDiscount) * item.quantity;
+        continue;
+      }
+
       const product = db.prepare('SELECT * FROM products WHERE id = ?').get(item.id) as any;
       if (!product) {
         throw new Error(`商品 "${item.name}" 已下架`);
@@ -136,7 +175,20 @@ router.put('/orders/:id', requireAdmin, (req: Request, res: Response) => {
     const items = JSON.parse(existing.items);
     const restoreTx = db.transaction(() => {
       for (const item of items) {
-        if (item.variantId) {
+        if (item.comboId) {
+          const combo = db.prepare('SELECT * FROM combos WHERE id = ?').get(item.comboId) as any;
+          if (combo) {
+            const comboItems: { productId: string; variantId?: string | null }[] =
+              typeof combo.items === 'string' ? JSON.parse(combo.items) : combo.items;
+            for (const ci of comboItems) {
+              if (ci.variantId) {
+                db.prepare('UPDATE product_variants SET stock = stock + ? WHERE id = ?').run(item.quantity, ci.variantId);
+              } else {
+                db.prepare('UPDATE products SET stock = stock + ? WHERE id = ?').run(item.quantity, ci.productId);
+              }
+            }
+          }
+        } else if (item.variantId) {
           db.prepare('UPDATE product_variants SET stock = stock + ? WHERE id = ?').run(item.quantity, item.variantId);
         } else {
           db.prepare('UPDATE products SET stock = stock + ? WHERE id = ?').run(item.quantity, item.id);

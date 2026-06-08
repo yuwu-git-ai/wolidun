@@ -5,6 +5,7 @@ import orderRoutes from './routes/orders';
 import statsRoutes from './routes/stats';
 import authRoutes from './routes/auth';
 import postRoutes from './routes/posts';
+import comboRoutes from './routes/combos';
 import { rateLimit } from './middleware/rateLimit';
 
 export function createApp() {
@@ -28,6 +29,7 @@ export function createApp() {
   app.use('/api', statsRoutes);
   app.use('/api', authRoutes);
   app.use('/api', postRoutes);
+  app.use('/api', comboRoutes);
 
   // Health check
   app.get('/api/health', (_req, res) => {
