@@ -1,4 +1,4 @@
-import { CartItem } from './types';
+import { CartItem, Combo } from './types';
 import { getIdentity } from './api';
 
 // ── Status helpers ──
@@ -19,8 +19,8 @@ export const STATUS_COLORS: Record<string, string> = {
 
 // ── Cart helpers ──
 
-export function getCartKey(item: { id: string; variantId?: string; isBrewingSelected?: boolean; isFreezingSelected?: boolean }): string {
-  return `${item.id}-${item.variantId || ''}-${item.isBrewingSelected ? 'b' : ''}-${item.isFreezingSelected ? 'f' : ''}`;
+export function getCartKey(item: { id: string; variantId?: string; isBrewingSelected?: boolean; isFreezingSelected?: boolean; comboId?: string }): string {
+  return `${item.comboId ? 'c' + item.comboId : item.id}-${item.variantId || ''}-${item.isBrewingSelected ? 'b' : ''}-${item.isFreezingSelected ? 'f' : ''}`;
 }
 
 export function getItemUnitPrice(item: { price: number; variants?: { id?: string; price?: number }[]; variantId?: string; isBrewingSelected?: boolean; isFreezingSelected?: boolean }): number {
@@ -54,6 +54,106 @@ export function saveCartToStorage(items: CartItem[]) {
       localStorage.removeItem(getCartStorageKey());
     }
   } catch { /* localStorage write failed */ }
+}
+
+// ── Combo detection ──
+
+/**
+ * Given a cart and available combos, merge matching individual items into combo entries.
+ * Returns a new cart array. Does not mutate input.
+ */
+export function detectCombos(cart: CartItem[], combos: Combo[]): CartItem[] {
+  if (!combos || combos.length === 0) return cart;
+
+  let result = cart.map(item => ({ ...item }));
+  let changed = true;
+  const maxIter = 50;
+  let iter = 0;
+
+  while (changed && iter < maxIter) {
+    changed = false;
+    iter++;
+
+    for (const combo of combos) {
+      interface Match {
+        comboItem: { productId: string; variantId?: string | null };
+        cartItems: { idx: number; item: CartItem; qty: number }[];
+      }
+      const matches: Match[] = [];
+
+      let allMatched = true;
+      for (const ci of combo.items) {
+        const matching = result
+          .map((item, idx) => ({ idx, item }))
+          .filter(({ item }) =>
+            !item.comboId &&
+            item.id === ci.productId &&
+            (ci.variantId == null || item.variantId === ci.variantId)
+          );
+
+        if (matching.length === 0) {
+          allMatched = false;
+          break;
+        }
+        matches.push({
+          comboItem: ci,
+          cartItems: matching.map(m => ({ idx: m.idx, item: m.item, qty: m.item.quantity })),
+        });
+      }
+
+      if (!allMatched || matches.length !== combo.items.length) continue;
+
+      const matchGroupQtys = matches.map(m =>
+        m.cartItems.reduce((sum, mi) => sum + mi.qty, 0)
+      );
+      let n = Math.min(...matchGroupQtys);
+      if (n <= 0) continue;
+
+      for (const match of matches) {
+        let remaining = n;
+        for (const mi of match.cartItems) {
+          if (remaining <= 0) break;
+          const ded = Math.min(remaining, mi.qty);
+          result[mi.idx] = { ...result[mi.idx], quantity: result[mi.idx].quantity - ded };
+          remaining -= ded;
+        }
+      }
+
+      result = result.filter(item => item.quantity > 0);
+
+      const existingComboIdx = result.findIndex(item => item.comboId === combo.id);
+      if (existingComboIdx >= 0) {
+        result[existingComboIdx] = { ...result[existingComboIdx], quantity: result[existingComboIdx].quantity + n };
+      } else {
+        const firstMatchedItem = matches[0].cartItems[0].item;
+        result.push({
+          ...firstMatchedItem,
+          id: combo.id,
+          name: combo.name,
+          price: combo.comboPrice,
+          quantity: n,
+          comboId: combo.id,
+          comboItems: combo.items.map(ci => ({
+            productId: ci.productId,
+            variantId: ci.variantId || null,
+            productName: undefined,
+            productPrice: undefined,
+            image: undefined,
+          })),
+          comboDiscount: combo.discount,
+          isBrewingSelected: false,
+          isFreezingSelected: false,
+          variantId: undefined,
+          variantName: undefined,
+        } as CartItem);
+      }
+
+      changed = true;
+      break;
+    }
+  }
+
+  return result;
 }
 
 // ── Error helper ──

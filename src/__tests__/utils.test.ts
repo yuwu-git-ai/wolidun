@@ -1,8 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import {
   getErrorMessage, getCartKey, getItemUnitPrice,
-  STATUS_LABELS, STATUS_COLORS,
+  STATUS_LABELS, STATUS_COLORS, detectCombos,
 } from '../shared/utils';
+import type { CartItem, Combo } from '../shared/types';
 
 // ── getErrorMessage ──
 
@@ -81,5 +82,67 @@ describe('STATUS_COLORS', () => {
     expect(STATUS_COLORS.preparing).toContain('blue');
     expect(STATUS_COLORS.delivered).toContain('green');
     expect(STATUS_COLORS.cancelled).toContain('slate');
+  });
+});
+
+// ── detectCombos ──
+
+function makeItem(overrides: Partial<CartItem> = {}): CartItem {
+  return {
+    id: 'p1', name: 'test', price: 10, category: '1', description: '', stock: 999,
+    quantity: 1, ...overrides,
+  };
+}
+
+describe('detectCombos', () => {
+  const combos: Combo[] = [
+    {
+      id: 'c1', name: '泡面+玉米肠套餐', discount: 0.5, originalPrice: 9, comboPrice: 8.5,
+      items: [
+        { productId: 'p3', variantId: null },
+        { productId: 'p99', variantId: null },
+      ],
+    },
+  ];
+
+  it('merges matching items into combo', () => {
+    const cart: CartItem[] = [
+      makeItem({ id: 'p3', name: '泡面', price: 6 }),
+      makeItem({ id: 'p99', name: '玉米肠', price: 3 }),
+    ];
+    const result = detectCombos(cart, combos);
+    expect(result).toHaveLength(1);
+    expect(result[0].comboId).toBe('c1');
+    expect(result[0].name).toBe('泡面+玉米肠套餐');
+    expect(result[0].quantity).toBe(1);
+  });
+
+  it('handles extra quantity correctly', () => {
+    const cart: CartItem[] = [
+      makeItem({ id: 'p3', name: '泡面', price: 6, quantity: 2 }),
+      makeItem({ id: 'p99', name: '玉米肠', price: 3 }),
+    ];
+    const result = detectCombos(cart, combos);
+    expect(result).toHaveLength(2);
+    const combo = result.find(i => i.comboId === 'c1');
+    const extra = result.find(i => i.id === 'p3');
+    expect(combo?.quantity).toBe(1);
+    expect(extra?.quantity).toBe(1);
+  });
+
+  it('does nothing when no combo matches', () => {
+    const cart: CartItem[] = [
+      makeItem({ id: 'p3', name: '泡面', price: 6 }),
+      makeItem({ id: 'pxxx', name: '其他', price: 5 }),
+    ];
+    const result = detectCombos(cart, combos);
+    expect(result).toHaveLength(2);
+    expect(result.every(i => !i.comboId)).toBe(true);
+  });
+
+  it('does nothing when combos list is empty', () => {
+    const cart: CartItem[] = [makeItem({ id: 'p3', name: '泡面' })];
+    const result = detectCombos(cart, []);
+    expect(result).toEqual(cart);
   });
 });
