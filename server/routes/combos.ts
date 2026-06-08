@@ -16,7 +16,7 @@ function serializeCombo(c: any) {
   let originalPrice = 0;
 
   const enrichedItems = items.map((ci: ComboItemInput) => {
-    const p = db.prepare('SELECT id, name, price, image FROM products WHERE id = ?').get(ci.productId) as any;
+    const p = db.prepare('SELECT id, name, price, image, allow_brewing, allow_freezing FROM products WHERE id = ?').get(ci.productId) as any;
     if (p) {
       let price = p.price;
       if (ci.variantId) {
@@ -30,6 +30,8 @@ function serializeCombo(c: any) {
         productName: p.name,
         productPrice: price,
         image: p.image || '',
+        allowBrewing: p.allow_brewing === 1,
+        allowFreezing: p.allow_freezing === 1,
       };
     }
     return { productId: ci.productId, variantId: ci.variantId || null, productName: '', productPrice: 0, image: '' };

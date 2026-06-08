@@ -63,7 +63,7 @@ export type CustomerAction =
   | { type: 'SET_IS_MOBILE_CART_OPEN'; payload: boolean }
   | { type: 'SET_POPULAR_IDS'; payload: Set<string> }
   | { type: 'SET_COMBOS'; payload: Combo[] }
-  | { type: 'ADD_COMBO_TO_CART'; payload: { combo: Combo; selections: { productId: string; variantId?: string }[] } };
+  | { type: 'ADD_COMBO_TO_CART'; payload: { combo: Combo; brewingIds: Set<string>; freezingIds: Set<string> } };
 
 // ── Reducer ──
 
@@ -185,7 +185,7 @@ export function customerReducer(state: CustomerRawState, action: CustomerAction)
       return { ...state, combos: action.payload };
 
     case 'ADD_COMBO_TO_CART': {
-      const { combo } = action.payload;
+      const { combo, brewingIds, freezingIds } = action.payload;
       const existingIdx = state.cart.findIndex(item => item.comboId === combo.id);
       let newCart: CartItem[];
       if (existingIdx >= 0) {
@@ -208,6 +208,8 @@ export function customerReducer(state: CustomerRawState, action: CustomerAction)
             productName: ci.productName,
             productPrice: ci.productPrice,
             image: ci.image,
+            selectedBrewing: brewingIds.has(ci.productId),
+            selectedFreezing: freezingIds.has(ci.productId),
           })),
           comboDiscount: combo.discount,
         };

@@ -358,7 +358,11 @@ function CustomerApp() {
                         </div>
                         {(item.comboItems || []).map(ci => (
                           <div key={ci.productId} className="flex justify-between text-[11px] text-slate-400 ml-4">
-                            <span>└ {ci.productName}</span>
+                            <span>
+                              └ {ci.productName}
+                              {ci.selectedBrewing && <span className="text-[9px] text-orange-600 font-bold ml-1">+帮泡¥1</span>}
+                              {ci.selectedFreezing && <span className="text-[9px] text-indigo-600 font-bold ml-1">+冰镇¥0.5</span>}
+                            </span>
                             <span>¥{((ci.productPrice || 0) * item.quantity).toFixed(2)}</span>
                           </div>
                         ))}

@@ -42,7 +42,7 @@ export interface CustomerAppActions {
   setIsMobileCartOpen: (v: boolean) => void;
   copyToClipboard: (text: string) => boolean;
   confirmAndCopy: () => Promise<void>;
-  addComboToCart: (combo: Combo, selections: { productId: string; variantId?: string }[]) => void;
+  addComboToCart: (combo: Combo, brewingIds: Set<string>, freezingIds: Set<string>) => void;
   handleSaveIdentity: (nickname: string, dorm: string) => void;
   handleUpdateProfile: (nickname: string, dorm: string) => void;
   handleLogout: () => void;
@@ -118,8 +118,8 @@ export function useCustomerApp(): { state: CustomerAppState; actions: CustomerAp
       if (item.comboId) {
         const subTotal = (item.comboItems || []).reduce((s, ci) => {
           let sp = ci.productPrice || 0;
-          if (item.isBrewingSelected) sp += 1;
-          if (item.isFreezingSelected) sp += 0.5;
+          if (ci.selectedBrewing) sp += 1;
+          if (ci.selectedFreezing) sp += 0.5;
           return s + sp;
         }, 0);
         return sum + (subTotal - (item.comboDiscount || 0)) * item.quantity;
@@ -197,8 +197,8 @@ export function useCustomerApp(): { state: CustomerAppState; actions: CustomerAp
 
   const setIsMobileCartOpen = (v: boolean) => dispatch({ type: 'SET_IS_MOBILE_CART_OPEN', payload: v });
 
-  const addComboToCart = (combo: Combo, selections: { productId: string; variantId?: string }[]) =>
-    dispatch({ type: 'ADD_COMBO_TO_CART', payload: { combo, selections } });
+  const addComboToCart = (combo: Combo, brewingIds: Set<string>, freezingIds: Set<string>) =>
+    dispatch({ type: 'ADD_COMBO_TO_CART', payload: { combo, brewingIds, freezingIds } });
 
   // Robust clipboard copy — works in WeChat browser, HTTP, and HTTPS
   const copyToClipboard = (text: string): boolean => {

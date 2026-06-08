@@ -5,23 +5,36 @@ import { Combo, CartItem } from '../../../shared/types';
 interface ComboCardProps {
   combo: Combo;
   cart: CartItem[];
-  onAddCombo: (combo: Combo, selections: { productId: string; variantId?: string }[]) => void;
+  onAddCombo: (combo: Combo, brewingIds: Set<string>, freezingIds: Set<string>) => void;
 }
 
 export default function ComboCard({ combo, cart, onAddCombo }: ComboCardProps) {
-  const [, setSelections] = useState<{ productId: string; variantId?: string }[]>([]);
+  const [brewingIds, setBrewingIds] = useState<Set<string>>(new Set());
+  const [freezingIds, setFreezingIds] = useState<Set<string>>(new Set());
 
   useEffect(() => {
-    setSelections([]);
+    setBrewingIds(new Set());
+    setFreezingIds(new Set());
   }, [combo.id]);
 
-  const comboQtyInCart = cart
-    .filter(c => c.comboId === combo.id)
-    .reduce((s, i) => s + i.quantity, 0);
+  const toggleBrewing = (productId: string) => {
+    setBrewingIds(prev => {
+      const next = new Set(prev);
+      if (next.has(productId)) next.delete(productId); else next.add(productId);
+      return next;
+    });
+  };
+
+  const toggleFreezing = (productId: string) => {
+    setFreezingIds(prev => {
+      const next = new Set(prev);
+      if (next.has(productId)) next.delete(productId); else next.add(productId);
+      return next;
+    });
+  };
 
   return (
     <div className="bg-white p-2.5 sm:p-4 rounded-[16px] sm:rounded-[32px] shadow-sm border border-amber-200 flex flex-col gap-2 sm:gap-4 group hover:shadow-md transition-all duration-300 ring-1 ring-amber-100">
-      {/* Header */}
       <div className="flex items-center gap-2">
         <span className="text-sm">🍱</span>
         <span className="text-[9px] sm:text-[10px] font-black text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full">套餐</span>
@@ -34,18 +47,41 @@ export default function ComboCard({ combo, cart, onAddCombo }: ComboCardProps) {
       {/* Sub-items */}
       <div className="flex flex-col gap-2">
         {combo.items.map(ci => (
-          <div key={ci.productId} className="flex items-center gap-2 p-2 bg-slate-50 rounded-xl">
-            <div className="w-10 h-10 bg-white rounded-lg overflow-hidden shrink-0 border border-slate-200">
-              {ci.image ? (
-                <img src={ci.image} alt="" referrerPolicy="no-referrer" className="w-full h-full object-cover" />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center text-lg">📦</div>
-              )}
+          <div key={ci.productId} className="flex flex-col gap-1">
+            <div className="flex items-center gap-2 p-2 bg-slate-50 rounded-xl">
+              <div className="w-10 h-10 bg-white rounded-lg overflow-hidden shrink-0 border border-slate-200">
+                {ci.image ? (
+                  <img src={ci.image} alt="" referrerPolicy="no-referrer" className="w-full h-full object-cover" />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-lg">📦</div>
+                )}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-[10px] sm:text-xs font-bold truncate">{ci.productName}</p>
+              </div>
+              <span className="text-[10px] sm:text-xs text-slate-400">¥{ci.productPrice}</span>
             </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-[10px] sm:text-xs font-bold truncate">{ci.productName}</p>
-            </div>
-            <span className="text-[10px] sm:text-xs text-slate-400">¥{ci.productPrice}</span>
+            {/* Brewing / Freezing options per sub-item */}
+            {(ci.allowBrewing || ci.allowFreezing) && (
+              <div className="flex gap-3 px-1">
+                {ci.allowBrewing && (
+                  <label className="flex items-center gap-1 cursor-pointer">
+                    <input type="checkbox" checked={brewingIds.has(ci.productId)}
+                      onChange={() => toggleBrewing(ci.productId)}
+                      className="w-3 h-3 rounded border-slate-300 text-orange-500" />
+                    <span className="text-[9px] font-bold text-slate-500">帮泡 +¥1</span>
+                  </label>
+                )}
+                {ci.allowFreezing && (
+                  <label className="flex items-center gap-1 cursor-pointer">
+                    <input type="checkbox" checked={freezingIds.has(ci.productId)}
+                      onChange={() => toggleFreezing(ci.productId)}
+                      className="w-3 h-3 rounded border-slate-300 text-indigo-500" />
+                    <span className="text-[9px] font-bold text-slate-500">冰镇 +¥0.5</span>
+                  </label>
+                )}
+              </div>
+            )}
           </div>
         ))}
       </div>
@@ -58,8 +94,8 @@ export default function ComboCard({ combo, cart, onAddCombo }: ComboCardProps) {
       </div>
 
       <button
-        onClick={() => onAddCombo(combo, [])}
-        className="w-full min-h-10 bg-amber-500 text-white py-2.5 sm:py-3 rounded-xl sm:rounded-2xl font-bold text-[11px] sm:text-base hover:bg-amber-600 transition-all shadow-lg shadow-amber-500/20 active:scale-[0.98] flex items-center justify-center gap-1 sm:gap-2 disabled:bg-slate-200 disabled:shadow-none disabled:text-slate-400"
+        onClick={() => onAddCombo(combo, brewingIds, freezingIds)}
+        className="w-full min-h-10 bg-amber-500 text-white py-2.5 sm:py-3 rounded-xl sm:rounded-2xl font-bold text-[11px] sm:text-base hover:bg-amber-600 transition-all shadow-lg shadow-amber-500/20 active:scale-[0.98] flex items-center justify-center gap-1 sm:gap-2"
       >
         <Plus size={16} /> 加入购物车
       </button>

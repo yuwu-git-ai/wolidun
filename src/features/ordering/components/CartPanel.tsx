@@ -66,8 +66,12 @@ export default function CartPanel({ cart, products, identity, isDelivery, setIsD
                         <span className="ml-2 text-amber-600">¥{(item.price * item.quantity).toFixed(2)}</span>
                       </div>
                       {(item.comboItems || []).map(ci => (
-                        <div key={ci.productId} className="text-[9px] text-slate-400 flex justify-between">
-                          <span>  └ {ci.productName}</span>
+                        <div key={ci.productId} className="text-[9px] text-slate-400 flex justify-between items-center">
+                          <span className="flex items-center gap-1">
+                            └ {ci.productName}
+                            {ci.selectedBrewing && <span className="text-[7px] bg-orange-100 text-orange-600 px-1 py-0.5 rounded font-black">帮泡+¥1</span>}
+                            {ci.selectedFreezing && <span className="text-[7px] bg-indigo-100 text-indigo-600 px-1 py-0.5 rounded font-black">冰镇+¥0.5</span>}
+                          </span>
                           <span>¥{((ci.productPrice || 0) * item.quantity).toFixed(2)}</span>
                         </div>
                       ))}

@@ -36,6 +36,10 @@ export interface ComboItem {
   productName?: string;
   productPrice?: number;
   image?: string;
+  allowBrewing?: boolean;
+  allowFreezing?: boolean;
+  selectedBrewing?: boolean;
+  selectedFreezing?: boolean;
 }
 
 export interface Combo {

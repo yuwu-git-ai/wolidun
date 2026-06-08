@@ -43,19 +43,18 @@ router.post('/orders', (req: Request, res: Response) => {
         if (!combo) {
           throw new Error(`套餐 "${item.name}" 已下架`);
         }
-        const comboItems: { productId: string; variantId?: string | null }[] =
-          typeof combo.items === 'string' ? JSON.parse(combo.items) : combo.items;
         const comboDiscount: number = combo.discount;
+        const subItems = item.comboItems || [];
 
         let comboSubtotal = 0;
-        for (const ci of comboItems) {
+        for (const ci of subItems) {
           const cp = db.prepare('SELECT * FROM products WHERE id = ?').get(ci.productId) as any;
           if (!cp) {
             throw new Error('套餐中的商品已下架');
           }
           let unitPrice = cp.price;
-          if (item.isBrewingSelected) unitPrice += 1;
-          if (item.isFreezingSelected) unitPrice += 0.5;
+          if (ci.selectedBrewing) unitPrice += 1;
+          if (ci.selectedFreezing) unitPrice += 0.5;
 
           if (ci.variantId) {
             const v = db.prepare('SELECT * FROM product_variants WHERE id = ? AND product_id = ?').get(ci.variantId, ci.productId) as any;
