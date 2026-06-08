@@ -1,5 +1,5 @@
-import { Product, CartItem } from '../../shared/types';
-import { getCartKey } from '../../shared/utils';
+import { Product, CartItem, Combo } from '../../shared/types';
+import { getCartKey, detectCombos } from '../../shared/utils';
 import type { Identity } from '../../shared/api';
 
 // ── State ──
@@ -18,6 +18,7 @@ export interface CustomerRawState {
   isMobileCartOpen: boolean;
   searchQuery: string;
   popularIds: Set<string>;
+  combos: Combo[];
 }
 
 export function createInitialState(): CustomerRawState {
@@ -35,6 +36,7 @@ export function createInitialState(): CustomerRawState {
     isMobileCartOpen: false,
     searchQuery: '',
     popularIds: new Set(),
+    combos: [],
   };
 }
 
@@ -59,7 +61,9 @@ export type CustomerAction =
   | { type: 'SET_SHOW_PROFILE_FORM'; payload: boolean }
   | { type: 'SET_IS_DELIVERY'; payload: boolean }
   | { type: 'SET_IS_MOBILE_CART_OPEN'; payload: boolean }
-  | { type: 'SET_POPULAR_IDS'; payload: Set<string> };
+  | { type: 'SET_POPULAR_IDS'; payload: Set<string> }
+  | { type: 'SET_COMBOS'; payload: Combo[] }
+  | { type: 'ADD_COMBO_TO_CART'; payload: { combo: Combo; selections: { productId: string; variantId?: string }[] } };
 
 // ── Reducer ──
 
@@ -83,17 +87,13 @@ export function customerReducer(state: CustomerRawState, action: CustomerAction)
       const variantPrice = variant?.price;
       const key = getCartKey({ id: product.id, variantId, isBrewingSelected: isBrewing, isFreezingSelected: isFreezing });
       const existingIdx = state.cart.findIndex(item => getCartKey(item) === key);
+      let newCart: CartItem[];
       if (existingIdx >= 0) {
-        return {
-          ...state,
-          cart: state.cart.map((item, idx) =>
-            idx === existingIdx ? { ...item, quantity: item.quantity + 1 } : item
-          ),
-        };
-      }
-      return {
-        ...state,
-        cart: [...state.cart, {
+        newCart = state.cart.map((item, idx) =>
+          idx === existingIdx ? { ...item, quantity: item.quantity + 1 } : item
+        );
+      } else {
+        newCart = [...state.cart, {
           ...product,
           quantity: 1,
           variantId,
@@ -101,22 +101,25 @@ export function customerReducer(state: CustomerRawState, action: CustomerAction)
           price: variantPrice != null ? variantPrice : product.price,
           isBrewingSelected: isBrewing,
           isFreezingSelected: isFreezing,
-        }],
-      };
+        }];
+      }
+      newCart = detectCombos(newCart, state.combos);
+      return { ...state, cart: newCart };
     }
 
     case 'REMOVE_FROM_CART': {
       const key = getCartKey(action.payload);
       const existingIdx = state.cart.findIndex(i => getCartKey(i) === key);
+      let newCart: CartItem[];
       if (existingIdx >= 0 && state.cart[existingIdx].quantity > 1) {
-        return {
-          ...state,
-          cart: state.cart.map((item, idx) =>
-            idx === existingIdx ? { ...item, quantity: item.quantity - 1 } : item
-          ),
-        };
+        newCart = state.cart.map((item, idx) =>
+          idx === existingIdx ? { ...item, quantity: item.quantity - 1 } : item
+        );
+      } else {
+        newCart = state.cart.filter(i => getCartKey(i) !== key);
       }
-      return { ...state, cart: state.cart.filter(i => getCartKey(i) !== key) };
+      newCart = detectCombos(newCart, state.combos);
+      return { ...state, cart: newCart };
     }
 
     case 'CLEAR_CART':
@@ -177,6 +180,42 @@ export function customerReducer(state: CustomerRawState, action: CustomerAction)
 
     case 'SET_POPULAR_IDS':
       return { ...state, popularIds: action.payload };
+
+    case 'SET_COMBOS':
+      return { ...state, combos: action.payload };
+
+    case 'ADD_COMBO_TO_CART': {
+      const { combo } = action.payload;
+      const existingIdx = state.cart.findIndex(item => item.comboId === combo.id);
+      let newCart: CartItem[];
+      if (existingIdx >= 0) {
+        newCart = state.cart.map((item, idx) =>
+          idx === existingIdx ? { ...item, quantity: item.quantity + 1 } : item
+        );
+      } else {
+        const comboItem: CartItem = {
+          id: combo.id,
+          name: combo.name,
+          price: combo.comboPrice,
+          category: '',
+          description: '',
+          stock: 999,
+          quantity: 1,
+          comboId: combo.id,
+          comboItems: combo.items.map(ci => ({
+            productId: ci.productId,
+            variantId: ci.variantId || null,
+            productName: ci.productName,
+            productPrice: ci.productPrice,
+            image: ci.image,
+          })),
+          comboDiscount: combo.discount,
+        };
+        newCart = [...state.cart, comboItem];
+      }
+      newCart = detectCombos(newCart, state.combos);
+      return { ...state, cart: newCart };
+    }
 
     default:
       return state;
