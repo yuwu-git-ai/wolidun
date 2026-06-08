@@ -40,7 +40,7 @@ export default function ProductCard({ product, onAdd, cart, isPopular }: Product
   const canAdd = hasVariants ? (!!selectedVariantId && availableStock > 0) : availableStock > 0;
 
   return (
-    <div className="bg-white p-2.5 sm:p-4 rounded-[16px] sm:rounded-[32px] shadow-sm border border-slate-100 flex flex-col gap-2 sm:gap-4 group hover:shadow-md transition-all duration-300">
+    <div className="bg-white p-2.5 sm:p-4 rounded-[16px] sm:rounded-[32px] shadow-sm border border-slate-100 flex flex-col gap-2 sm:gap-4 group hover:shadow-md transition-all duration-300 h-full">
       <div className="aspect-square sm:aspect-video bg-slate-100 rounded-xl sm:rounded-3xl overflow-hidden relative">
         {product.image ? (
           <img src={product.image} alt={product.name} referrerPolicy="no-referrer"

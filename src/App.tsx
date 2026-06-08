@@ -247,12 +247,12 @@ function CustomerApp() {
               <AnimatePresence mode="popLayout">
                 {/* Combo cards — only in 优惠套餐 category */}
                 {state.activeCategory === 'combo' && state.combos.map(combo => (
-                  <motion.div layout key={`combo-${combo.id}`} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                  <motion.div layout className="h-full" key={`combo-${combo.id}`} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
                     <ComboCard combo={combo} cart={state.cart} onAddCombo={actions.addComboToCart} />
                   </motion.div>
                 ))}
                 {state.filteredProducts.map(product => (
-                  <motion.div layout key={product.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                  <motion.div layout className="h-full" key={product.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
                     <ProductCard product={product} onAdd={actions.addToCart} cart={state.cart} isPopular={state.popularIds.has(product.id)} />
                   </motion.div>
                 ))}
