@@ -116,15 +116,15 @@ export default function ProductCard({ product, onAdd, cart, isPopular }: Product
             )}
           </div>
         )}
-
-        <button
-          onClick={() => onAdd(product, selectedVariantId, isBrewing, isFreezing)}
-          disabled={!canAdd}
-          className="w-full min-h-10 bg-orange-500 text-white py-2.5 sm:py-3 rounded-xl sm:rounded-2xl font-bold text-[11px] sm:text-base hover:bg-orange-600 transition-all shadow-lg shadow-orange-500/20 active:scale-[0.98] mt-1 sm:mt-2 flex items-center justify-center gap-1 sm:gap-2 disabled:bg-slate-200 disabled:shadow-none disabled:text-slate-400"
-        >
-          {canAdd ? <><Plus size={16} /> 加入购物车</> : hasVariants && !selectedVariantId ? '请选择规格' : '暂时缺货'}
-        </button>
       </div>
+
+      <button
+        onClick={() => onAdd(product, selectedVariantId, isBrewing, isFreezing)}
+        disabled={!canAdd}
+        className="w-full min-h-10 bg-orange-500 text-white py-2.5 sm:py-3 rounded-xl sm:rounded-2xl font-bold text-[11px] sm:text-base hover:bg-orange-600 transition-all shadow-lg shadow-orange-500/20 active:scale-[0.98] mt-auto flex items-center justify-center gap-1 sm:gap-2 disabled:bg-slate-200 disabled:shadow-none disabled:text-slate-400"
+      >
+        {canAdd ? <><Plus size={16} /> 加入购物车</> : hasVariants && !selectedVariantId ? '请选择规格' : '暂时缺货'}
+      </button>
     </div>
   );
 }
