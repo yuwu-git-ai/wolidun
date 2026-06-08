@@ -6,6 +6,7 @@ export const DEFAULT_CATEGORIES: Category[] = [
   { id: '3', name: '美味小食', icon: 'Pizza' },
   { id: '4', name: '清凉饮品', icon: 'Coffee' },
   { id: '5', name: '精致甜点', icon: 'IceCream' },
+  { id: 'combo', name: '优惠套餐', icon: 'Package' },
 ];
 
 export const DEFAULT_PRODUCTS: Product[] = [
