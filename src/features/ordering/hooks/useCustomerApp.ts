@@ -1,9 +1,9 @@
 import { useReducer, useEffect, useMemo, useCallback } from 'react';
-import { Product, CartItem } from '../../../shared/types';
+import { Product, CartItem, Combo } from '../../../shared/types';
 import { DEFAULT_PRODUCTS } from '../../../shared/constants';
 import {
   getIdentity, clearIdentity,
-  fetchProducts, createOrder, fetchStats,
+  fetchProducts, createOrder, fetchStats, fetchCombos,
 } from '../../../shared/api';
 import { getItemUnitPrice, loadCartFromStorage, saveCartToStorage, getErrorMessage } from '../../../shared/utils';
 import {
@@ -20,6 +20,7 @@ export interface CustomerAppState extends CustomerRawState {
   totalPrice: number;
   filteredProducts: Product[];
   cartCount: number;
+  combos: Combo[];
 }
 
 // ── Actions interface ──
@@ -41,6 +42,7 @@ export interface CustomerAppActions {
   setIsMobileCartOpen: (v: boolean) => void;
   copyToClipboard: (text: string) => boolean;
   confirmAndCopy: () => Promise<void>;
+  addComboToCart: (combo: Combo, selections: { productId: string; variantId?: string }[]) => void;
   handleSaveIdentity: (nickname: string, dorm: string) => void;
   handleUpdateProfile: (nickname: string, dorm: string) => void;
   handleLogout: () => void;
@@ -82,6 +84,13 @@ export function useCustomerApp(): { state: CustomerAppState; actions: CustomerAp
       .catch(err => console.warn('Failed to load popular products:', err));
   }, []);  
 
+  // 2.5. Load combos
+  useEffect(() => {
+    fetchCombos()
+      .then(combos => dispatch({ type: 'SET_COMBOS', payload: combos }))
+      .catch(err => console.warn('Failed to load combos:', err));
+  }, []);
+
   // 3. Persist cart to localStorage
   useEffect(() => {
     saveCartToStorage(rawState.cart);
@@ -106,6 +115,15 @@ export function useCustomerApp(): { state: CustomerAppState; actions: CustomerAp
 
   const itemsTotal = useMemo(() =>
     sortedCart.reduce((sum, item) => {
+      if (item.comboId) {
+        const subTotal = (item.comboItems || []).reduce((s, ci) => {
+          let sp = ci.productPrice || 0;
+          if (item.isBrewingSelected) sp += 1;
+          if (item.isFreezingSelected) sp += 0.5;
+          return s + sp;
+        }, 0);
+        return sum + (subTotal - (item.comboDiscount || 0)) * item.quantity;
+      }
       let p = item.price;
       if (item.isBrewingSelected) p += 1;
       if (item.isFreezingSelected) p += 0.5;
@@ -143,6 +161,7 @@ export function useCustomerApp(): { state: CustomerAppState; actions: CustomerAp
     totalPrice,
     filteredProducts,
     cartCount,
+    combos: rawState.combos,
   };
 
   // ── Action creators ──
@@ -177,6 +196,9 @@ export function useCustomerApp(): { state: CustomerAppState; actions: CustomerAp
   const setIsDelivery = (v: boolean) => dispatch({ type: 'SET_IS_DELIVERY', payload: v });
 
   const setIsMobileCartOpen = (v: boolean) => dispatch({ type: 'SET_IS_MOBILE_CART_OPEN', payload: v });
+
+  const addComboToCart = (combo: Combo, selections: { productId: string; variantId?: string }[]) =>
+    dispatch({ type: 'ADD_COMBO_TO_CART', payload: { combo, selections } });
 
   // Robust clipboard copy — works in WeChat browser, HTTP, and HTTPS
   const copyToClipboard = (text: string): boolean => {
@@ -232,6 +254,13 @@ export function useCustomerApp(): { state: CustomerAppState; actions: CustomerAp
       });
 
       const orderLines = sortedCart.map(item => {
+        if (item.comboId && item.comboItems) {
+          const subLines = item.comboItems.map(ci => {
+            const subP = (ci.productPrice || 0);
+            return `  - ${ci.productName || '商品'} x${item.quantity}  ¥${(subP * item.quantity).toFixed(2)}`;
+          }).join('\n');
+          return `🍱套餐: ${item.name}\n${subLines}\n  套餐优惠  -¥${((item.comboDiscount || 0) * item.quantity).toFixed(2)}`;
+        }
         const svc: string[] = [];
         if (item.isBrewingSelected) svc.push('帮泡+¥1');
         if (item.isFreezingSelected) svc.push('冰镇+¥0.5');
@@ -284,6 +313,7 @@ export function useCustomerApp(): { state: CustomerAppState; actions: CustomerAp
     handleSaveIdentity,
     handleUpdateProfile,
     handleLogout,
+    addComboToCart,
   }), [confirmAndCopy, handleSaveIdentity, handleUpdateProfile, handleLogout]);
 
   return { state, actions };
