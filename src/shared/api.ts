@@ -1,4 +1,4 @@
-import type { Product, CartItem, Order } from './types';
+import type { Product, CartItem, Order, Combo } from './types';
 
 const BASE = '/api';
 
@@ -312,5 +312,33 @@ export async function joinPost(postId: string, userId: string): Promise<Post> {
   return request(`${BASE}/posts/${postId}/join`, {
     method: 'POST',
     body: JSON.stringify({ user_id: userId }),
+  });
+}
+
+// ── Combos ──
+export async function fetchCombos(): Promise<Combo[]> {
+  return request(`${BASE}/combos`);
+}
+
+export async function createCombo(combo: { name: string; discount: number; items: { productId: string; variantId?: string | null }[] }, adminKey: string): Promise<Combo> {
+  return request(`${BASE}/combos`, {
+    method: 'POST',
+    headers: { 'X-Admin-Key': adminKey },
+    body: JSON.stringify(combo),
+  });
+}
+
+export async function updateCombo(id: string, combo: { name?: string; discount?: number; items?: { productId: string; variantId?: string | null }[] }, adminKey: string): Promise<Combo> {
+  return request(`${BASE}/combos/${id}`, {
+    method: 'PUT',
+    headers: { 'X-Admin-Key': adminKey },
+    body: JSON.stringify(combo),
+  });
+}
+
+export async function deleteCombo(id: string, adminKey: string): Promise<{ success: boolean }> {
+  return request(`${BASE}/combos/${id}`, {
+    method: 'DELETE',
+    headers: { 'X-Admin-Key': adminKey },
   });
 }
