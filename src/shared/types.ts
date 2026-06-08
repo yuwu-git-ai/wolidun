@@ -25,6 +25,26 @@ export interface CartItem extends Product {
   variantId?: string;
   variantName?: string;
   note?: string;
+  comboId?: string;
+  comboItems?: ComboItem[];
+  comboDiscount?: number;
+}
+
+export interface ComboItem {
+  productId: string;
+  variantId?: string | null;
+  productName?: string;
+  productPrice?: number;
+  image?: string;
+}
+
+export interface Combo {
+  id: string;
+  name: string;
+  discount: number;
+  originalPrice: number;
+  comboPrice: number;
+  items: ComboItem[];
 }
 
 export interface Category {
