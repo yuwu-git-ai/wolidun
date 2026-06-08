@@ -181,6 +181,20 @@ function runMigrations() {
     db.prepare('INSERT INTO schema_version (version) VALUES (6)').run();
     console.log('[DB] Migrated to schema v6 (product_variants).');
   }
+
+  if (current < 7) {
+    db.exec(`
+      CREATE TABLE IF NOT EXISTS combos (
+        id TEXT PRIMARY KEY,
+        name TEXT NOT NULL,
+        discount REAL NOT NULL DEFAULT 0,
+        items TEXT NOT NULL,
+        created_at TEXT DEFAULT (datetime('now'))
+      );
+    `);
+    db.prepare('INSERT INTO schema_version (version) VALUES (7)').run();
+    console.log('[DB] Migrated to schema v7 (combos).');
+  }
 }
 
 function initTables() {
