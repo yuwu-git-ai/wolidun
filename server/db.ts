@@ -290,6 +290,20 @@ function runMigrations() {
     db.prepare('INSERT INTO schema_version (version) VALUES (11)').run();
     console.log('[DB] Migrated to schema v11 (user_profiles, friendships, messages).');
   }
+
+  if (current < 12) {
+    db.exec(`
+      CREATE TABLE IF NOT EXISTS announcements (
+        id TEXT PRIMARY KEY,
+        title TEXT NOT NULL,
+        content TEXT DEFAULT '',
+        is_global INTEGER DEFAULT 0,
+        created_at TEXT DEFAULT (datetime('now'))
+      );
+    `);
+    db.prepare('INSERT INTO schema_version (version) VALUES (12)').run();
+    console.log('[DB] Migrated to schema v12 (announcements).');
+  }
 }
 
 function initTables() {

@@ -386,7 +386,7 @@ export async function fetchAllUsers(adminKey: string): Promise<{ users: { nickna
 }
 
 // ── Notifications ──
-export async function fetchNotifications(userId: string): Promise<any[]> {
+export async function fetchNotifications(userId: string): Promise<{ notifications: any[]; announcements: any[] }> {
   return request(`${BASE}/notifications?user_id=${encodeURIComponent(userId)}`);
 }
 
@@ -398,11 +398,11 @@ export async function markNotificationRead(id: string): Promise<{ success: boole
   return request(`${BASE}/notifications/${id}/read`, { method: 'PUT' });
 }
 
-export async function broadcastNotification(adminKey: string, title: string, content: string): Promise<{ success: boolean; count: number }> {
+export async function broadcastNotification(adminKey: string, title: string, content: string, isGlobal?: boolean, userIds?: string[]): Promise<{ success: boolean; count: number; global?: boolean }> {
   return request(`${BASE}/notifications/broadcast`, {
     method: 'POST',
     headers: { 'X-Admin-Key': adminKey },
-    body: JSON.stringify({ title, content }),
+    body: JSON.stringify({ title, content, is_global: isGlobal, user_ids: userIds }),
   });
 }
 

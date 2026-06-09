@@ -45,6 +45,8 @@ export default function AdminPanel({ adminKey }: { adminKey: string }) {
   const [broadcastTitle, setBroadcastTitle] = useState('');
   const [broadcastContent, setBroadcastContent] = useState('');
   const [broadcasting, setBroadcasting] = useState(false);
+  const [broadcastMode, setBroadcastMode] = useState<'all' | 'selected' | 'global'>('all');
+  const [selectedUserIds, setSelectedUserIds] = useState<Set<string>>(new Set());
 
   const loadOrders = useCallback(() => {
     fetchOrders().then(setOrders).catch(err => console.warn('Failed to load orders (admin):', err));
@@ -124,13 +126,28 @@ export default function AdminPanel({ adminKey }: { adminKey: string }) {
 
   const handleBroadcast = async () => {
     if (!broadcastTitle.trim()) { alert('请填写标题'); return; }
-    if (!confirm(`确定向所有 ${users.length} 个用户发送通知？`)) return;
+
+    const isGlobal = broadcastMode === 'global';
+    const userList = broadcastMode === 'selected' ? Array.from(selectedUserIds) : undefined;
+
+    let confirmMsg = isGlobal
+      ? '确定发布全局公告？所有用户（含未来注册）都能看到。'
+      : userList && userList.length > 0
+        ? `确定向选中的 ${userList.length} 个用户发送通知？`
+        : `确定向所有 ${users.length} 个注册用户发送通知？`;
+    if (!confirm(confirmMsg)) return;
+
     setBroadcasting(true);
     try {
-      const r = await broadcastNotification(adminKey, broadcastTitle.trim(), broadcastContent.trim());
-      alert(`已发送给 ${r.count} 个用户`);
+      const r = await broadcastNotification(adminKey, broadcastTitle.trim(), broadcastContent.trim(), isGlobal, userList);
+      if (r.global) {
+        alert('全局公告已发布');
+      } else {
+        alert(`已发送给 ${r.count} 个用户`);
+      }
       setBroadcastTitle('');
       setBroadcastContent('');
+      setSelectedUserIds(new Set());
     } catch (err) { alert(getErrorMessage(err)); }
     finally { setBroadcasting(false); }
   };
@@ -786,22 +803,78 @@ export default function AdminPanel({ adminKey }: { adminKey: string }) {
           <div className="max-w-6xl mx-auto px-4 pb-20">
             <h3 className="font-bold text-lg mb-4">📢 群发通知</h3>
             <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 space-y-4 max-w-lg">
+              {/* Mode selector */}
+              <div>
+                <label className="block text-xs font-bold text-slate-500 mb-2">发送方式</label>
+                <div className="flex gap-2">
+                  <button onClick={() => setBroadcastMode('all')}
+                    className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${broadcastMode === 'all' ? 'bg-slate-800 text-white' : 'bg-slate-100 text-slate-500'}`}>
+                    全部用户
+                  </button>
+                  <button onClick={() => setBroadcastMode('selected')}
+                    className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${broadcastMode === 'selected' ? 'bg-slate-800 text-white' : 'bg-slate-100 text-slate-500'}`}>
+                    指定用户
+                  </button>
+                  <button onClick={() => setBroadcastMode('global')}
+                    className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${broadcastMode === 'global' ? 'bg-indigo-600 text-white' : 'bg-indigo-50 text-indigo-600'}`}>
+                    📌 全局公告
+                  </button>
+                </div>
+                {broadcastMode === 'global' && (
+                  <p className="text-xs text-indigo-500 mt-2">全局公告将对所有用户（含未来新注册）可见，永久显示在铃铛顶部</p>
+                )}
+              </div>
+
+              {/* User selector (for 'selected' mode) */}
+              {broadcastMode === 'selected' && (
+                <div>
+                  <label className="block text-xs font-bold text-slate-500 mb-1">
+                    选择用户 ({selectedUserIds.size} 已选)
+                  </label>
+                  <div className="max-h-48 overflow-y-auto bg-slate-50 rounded-xl border border-slate-200 p-2 space-y-1">
+                    {users.length === 0 ? (
+                      <p className="text-xs text-slate-400 text-center py-4">暂无注册用户</p>
+                    ) : (
+                      users.map(u => (
+                        <label key={u.nickname} className={`flex items-center gap-2 p-2 rounded-lg cursor-pointer transition-colors ${selectedUserIds.has(u.nickname) ? 'bg-slate-200' : 'hover:bg-slate-100'}`}>
+                          <input type="checkbox"
+                            checked={selectedUserIds.has(u.nickname)}
+                            onChange={() => {
+                              const next = new Set(selectedUserIds);
+                              if (next.has(u.nickname)) next.delete(u.nickname); else next.add(u.nickname);
+                              setSelectedUserIds(next);
+                            }}
+                            className="w-4 h-4 rounded" />
+                          <span className="text-sm font-bold">{u.nickname}</span>
+                          <span className="text-xs text-slate-400">{u.dorm}</span>
+                        </label>
+                      ))
+                    )}
+                  </div>
+                  <button onClick={() => setSelectedUserIds(new Set(users.map(u => u.nickname)))}
+                    className="text-xs text-slate-400 hover:text-slate-600 mt-1">全选</button>
+                </div>
+              )}
+
               <div>
                 <label className="block text-xs font-bold text-slate-500 mb-1">标题</label>
                 <input value={broadcastTitle} onChange={e => setBroadcastTitle(e.target.value)}
-                  placeholder="通知标题" className="w-full p-3 bg-slate-50 rounded-xl border border-slate-200 outline-none focus:border-slate-400 text-sm" />
+                  placeholder={broadcastMode === 'global' ? '公告标题' : '通知标题'}
+                  className="w-full p-3 bg-slate-50 rounded-xl border border-slate-200 outline-none focus:border-slate-400 text-sm" />
               </div>
               <div>
                 <label className="block text-xs font-bold text-slate-500 mb-1">内容</label>
                 <textarea value={broadcastContent} onChange={e => setBroadcastContent(e.target.value)}
-                  placeholder="通知内容..." rows={4}
+                  placeholder="内容..." rows={4}
                   className="w-full p-3 bg-slate-50 rounded-xl border border-slate-200 outline-none focus:border-slate-400 text-sm resize-none" />
               </div>
               <button onClick={handleBroadcast} disabled={broadcasting}
-                className="px-6 py-3 bg-slate-800 text-white rounded-xl font-bold hover:bg-slate-700 disabled:opacity-50 transition-all">
-                {broadcasting ? '发送中...' : `发送给全部 ${users.length} 个用户`}
+                className={`px-6 py-3 text-white rounded-xl font-bold disabled:opacity-50 transition-all ${broadcastMode === 'global' ? 'bg-indigo-600 hover:bg-indigo-700' : 'bg-slate-800 hover:bg-slate-700'}`}>
+                {broadcasting ? '发送中...' :
+                  broadcastMode === 'global' ? '📌 发布全局公告' :
+                  broadcastMode === 'selected' ? `发送给 ${selectedUserIds.size} 个用户` :
+                  `发送给全部 ${users.length} 个用户`}
               </button>
-              <p className="text-xs text-slate-400">所有注册用户都会在铃铛通知中收到此消息</p>
             </div>
           </div>
         )}

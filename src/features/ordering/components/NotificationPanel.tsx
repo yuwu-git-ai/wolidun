@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ArrowLeft, Bell, Check, X, Clock } from 'lucide-react';
+import { ArrowLeft, Bell, Check, X, Clock, Pin, ChevronDown, ChevronUp } from 'lucide-react';
 import { fetchNotifications, markNotificationRead, fetchFriends, respondFriendRequest } from '../../../shared/api';
 import { getErrorMessage } from '../../../shared/utils';
 
@@ -10,16 +10,19 @@ interface NotificationPanelProps {
 
 export default function NotificationPanel({ nickname, onClose }: NotificationPanelProps) {
   const [notifs, setNotifs] = useState<any[]>([]);
+  const [announcements, setAnnouncements] = useState<any[]>([]);
   const [friendRequests, setFriendRequests] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [actingId, setActingId] = useState<string | null>(null);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
 
   useEffect(() => {
     Promise.all([
-      fetchNotifications(nickname).catch(() => []),
+      fetchNotifications(nickname).then(r => ({ notifications: r.notifications || [], announcements: r.announcements || [] })).catch(() => ({ notifications: [], announcements: [] })),
       fetchFriends(nickname).then(d => d.received).catch(() => []),
     ]).then(([ns, frs]) => {
-      setNotifs(ns);
+      setNotifs(ns.notifications);
+      setAnnouncements(ns.announcements);
       setFriendRequests(frs);
     }).finally(() => setLoading(false));
   }, [nickname]);
@@ -40,7 +43,11 @@ export default function NotificationPanel({ nickname, onClose }: NotificationPan
     finally { setActingId(null); }
   };
 
-  const totalItems = friendRequests.length + notifs.length;
+  const toggleExpand = (id: string) => {
+    setExpandedId(prev => prev === id ? null : id);
+  };
+
+  const totalItems = announcements.length + friendRequests.length + notifs.length;
 
   return (
     <div className="min-h-[100dvh] bg-slate-50 font-sans">
@@ -62,6 +69,43 @@ export default function NotificationPanel({ nickname, onClose }: NotificationPan
           </div>
         ) : (
           <>
+            {/* Global announcements — pinned at top */}
+            {announcements.length > 0 && (
+              <div className="space-y-2">
+                <p className="text-xs font-bold text-slate-400 px-1 flex items-center gap-1"><Pin size={10} />公告</p>
+                {announcements.map(a => {
+                  const isExpanded = expandedId === a.id;
+                  return (
+                    <div key={a.id}
+                      className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-2xl border border-indigo-200 p-4 cursor-pointer"
+                      onClick={() => toggleExpand(a.id)}>
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2">
+                            <Pin size={12} className="text-indigo-400 shrink-0" />
+                            <h3 className="font-bold text-sm text-indigo-800">{a.title}</h3>
+                            <span className="text-[10px] px-1.5 py-0.5 bg-indigo-200 text-indigo-600 rounded font-bold">公告</span>
+                          </div>
+                          {isExpanded && (
+                            <>
+                              {a.content && <p className="text-xs text-slate-600 mt-2 whitespace-pre-wrap">{a.content}</p>}
+                              <p className="text-[10px] text-slate-400 mt-2">{a.created_at}</p>
+                            </>
+                          )}
+                          {!isExpanded && a.content && (
+                            <p className="text-xs text-slate-400 mt-1 truncate">{a.content}</p>
+                          )}
+                        </div>
+                        <div className="text-slate-400 shrink-0">
+                          {isExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+
             {/* Friend requests section */}
             {friendRequests.length > 0 && (
               <div className="space-y-2">
@@ -95,23 +139,35 @@ export default function NotificationPanel({ nickname, onClose }: NotificationPan
             {/* System notifications */}
             {notifs.length > 0 && (
               <div className="space-y-2">
-                {friendRequests.length > 0 && <p className="text-xs font-bold text-slate-400 px-1">系统通知</p>}
-                {notifs.map(n => (
-                  <div key={n.id}
-                    onClick={() => markRead(n.id)}
-                    className={`bg-white rounded-2xl border p-4 cursor-pointer transition-colors ${n.is_read ? 'border-slate-100' : 'border-orange-200 bg-orange-50/30'}`}>
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2">
-                          <h3 className="font-bold text-sm">{n.title}</h3>
-                          {!n.is_read && <span className="w-2 h-2 bg-orange-500 rounded-full shrink-0" />}
+                {(announcements.length > 0 || friendRequests.length > 0) && <p className="text-xs font-bold text-slate-400 px-1">系统通知</p>}
+                {notifs.map(n => {
+                  const isExpanded = expandedId === n.id;
+                  return (
+                    <div key={n.id}
+                      onClick={() => { toggleExpand(n.id); if (!n.is_read) markRead(n.id); }}
+                      className={`bg-white rounded-2xl border p-4 cursor-pointer transition-colors ${n.is_read ? 'border-slate-100' : 'border-orange-200 bg-orange-50/30'}`}>
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2">
+                            <h3 className="font-bold text-sm">{n.title}</h3>
+                            {!n.is_read && <span className="w-2 h-2 bg-orange-500 rounded-full shrink-0" />}
+                          </div>
+                          {isExpanded ? (
+                            <>
+                              {n.content && <p className="text-xs text-slate-500 mt-2 whitespace-pre-wrap">{n.content}</p>}
+                              <p className="text-[10px] text-slate-400 mt-2">{n.created_at}</p>
+                            </>
+                          ) : (
+                            n.content && <p className="text-xs text-slate-400 mt-1 truncate">{n.content}</p>
+                          )}
                         </div>
-                        {n.content && <p className="text-xs text-slate-500 mt-1 whitespace-pre-wrap">{n.content}</p>}
-                        <p className="text-[10px] text-slate-400 mt-2">{n.created_at}</p>
+                        <div className="text-slate-400 shrink-0">
+                          {isExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </>
