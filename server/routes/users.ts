@@ -25,7 +25,7 @@ router.get('/users/:nickname', (req: Request, res: Response) => {
 
   // Recent posts
   const posts = db.prepare(
-    "SELECT * FROM posts WHERE user_id = ? AND status != 'cancelled' ORDER BY created_at DESC LIMIT 10"
+    "SELECT * FROM posts WHERE user_id = ? AND status != 'cancelled' ORDER BY created_at DESC LIMIT 50"
   ).all(nickname);
 
   // Friend count + friend status for viewer

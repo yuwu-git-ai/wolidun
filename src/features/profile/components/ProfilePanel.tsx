@@ -27,6 +27,7 @@ export default function ProfilePanel({ nickname, myIdentity, onClose, onChat }: 
   const [editStatus, setEditStatus] = useState('');
   const [editError, setEditError] = useState('');
   const [friendActionLoading, setFriendActionLoading] = useState(false);
+  const [expandedPost, setExpandedPost] = useState<string | null>(null);
 
   const isMe = nickname === myIdentity.nickname;
 
@@ -256,30 +257,47 @@ export default function ProfilePanel({ nickname, myIdentity, onClose, onChat }: 
         </div>
 
         {/* Posts */}
-        {profile.posts && profile.posts.length > 0 && (
-          <div>
-            <p className="text-xs font-bold text-slate-400 mb-2">最近帖子</p>
+        <div>
+          <p className="text-xs font-bold text-slate-400 mb-2">历史帖子 ({profile.posts?.length || 0})</p>
+          {profile.posts && profile.posts.length > 0 ? (
             <div className="space-y-2">
               {profile.posts.map(p => (
-                <div key={p.id} className="p-3 bg-slate-50 rounded-xl">
-                  <div className="flex items-center gap-2">
-                    <span className="text-[10px] px-1.5 py-0.5 rounded font-bold bg-slate-200 text-slate-500">{p.type}</span>
-                    <span className="text-sm font-bold truncate flex-1">{p.title}</span>
-                    <span className={`text-[10px] ${p.status === 'done' ? 'text-green-500' : p.status === 'claimed' ? 'text-blue-500' : 'text-slate-400'}`}>
-                      {p.status === 'open' ? '进行中' : p.status === 'claimed' ? '已接单' : p.status === 'done' ? '已完成' : ''}
-                    </span>
-                    {isMe && (
-                      <button onClick={(e) => { e.stopPropagation(); handleDeletePost(p.id); }}
-                        className="text-slate-300 hover:text-red-500 transition-colors shrink-0" title="删除帖子">
-                        <Trash2 size={14} />
+                <div key={p.id}>
+                  <button onClick={() => setExpandedPost(expandedPost === p.id ? null : p.id)}
+                    className="p-3 bg-slate-50 rounded-xl w-full text-left hover:bg-slate-100 transition-colors">
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] px-1.5 py-0.5 rounded font-bold bg-slate-200 text-slate-500">{p.type}</span>
+                      <span className="text-sm font-bold truncate flex-1">{p.title}</span>
+                      <span className={`text-[10px] ${p.status === 'done' ? 'text-green-500' : p.status === 'claimed' ? 'text-blue-500' : 'text-slate-400'}`}>
+                        {p.status === 'open' ? '进行中' : p.status === 'claimed' ? '已接单' : p.status === 'done' ? '已完成' : ''}
+                      </span>
+                      {isMe && (
+                        <button onClick={(e) => { e.stopPropagation(); handleDeletePost(p.id); }}
+                          className="text-slate-300 hover:text-red-500 transition-colors shrink-0" title="删除帖子">
+                          <Trash2 size={14} />
                       </button>
                     )}
-                  </div>
+                    </div>
+                  </button>
+                  {/* Expanded content */}
+                  {expandedPost === p.id && (
+                    <div className="mt-1 p-3 bg-white border border-slate-100 rounded-xl text-sm text-slate-600 whitespace-pre-wrap">
+                      {p.content || <span className="text-slate-400 italic">无正文内容</span>}
+                      <p className="text-[10px] text-slate-400 mt-2">
+                        {p.created_at ? new Date(p.created_at + 'Z').toLocaleDateString('zh-CN') : ''}
+                        {' · '}{p.likes_count} 赞 · {p.comments_count} 评论
+                        {p.price ? ` · ${p.price}` : ''}
+                        {p.claimed_by ? ` · 接单人: ${p.claimed_by}` : ''}
+                      </p>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
-          </div>
-        )}
+          ) : (
+            <p className="text-xs text-slate-400 text-center py-4">暂无帖子</p>
+          )}
+        </div>
       </div>
     </div>
   );
