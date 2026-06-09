@@ -15,6 +15,7 @@ export interface Product {
   stock: number;
   allowBrewing?: boolean;
   allowFreezing?: boolean;
+  isHot?: boolean;
   variants?: ProductVariant[];
 }
 

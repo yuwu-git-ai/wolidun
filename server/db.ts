@@ -54,10 +54,11 @@ function runMigrations() {
           id TEXT PRIMARY KEY, name TEXT NOT NULL, price REAL NOT NULL,
           category TEXT NOT NULL, description TEXT DEFAULT '', image TEXT DEFAULT '',
           stock INTEGER DEFAULT 999, allow_brewing INTEGER DEFAULT 0,
-          allow_freezing INTEGER DEFAULT 0, created_at TEXT DEFAULT (datetime('now'))
+          allow_freezing INTEGER DEFAULT 0, is_hot INTEGER DEFAULT 0,
+          created_at TEXT DEFAULT (datetime('now'))
         );
-        INSERT INTO products_new (id, name, price, category, description, image, stock, allow_brewing, allow_freezing, created_at)
-          SELECT id, name, price, category, description, image, stock, allow_brewing, allow_freezing, created_at FROM products;
+        INSERT INTO products_new (id, name, price, category, description, image, stock, allow_brewing, allow_freezing, is_hot, created_at)
+          SELECT id, name, price, category, description, image, stock, allow_brewing, allow_freezing, 0, created_at FROM products;
         DROP TABLE products;
         ALTER TABLE products_new RENAME TO products;
       `);
@@ -104,7 +105,7 @@ function runMigrations() {
       CREATE TABLE IF NOT EXISTS posts (
         id TEXT PRIMARY KEY,
         user_id TEXT NOT NULL,
-        type TEXT NOT NULL CHECK(type IN ('help','skill','treehole','teamup')),
+        type TEXT NOT NULL CHECK(type IN ('help','skill','feedback','teamup')),
         title TEXT NOT NULL,
         content TEXT DEFAULT '',
         tags TEXT DEFAULT '',
@@ -195,6 +196,46 @@ function runMigrations() {
     db.prepare('INSERT INTO schema_version (version) VALUES (7)').run();
     console.log('[DB] Migrated to schema v7 (combos).');
   }
+
+  if (current < 8) {
+    // v8: rename treehole → feedback; update CHECK constraint
+    db.exec(`
+      CREATE TABLE posts_new (
+        id TEXT PRIMARY KEY,
+        user_id TEXT NOT NULL,
+        type TEXT NOT NULL CHECK(type IN ('help','skill','feedback','teamup')),
+        title TEXT NOT NULL,
+        content TEXT DEFAULT '',
+        tags TEXT DEFAULT '',
+        price TEXT DEFAULT '',
+        status TEXT DEFAULT 'open' CHECK(status IN ('open','claimed','done','cancelled')),
+        claimed_by TEXT DEFAULT '',
+        players INT DEFAULT 1,
+        max_players INT DEFAULT 0,
+        anonymous INT DEFAULT 0,
+        likes_count INT DEFAULT 0,
+        comments_count INT DEFAULT 0,
+        created_at TEXT DEFAULT (datetime('now'))
+      );
+
+      INSERT INTO posts_new SELECT
+        id, user_id, CASE WHEN type = 'treehole' THEN 'feedback' ELSE type END,
+        title, content, tags, price, status, claimed_by,
+        players, max_players, anonymous, likes_count, comments_count, created_at
+      FROM posts;
+
+      DROP TABLE posts;
+      ALTER TABLE posts_new RENAME TO posts;
+    `);
+    db.prepare('INSERT INTO schema_version (version) VALUES (8)').run();
+    console.log('[DB] Migrated to schema v8 (treehole→feedback).');
+  }
+
+  if (current < 9) {
+    db.exec(`ALTER TABLE products ADD COLUMN is_hot INTEGER DEFAULT 0`);
+    db.prepare('INSERT INTO schema_version (version) VALUES (9)').run();
+    console.log('[DB] Migrated to schema v9 (products.is_hot).');
+  }
 }
 
 function initTables() {
@@ -209,6 +250,7 @@ function initTables() {
       stock INTEGER DEFAULT 999,
       allow_brewing INTEGER DEFAULT 0,
       allow_freezing INTEGER DEFAULT 0,
+      is_hot INTEGER DEFAULT 0,
       created_at TEXT DEFAULT (datetime('now'))
     );
 
@@ -230,12 +272,13 @@ const DEFAULT_PRODUCTS = [
     id: 'p1',
     name: '招牌红烧肉套餐',
     price: 38,
-    category: '1',
+    category: '2',
     description: '精选五花肉，慢火炖煮，口感软糯。',
     image: 'https://images.unsplash.com/photo-1544025162-d76694265947?w=400&h=300&fit=crop',
     stock: 999,
     allow_brewing: 0,
     allow_freezing: 0,
+    is_hot: 1,
   },
   {
     id: 'p2',
@@ -247,17 +290,19 @@ const DEFAULT_PRODUCTS = [
     stock: 999,
     allow_brewing: 0,
     allow_freezing: 0,
+    is_hot: 1,
   },
   {
     id: 'p3',
     name: '康师傅红烧牛肉面（帮泡）',
     price: 6,
-    category: '1',
+    category: '3',
     description: '经典红烧牛肉面，帮你泡好送到手。',
     image: 'https://images.unsplash.com/photo-1612929904986-8e4ba5b8f9d1?w=400&h=300&fit=crop',
     stock: 999,
     allow_brewing: 1,
     allow_freezing: 0,
+    is_hot: 1,
   },
   {
     id: 'p4',
@@ -269,6 +314,7 @@ const DEFAULT_PRODUCTS = [
     stock: 999,
     allow_brewing: 0,
     allow_freezing: 1,
+    is_hot: 0,
   },
   {
     id: 'p5',
@@ -280,6 +326,7 @@ const DEFAULT_PRODUCTS = [
     stock: 999,
     allow_brewing: 0,
     allow_freezing: 1,
+    is_hot: 0,
   },
 ];
 
@@ -287,7 +334,7 @@ function seedDefaults() {
   const row = db.prepare('SELECT COUNT(*) as count FROM products').get() as { count: number };
   if (row.count === 0) {
     const stmt = db.prepare(
-      'INSERT INTO products (id, name, price, category, description, image, stock, allow_brewing, allow_freezing) VALUES (@id, @name, @price, @category, @description, @image, @stock, @allow_brewing, @allow_freezing)'
+      'INSERT INTO products (id, name, price, category, description, image, stock, allow_brewing, allow_freezing, is_hot) VALUES (@id, @name, @price, @category, @description, @image, @stock, @allow_brewing, @allow_freezing, @is_hot)'
     );
     const insertAll = db.transaction(() => {
       for (const p of DEFAULT_PRODUCTS) {

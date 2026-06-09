@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef, FormEvent } from 'react';
-import { Plus, Heart, MessageCircle, HelpCircle, Wrench, EyeOff, Users, X, Send } from 'lucide-react';
+import { Plus, Heart, MessageCircle, HelpCircle, Wrench, MessageSquareText, Users, X, Send, Search } from 'lucide-react';
 import {
   fetchPosts, createPost, updatePost, toggleLike,
   addComment, joinPost, fetchPostById, fetchJoinedPostIds
@@ -10,21 +10,24 @@ import { getErrorMessage } from '../../../shared/utils';
 const SQUARE_TABS = [
   { key: 'help', label: '求助', icon: HelpCircle, color: 'text-rose-500', bg: 'bg-rose-50' },
   { key: 'skill', label: '技能', icon: Wrench, color: 'text-indigo-500', bg: 'bg-indigo-50' },
-  { key: 'treehole', label: '树洞', icon: EyeOff, color: 'text-emerald-500', bg: 'bg-emerald-50' },
+  { key: 'feedback', label: '反馈', icon: MessageSquareText, color: 'text-emerald-500', bg: 'bg-emerald-50' },
   { key: 'teamup', label: '组队', icon: Users, color: 'text-amber-500', bg: 'bg-amber-50' },
 ] as const;
 
-const TYPE_LABELS: Record<string, string> = { help: '求助', skill: '技能', treehole: '树洞', teamup: '组队' };
-const TYPE_COLORS: Record<string, string> = { help: 'bg-rose-50 text-rose-600', skill: 'bg-indigo-50 text-indigo-600', treehole: 'bg-emerald-50 text-emerald-600', teamup: 'bg-amber-50 text-amber-600' };
+const TYPE_LABELS: Record<string, string> = { help: '求助', skill: '技能', feedback: '反馈', teamup: '组队' };
+const TYPE_COLORS: Record<string, string> = { help: 'bg-rose-50 text-rose-600', skill: 'bg-indigo-50 text-indigo-600', feedback: 'bg-emerald-50 text-emerald-600', teamup: 'bg-amber-50 text-amber-600' };
 
 export default function SquarePanel({ identity }: { identity: { nickname: string; dorm: string } }) {
   const [activeTab, setActiveTab] = useState<string>('help');
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const initialLoadRef = useRef(true);
+  const formRef = useRef<HTMLFormElement>(null);
   const [showCreate, setShowCreate] = useState(false);
   const [selectedPost, setSelectedPost] = useState<Post | null>(null);
   const [sort, setSort] = useState<'newest' | 'hot'>('newest');
+  const [teamupFilter, setTeamupFilter] = useState<'active' | 'history'>('active');
+  const [search, setSearch] = useState('');
 
   // Create form
   const [createType, setCreateType] = useState('help');
@@ -44,13 +47,17 @@ export default function SquarePanel({ identity }: { identity: { nickname: string
 
   const loadPosts = useCallback(() => {
     if (initialLoadRef.current) setLoading(true);
-    fetchPosts({ type: activeTab, sort }).then(r => setPosts(r.posts as Post[])).catch(err => console.warn('Failed to load posts:', err)).finally(() => {
+    const params: { type?: string; sort?: string; status?: string; search?: string } = { type: activeTab, sort };
+    if (activeTab === 'teamup' && teamupFilter === 'history') params.status = 'done';
+    else if (activeTab === 'teamup' && teamupFilter === 'active') params.status = 'open';
+    if (search.trim()) params.search = search.trim();
+    fetchPosts(params).then(r => setPosts(r.posts as Post[])).catch(err => console.warn('Failed to load posts:', err)).finally(() => {
       setLoading(false);
       initialLoadRef.current = false;
     });
     // Refresh joined status in background
     fetchJoinedPostIds(identity.nickname).then(ids => setJoinedPostIds(new Set(ids))).catch(() => {});
-  }, [activeTab, sort, identity.nickname]);
+  }, [activeTab, sort, identity.nickname, teamupFilter, search]);
 
   useEffect(() => { initialLoadRef.current = true; loadPosts(); }, [loadPosts]);
   useEffect(() => { const t = setInterval(loadPosts, 15000); return () => clearInterval(t); }, [loadPosts]);
@@ -166,10 +173,34 @@ export default function SquarePanel({ identity }: { identity: { nickname: string
           );
         })}
         <div className="flex-1" />
+        {activeTab === 'teamup' && (
+          <button onClick={() => { setTeamupFilter(tf => tf === 'active' ? 'history' : 'active'); }}
+            className={`text-xs px-2 py-0.5 rounded-lg font-bold transition-colors ${teamupFilter === 'history' ? 'bg-slate-100 text-slate-500' : 'text-slate-400 hover:text-slate-600'}`}>
+            {teamupFilter === 'active' ? '历史' : '进行中'}
+          </button>
+        )}
         <button onClick={() => setSort(sort === 'newest' ? 'hot' : 'newest')}
           className="text-xs text-slate-400 px-2 hover:text-slate-600 transition-colors">
           {sort === 'newest' ? '最新' : '最热'}
         </button>
+      </div>
+
+      {/* Search bar */}
+      <div className="px-3 pb-2 shrink-0">
+        <div className="flex items-center gap-2 bg-slate-50 rounded-xl px-3 py-2 border border-slate-100">
+          <Search size={14} className="text-slate-400 shrink-0" />
+          <input
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            placeholder="搜索标题或用户名..."
+            className="flex-1 bg-transparent outline-none text-sm text-slate-600 placeholder-slate-400"
+          />
+          {search && (
+            <button onClick={() => setSearch('')} className="text-slate-400 hover:text-slate-600 shrink-0">
+              <X size={14} />
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Post list */}
@@ -182,7 +213,7 @@ export default function SquarePanel({ identity }: { identity: { nickname: string
           <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center shrink-0">
             <Plus size={20} className="text-slate-400" />
           </div>
-          <span className="text-sm text-slate-400 font-medium">发布{activeTab === 'help' ? '求助' : activeTab === 'skill' ? '技能' : activeTab === 'treehole' ? '树洞' : '组队'}帖...</span>
+          <span className="text-sm text-slate-400 font-medium">发布{activeTab === 'help' ? '求助' : activeTab === 'skill' ? '技能' : activeTab === 'feedback' ? '反馈' : '组队'}帖...</span>
         </button>
 
         {loading ? (
@@ -201,15 +232,23 @@ export default function SquarePanel({ identity }: { identity: { nickname: string
                 <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${TYPE_COLORS[post.type]?.split(' ')[0] || 'bg-slate-50'}`}>
                   {post.type === 'help' ? <HelpCircle size={16} className={TYPE_COLORS[post.type]?.split(' ')[1] || 'text-slate-400'} /> :
                    post.type === 'skill' ? <Wrench size={16} className={TYPE_COLORS[post.type]?.split(' ')[1] || 'text-slate-400'} /> :
-                   post.type === 'treehole' ? <EyeOff size={16} className={TYPE_COLORS[post.type]?.split(' ')[1] || 'text-slate-400'} /> :
+                   post.type === 'feedback' ? <MessageSquareText size={16} className={TYPE_COLORS[post.type]?.split(' ')[1] || 'text-slate-400'} /> :
                    <Users size={16} className={TYPE_COLORS[post.type]?.split(' ')[1] || 'text-slate-400'} />}
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
                     <span className={`text-[10px] px-1.5 py-0.5 rounded font-bold ${TYPE_COLORS[post.type]}`}>{TYPE_LABELS[post.type]}</span>
                     {post.price && <span className="text-[10px] font-bold text-orange-500">{post.price}</span>}
-                    {post.type === 'teamup' && <span className="text-[10px] text-slate-400">{post.players}/{post.max_players || '∞'}人</span>}
-                    {post.type === 'teamup' && joinedPostIds.has(post.id) && <span className="text-[10px] text-amber-500 font-bold">已加入</span>}
+                    {post.type === 'teamup' && (
+                      <span className="text-[10px] text-slate-400">
+                        {post.players}/{post.max_players || '∞'}人
+                        {post.max_players > 0 && post.players < post.max_players && (
+                          <span className="text-amber-500 ml-0.5">差{post.max_players - post.players}人</span>
+                        )}
+                      </span>
+                    )}
+                    {post.type === 'teamup' && post.user_id === identity.nickname && <span className="text-[10px] text-slate-400 font-bold">我的队伍</span>}
+                    {post.type === 'teamup' && post.user_id !== identity.nickname && joinedPostIds.has(post.id) && <span className="text-[10px] text-amber-500 font-bold">已加入</span>}
                     {post.status === 'done' && <span className="text-[10px] text-green-500 font-bold">已完成</span>}
                     {post.status === 'claimed' && <span className="text-[10px] text-blue-500 font-bold">已接单</span>}
                   </div>
@@ -237,7 +276,7 @@ export default function SquarePanel({ identity }: { identity: { nickname: string
       {showCreate && (
         <div className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm flex items-end sm:items-center justify-center p-4"
           onClick={e => { if (e.target === e.currentTarget) setShowCreate(false); }}>
-          <form onSubmit={handleCreate} className="w-full max-w-md bg-white rounded-t-[28px] sm:rounded-[28px] p-6 max-h-[85vh] overflow-y-auto shadow-2xl">
+          <form ref={formRef} onSubmit={handleCreate} className="w-full max-w-md bg-white rounded-t-[28px] sm:rounded-[28px] p-6 max-h-[85vh] overflow-y-auto shadow-2xl">
             <h3 className="font-black text-lg mb-4">发布帖子</h3>
             <div className="space-y-3">
               {/* Type selector */}
@@ -273,7 +312,7 @@ export default function SquarePanel({ identity }: { identity: { nickname: string
               <div className="flex gap-3">
                 <button type="button" onClick={() => setShowCreate(false)}
                   className="flex-1 py-3 bg-slate-100 text-slate-600 rounded-2xl font-bold text-sm">取消</button>
-                <button type="submit"
+                <button type="button" onClick={() => formRef.current?.requestSubmit()}
                   className="flex-1 py-3 bg-slate-800 text-white rounded-2xl font-bold text-sm hover:bg-slate-700 transition-all">发布</button>
               </div>
             </div>
@@ -291,7 +330,7 @@ export default function SquarePanel({ identity }: { identity: { nickname: string
               <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${TYPE_COLORS[selectedPost.type]?.split(' ')[0] || 'bg-slate-50'}`}>
                 {selectedPost.type === 'help' ? <HelpCircle size={18} className={TYPE_COLORS[selectedPost.type]?.split(' ')[1]} /> :
                  selectedPost.type === 'skill' ? <Wrench size={18} className={TYPE_COLORS[selectedPost.type]?.split(' ')[1]} /> :
-                 selectedPost.type === 'treehole' ? <EyeOff size={18} className={TYPE_COLORS[selectedPost.type]?.split(' ')[1]} /> :
+                 selectedPost.type === 'feedback' ? <MessageSquareText size={18} className={TYPE_COLORS[selectedPost.type]?.split(' ')[1]} /> :
                  <Users size={18} className={TYPE_COLORS[selectedPost.type]?.split(' ')[1]} />}
               </div>
               <div className="flex-1">
@@ -299,6 +338,14 @@ export default function SquarePanel({ identity }: { identity: { nickname: string
                 <div className="flex items-center gap-2 mt-0.5">
                   <span className={`text-[10px] px-1.5 py-0.5 rounded font-bold ${TYPE_COLORS[selectedPost.type]}`}>{TYPE_LABELS[selectedPost.type]}</span>
                   {selectedPost.price && <span className="text-[10px] font-bold text-orange-500">{selectedPost.price}</span>}
+                  {selectedPost.type === 'teamup' && (
+                    <span className="text-[10px] text-slate-400">
+                      {selectedPost.players}/{selectedPost.max_players || '∞'}人
+                      {selectedPost.max_players > 0 && selectedPost.players < selectedPost.max_players && (
+                        <span className="text-amber-500 ml-0.5 font-bold">差{selectedPost.max_players - selectedPost.players}人</span>
+                      )}
+                    </span>
+                  )}
                   <span className="text-[10px] text-slate-400">{formatTime(selectedPost.created_at)}</span>
                 </div>
               </div>
@@ -320,11 +367,13 @@ export default function SquarePanel({ identity }: { identity: { nickname: string
               {selectedPost.type === 'help' && selectedPost.status === 'open' && selectedPost.user_id !== identity.nickname && (
                 <button onClick={() => handleClaim(selectedPost)} className="ml-auto px-3 py-1.5 bg-slate-800 text-white rounded-lg text-xs font-bold hover:bg-slate-700">我能搞定</button>
               )}
-              {selectedPost.status === 'claimed' && selectedPost.user_id === identity.nickname && (
-                <button onClick={() => handleDone(selectedPost)} className="ml-auto px-3 py-1.5 bg-green-500 text-white rounded-lg text-xs font-bold">标记完成</button>
+              {selectedPost.user_id === identity.nickname && (selectedPost.status === 'open' || selectedPost.status === 'claimed') && (
+                <button onClick={() => handleDone(selectedPost)} className="ml-auto px-3 py-1.5 bg-green-500 text-white rounded-lg text-xs font-bold hover:bg-green-600 active:scale-95 transition-all">标记完成</button>
               )}
               {selectedPost.type === 'teamup' && (
-                joinedPostIds.has(selectedPost.id) ? (
+                selectedPost.user_id === identity.nickname ? (
+                  <span className="ml-auto px-3 py-1.5 bg-slate-100 text-slate-400 rounded-lg text-xs font-bold">我的队伍</span>
+                ) : joinedPostIds.has(selectedPost.id) ? (
                   <span className="ml-auto px-3 py-1.5 bg-amber-50 text-amber-600 rounded-lg text-xs font-bold">已加入</span>
                 ) : selectedPost.status === 'open' ? (
                   <button onClick={() => handleJoin(selectedPost.id)} className="ml-auto px-3 py-1.5 bg-amber-500 text-white rounded-lg text-xs font-bold hover:bg-amber-600 active:scale-95 transition-all">加入</button>

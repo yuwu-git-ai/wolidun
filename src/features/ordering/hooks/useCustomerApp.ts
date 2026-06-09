@@ -147,7 +147,7 @@ export function useCustomerApp(): { state: CustomerAppState; actions: CustomerAp
           p.name.toLowerCase().includes(rawState.searchQuery.toLowerCase()) ||
           p.description.toLowerCase().includes(rawState.searchQuery.toLowerCase())
         )
-      : inStock.filter(p => p.category === rawState.activeCategory);
+      : inStock.filter(p => rawState.activeCategory === '1' ? p.isHot === true : p.category === rawState.activeCategory);
     return list.sort((a, b) => a.name.localeCompare(b.name, 'zh-CN'));
   }, [rawState.products, rawState.activeCategory, rawState.searchQuery]);
 

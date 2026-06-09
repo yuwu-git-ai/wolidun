@@ -7,13 +7,15 @@ const router = Router();
 // GET /api/posts — list posts with pagination + filters
 router.get('/posts', (req: Request, res: Response) => {
   const db = getDb();
-  const { type, status, page = '1', limit = '20', sort = 'newest' } = req.query as Record<string, string>;
+  const { type, status, page = '1', limit = '20', sort = 'newest', search } = req.query as Record<string, string>;
 
   let sql = 'SELECT * FROM posts WHERE 1=1';
   const params: any[] = [];
 
   if (type) { sql += ' AND type = ?'; params.push(type); }
   if (status) { sql += ' AND status = ?'; params.push(status); }
+  else { sql += " AND status NOT IN ('done','cancelled')"; }
+  if (search) { sql += ' AND (title LIKE ? OR user_id LIKE ?)'; params.push(`%${search}%`, `%${search}%`); }
 
   // Count total
   const countSql = sql.replace('SELECT *', 'SELECT COUNT(*) as total');
@@ -79,7 +81,7 @@ router.post('/posts', (req: Request, res: Response) => {
   if (!user_id || !type || !title) {
     return res.status(400).json({ error: '缺少必填字段' });
   }
-  if (!['help', 'skill', 'treehole', 'teamup'].includes(type)) {
+  if (!['help', 'skill', 'feedback', 'teamup'].includes(type)) {
     return res.status(400).json({ error: '无效的帖子类型' });
   }
 
@@ -175,6 +177,9 @@ router.post('/posts/:id/join', (req: Request, res: Response) => {
 
   const { user_id } = req.body;
   if (!user_id) return res.status(400).json({ error: '缺少 user_id' });
+
+  // Prevent creator from joining own teamup
+  if (post.user_id === user_id) return res.status(400).json({ error: '不能加入自己创建的队伍' });
 
   // Check if user already joined this post (before status check, for clearer error)
   const alreadyInPost = db.prepare(

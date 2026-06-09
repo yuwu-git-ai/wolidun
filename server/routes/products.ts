@@ -40,6 +40,7 @@ function serializeProduct(p: any) {
     stock: computedStock,
     allowBrewing: p.allow_brewing === 1 || p.allow_brewing === true,
     allowFreezing: p.allow_freezing === 1 || p.allow_freezing === true,
+    isHot: p.is_hot === 1 || p.is_hot === true,
     variants,
   };
 }
@@ -64,7 +65,7 @@ router.get('/products', (_req: Request, res: Response) => {
 });
 
 router.post('/products', requireAdmin, (req: Request, res: Response) => {
-  const { name, price, category, description, image, stock, allowBrewing, allowFreezing, variants } = req.body;
+  const { name, price, category, description, image, stock, allowBrewing, allowFreezing, isHot, variants } = req.body;
 
   if (!name || price == null || !category) {
     res.status(400).json({ error: '请填写商品名称、价格和分类' });
@@ -75,12 +76,12 @@ router.post('/products', requireAdmin, (req: Request, res: Response) => {
   const id = uuid();
 
   db.prepare(`
-    INSERT INTO products (id, name, price, category, description, image, stock, allow_brewing, allow_freezing)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    INSERT INTO products (id, name, price, category, description, image, stock, allow_brewing, allow_freezing, is_hot)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `).run(
     id, name, price, category,
     description || '', image || '', stock ?? 999,
-    allowBrewing ? 1 : 0, allowFreezing ? 1 : 0
+    allowBrewing ? 1 : 0, allowFreezing ? 1 : 0, isHot ? 1 : 0
   );
 
   // Insert variants if provided
@@ -94,7 +95,7 @@ router.post('/products', requireAdmin, (req: Request, res: Response) => {
 
 router.put('/products/:id', requireAdmin, (req: Request, res: Response) => {
   const { id } = req.params;
-  const { name, price, category, description, image, stock, allowBrewing, allowFreezing, variants } = req.body;
+  const { name, price, category, description, image, stock, allowBrewing, allowFreezing, isHot, variants } = req.body;
 
   const db = getDb();
   const existing = db.prepare('SELECT * FROM products WHERE id = ?').get(id) as any;
@@ -104,7 +105,7 @@ router.put('/products/:id', requireAdmin, (req: Request, res: Response) => {
   }
 
   db.prepare(`
-    UPDATE products SET name=?, price=?, category=?, description=?, image=?, stock=?, allow_brewing=?, allow_freezing=?
+    UPDATE products SET name=?, price=?, category=?, description=?, image=?, stock=?, allow_brewing=?, allow_freezing=?, is_hot=?
     WHERE id=?
   `).run(
     name ?? existing.name, price ?? existing.price,
@@ -113,6 +114,7 @@ router.put('/products/:id', requireAdmin, (req: Request, res: Response) => {
     stock ?? existing.stock,
     allowBrewing !== undefined ? (allowBrewing ? 1 : 0) : existing.allow_brewing,
     allowFreezing !== undefined ? (allowFreezing ? 1 : 0) : existing.allow_freezing,
+    isHot !== undefined ? (isHot ? 1 : 0) : existing.is_hot,
     id
   );
 

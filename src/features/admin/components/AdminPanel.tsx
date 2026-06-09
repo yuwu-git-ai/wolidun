@@ -34,7 +34,7 @@ export default function AdminPanel({ adminKey }: { adminKey: string }) {
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [showProductForm, setShowProductForm] = useState(false);
   interface VariantFormItem { id?: string; name: string; price: string; stock: string; }
-  const [productForm, setProductForm] = useState({ name: '', price: '', category: '1', description: '', image: '', stock: '999', allowBrewing: false, allowFreezing: false, variants: [] as VariantFormItem[] });
+  const [productForm, setProductForm] = useState({ name: '', price: '', category: '1', description: '', image: '', stock: '999', allowBrewing: false, allowFreezing: false, isHot: false, variants: [] as VariantFormItem[] });
 
   // Combo state
   const [combos, setCombos] = useState<Combo[]>([]);
@@ -102,7 +102,7 @@ export default function AdminPanel({ adminKey }: { adminKey: string }) {
   };
 
   const resetProductForm = () => {
-    setProductForm({ name: '', price: '', category: '1', description: '', image: '', stock: '999', allowBrewing: false, allowFreezing: false, variants: [] });
+    setProductForm({ name: '', price: '', category: '1', description: '', image: '', stock: '999', allowBrewing: false, allowFreezing: false, isHot: false, variants: [] });
     setEditingProduct(null);
     setShowProductForm(false);
   };
@@ -126,6 +126,7 @@ export default function AdminPanel({ adminKey }: { adminKey: string }) {
       stock,
       allowBrewing: productForm.allowBrewing,
       allowFreezing: productForm.allowFreezing,
+      isHot: productForm.isHot,
       variants,
     };
     try {
@@ -146,7 +147,7 @@ export default function AdminPanel({ adminKey }: { adminKey: string }) {
     setProductForm({
       name: p.name, price: String(p.price), category: p.category,
       description: p.description, image: p.image || '', stock: String(p.stock),
-      allowBrewing: p.allowBrewing || false, allowFreezing: p.allowFreezing || false,
+      allowBrewing: p.allowBrewing || false, allowFreezing: p.allowFreezing || false, isHot: p.isHot || false,
       variants: (p.variants || []).map(v => ({ id: v.id, name: v.name, price: v.price != null ? String(v.price) : '', stock: String(v.stock) })),
     });
     setShowProductForm(true);
@@ -521,6 +522,11 @@ export default function AdminPanel({ adminKey }: { adminKey: string }) {
                         className="w-4 h-4 rounded-md border-slate-300 text-indigo-500" />
                       <span className="text-sm font-bold">支持冰镇 (+¥0.5)</span>
                     </label>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input type="checkbox" checked={productForm.isHot} onChange={e => setProductForm(p => ({ ...p, isHot: e.target.checked }))}
+                        className="w-4 h-4 rounded-md border-slate-300 text-red-500" />
+                      <span className="text-sm font-bold">🔥 热销推荐</span>
+                    </label>
                   </div>
                   <div className="flex gap-3">
                     <button type="button" onClick={resetProductForm}
@@ -564,6 +570,7 @@ export default function AdminPanel({ adminKey }: { adminKey: string }) {
                       )}
                       {p.allowBrewing && <span className="text-[10px] bg-orange-100 text-orange-600 px-2 py-0.5 rounded-full">帮泡</span>}
                       {p.allowFreezing && <span className="text-[10px] bg-indigo-100 text-indigo-600 px-2 py-0.5 rounded-full">冰镇</span>}
+                      {p.isHot && <span className="text-[10px] bg-red-100 text-red-600 px-2 py-0.5 rounded-full">🔥热销</span>}
                     </div>
                   </div>
                   <div className="flex gap-1.5">

@@ -219,7 +219,7 @@ export async function updateOrderStatus(orderId: string, status: string, adminKe
 export interface Post {
   id: string;
   user_id: string;
-  type: 'help' | 'skill' | 'treehole' | 'teamup';
+  type: 'help' | 'skill' | 'feedback' | 'teamup';
   title: string;
   content: string;
   tags: string;
@@ -245,7 +245,7 @@ export interface Comment {
   created_at: string;
 }
 
-export async function fetchPosts(params?: { type?: string; status?: string; page?: number; sort?: string }): Promise<{
+export async function fetchPosts(params?: { type?: string; status?: string; page?: number; sort?: string; search?: string }): Promise<{
   posts: Post[];
   total: number;
   page: number;
@@ -256,6 +256,7 @@ export async function fetchPosts(params?: { type?: string; status?: string; page
   if (params?.status) qs.set('status', params.status);
   if (params?.page) qs.set('page', String(params.page));
   if (params?.sort) qs.set('sort', params.sort);
+  if (params?.search) qs.set('search', params.search);
   const q = qs.toString();
   return request(`${BASE}/posts${q ? '?' + q : ''}`);
 }
