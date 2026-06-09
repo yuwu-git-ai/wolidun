@@ -152,7 +152,7 @@ export default function ComboCard({ combo, cart, products, onAddCombo }: ComboCa
         onClick={() => onAddCombo(combo, brewingIds, freezingIds, variantIds)}
         className={`w-full min-h-10 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl font-bold text-[11px] sm:text-base transition-all flex items-center justify-center gap-1 sm:gap-2 ${allRequiredSelected ? 'bg-amber-500 text-white hover:bg-amber-600 shadow-lg shadow-amber-500/20 active:scale-[0.98]' : 'bg-slate-200 text-slate-400 cursor-not-allowed'}`}
       >
-        <Plus size={16} /> {allRequiredSelected ? '加入购物车' : '请选择规格'}
+        <Plus size={16} /> {allRequiredSelected ? '加入购物车' : '请选择'}
       </button>
     </div>
   );
