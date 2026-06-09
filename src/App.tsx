@@ -45,6 +45,17 @@ function SquareApp() {
   const [showFriends, setShowFriends] = useState(false);
   const [showChat, setShowChat] = useState<string | undefined>(undefined);
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  // Poll unread notification count
+  useEffect(() => {
+    if (!identity) return;
+    const load = () => fetchUnreadCount(identity.nickname).then(r => setUnreadCount(r.count)).catch(() => {});
+    load();
+    const t = setInterval(load, 30000);
+    return () => clearInterval(t);
+  }, [identity]);
 
   if (!identity) {
     return (
@@ -68,15 +79,23 @@ function SquareApp() {
           <h1 className="min-w-0 truncate text-base sm:text-xl font-bold tracking-tight">窝里蹲广场</h1>
         </div>
         <div className="flex shrink-0 items-center gap-2">
-          <button onClick={() => setShowFriends(true)}
-            className="w-9 h-9 flex items-center justify-center bg-slate-100 hover:bg-slate-200 rounded-full border border-slate-200 transition-colors hidden sm:flex"
-            title="好友">
-            <Users size={14} />
-          </button>
+          <Link to="/"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-orange-500 text-white hover:bg-orange-600 transition-all">
+            <ShoppingBag size={14} />
+            <span className="hidden sm:inline">点单</span>
+          </Link>
           <button onClick={() => setShowChat("")}
             className="w-9 h-9 flex items-center justify-center bg-slate-100 hover:bg-slate-200 rounded-full border border-slate-200 transition-colors"
             title="消息">
             <MessageCircle size={14} />
+          </button>
+          <button onClick={() => setShowNotifications(true)}
+            className="w-9 h-9 flex items-center justify-center bg-slate-100 hover:bg-slate-200 rounded-full border border-slate-200 transition-colors relative"
+            title="通知">
+            <Bell size={16} />
+            {unreadCount > 0 && (
+              <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center">{unreadCount > 9 ? '9+' : unreadCount}</span>
+            )}
           </button>
           {/* User menu dropdown */}
           <div className="relative">
@@ -98,20 +117,10 @@ function SquareApp() {
                   className="w-full flex items-center gap-2 px-3 py-2 text-xs font-bold hover:bg-slate-50 text-left sm:hidden">
                   <Users size={12} />好友
                 </button>
-                <hr className="my-1 border-slate-100 sm:hidden" />
-                <Link to="/" onClick={() => setShowUserMenu(false)}
-                  className="w-full flex items-center gap-2 px-3 py-2 text-xs font-bold hover:bg-slate-50 text-left">
-                  <ShoppingBag size={12} />回到点单
-                </Link>
               </div>
             )}
           </div>
           {showUserMenu && <div className="fixed inset-0 z-40" onClick={() => setShowUserMenu(false)} />}
-          <Link to="/"
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-orange-500 text-white hover:bg-orange-600 transition-all">
-            <ShoppingBag size={14} />
-            <span className="hidden sm:inline">点单</span>
-          </Link>
         </div>
       </nav>
 
@@ -123,6 +132,9 @@ function SquareApp() {
       </div>
 
       {/* Overlays */}
+      {showNotifications && (
+        <NotificationPanel nickname={identity.nickname} onClose={() => { setShowNotifications(false); setUnreadCount(0); }} />
+      )}
       {showProfile && (
         <ProfilePanel nickname={showProfile} myIdentity={identity} onClose={() => setShowProfile(null)}
           onChat={setShowChat} />
