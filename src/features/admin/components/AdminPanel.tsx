@@ -325,9 +325,9 @@ export default function AdminPanel({ adminKey }: { adminKey: string }) {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-2 p-4 max-w-6xl mx-auto">
+      <div className="flex gap-2 p-4 max-w-6xl mx-auto overflow-x-auto scrollbar-hide">
         <button onClick={() => setTab('orders')}
-          className={`px-5 py-2.5 rounded-2xl font-bold text-sm transition-all ${tab === 'orders' ? 'bg-slate-800 text-white' : 'bg-white text-slate-500 border border-slate-200'}`}>
+          className={`px-5 py-2.5 rounded-2xl font-bold text-sm transition-all whitespace-nowrap ${tab === 'orders' ? 'bg-slate-800 text-white' : 'bg-white text-slate-500 border border-slate-200'}`}>
           订单管理
           {pendingOrders.length > 0 && <span className="ml-1.5 bg-red-500 text-white text-[10px] px-2 py-0.5 rounded-full">{pendingOrders.length}</span>}
         </button>
