@@ -123,14 +123,19 @@ function SquareApp() {
                   className="w-full flex items-center gap-2 px-3 py-2 text-xs font-bold hover:bg-slate-50 text-left">
                   <Users size={12} />好友
                 </button>
-                <button onClick={() => { setShowProfile(identity.nickname); setShowProfileScroll(undefined); setProfileStartEditing(true); setShowUserMenu(false); }}
-                  className="w-full flex items-center gap-2 px-3 py-2 text-xs font-bold hover:bg-slate-50 text-left">
-                  <Edit3 size={12} />编辑资料
-                </button>
                 <Link to="/" onClick={() => setShowUserMenu(false)}
                   className="w-full flex items-center gap-2 px-3 py-2 text-xs font-bold hover:bg-slate-50 text-left">
                   <ShoppingBag size={12} />回到点单
                 </Link>
+                <button onClick={() => { setShowProfile(identity.nickname); setShowProfileScroll(undefined); setProfileStartEditing(true); setShowUserMenu(false); }}
+                  className="w-full flex items-center gap-2 px-3 py-2 text-xs font-bold hover:bg-slate-50 text-left">
+                  <Edit3 size={12} />编辑资料
+                </button>
+                <hr className="my-1 border-slate-100" />
+                <button onClick={() => { localStorage.removeItem('wolidun_identity'); window.location.href = '/'; }}
+                  className="w-full flex items-center gap-2 px-3 py-2 text-xs font-bold hover:bg-red-50 text-red-500 text-left">
+                  <LogOut size={12} />退出
+                </button>
               </div>
             )}
           </div>
