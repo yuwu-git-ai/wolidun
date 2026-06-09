@@ -165,7 +165,7 @@ function SquareApp() {
         <NotificationPanel nickname={identity.nickname} onClose={() => { setShowNotifications(false); setUnreadCount(0); }} />
       )}
       {showProfile && (
-        <ProfilePanel nickname={showProfile} myIdentity={identity} onClose={() => { setShowProfile(null); setProfileStartEditing(false); }}
+        <ProfilePanel nickname={showProfile} myIdentity={identity} onClose={() => { setShowProfile(null); setProfileStartEditing(false); setShowProfileScroll(undefined); }}
           onChat={setShowChat} scrollTo={showProfileScroll} viewMode={showProfileScroll === 'posts' ? 'posts' : 'full'} startEditing={profileStartEditing} />
       )}
       {showFriends && (
