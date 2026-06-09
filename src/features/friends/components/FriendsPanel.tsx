@@ -127,25 +127,10 @@ export default function FriendsPanel({ userId, onClose, onViewProfile, onChat }:
             <div className="min-h-[280px]">
               {searching ? (
                 <p className="text-center text-slate-400 py-10 text-sm">搜索中...</p>
-              ) : searchQuery && searchResults.length === 0 ? (
-                <div className="text-center py-10">
-                  <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-3 text-2xl">🔍</div>
-                  <p className="font-bold text-slate-400 text-sm">未找到用户</p>
-                  <p className="text-xs text-slate-300 mt-1">换个关键词试试</p>
-                </div>
-              ) : !searchQuery ? (
-                <div className="text-center py-10">
-                  <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-3 text-2xl">🌍</div>
-                  <p className="font-bold text-slate-400 text-sm">发现新朋友</p>
-                  <p className="text-xs text-slate-300 mt-1">以下是所有注册用户，输入昵称可搜索</p>
-                </div>
-              ) : !searchQuery && searchResults.length === 0 ? (
-                <div className="text-center py-10">
-                  <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-3 text-2xl">🌍</div>
-                  <p className="font-bold text-slate-400 text-sm">暂无其他用户</p>
-                </div>
-              ) : (
+              ) : searchResults.length > 0 ? (
+                // Show results (either from search or all users)
                 <div className="space-y-2">
+                  {!searchQuery && <p className="text-xs font-bold text-slate-400 px-1">所有用户</p>}
                   {searchResults.map(u => (
                     <div key={u.nickname} className="flex items-center gap-3 p-3 bg-slate-50 rounded-xl">
                       <button onClick={() => onViewProfile(u.nickname)}
@@ -160,6 +145,17 @@ export default function FriendsPanel({ userId, onClose, onViewProfile, onChat }:
                       </button>
                     </div>
                   ))}
+                </div>
+              ) : searchQuery ? (
+                <div className="text-center py-10">
+                  <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-3 text-2xl">🔍</div>
+                  <p className="font-bold text-slate-400 text-sm">未找到用户</p>
+                  <p className="text-xs text-slate-300 mt-1">换个关键词试试</p>
+                </div>
+              ) : (
+                <div className="text-center py-10">
+                  <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-3 text-2xl">🌍</div>
+                  <p className="font-bold text-slate-400 text-sm">暂无其他用户</p>
                 </div>
               )}
             </div>
