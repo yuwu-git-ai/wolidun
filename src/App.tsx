@@ -43,7 +43,7 @@ function SquareApp() {
   const navigate = useNavigate();
   const [showProfile, setShowProfile] = useState<string | null>(null);
   const [showFriends, setShowFriends] = useState(false);
-  const [showChat, setShowChat] = useState<string | null>(null);
+  const [showChat, setShowChat] = useState<string | undefined>(undefined);
 
   if (!identity) {
     return (
@@ -79,7 +79,7 @@ function SquareApp() {
             title="好友">
             <Users size={14} />
           </button>
-          <button onClick={() => setShowChat(null)}
+          <button onClick={() => setShowChat("")}
             className="w-9 h-9 flex items-center justify-center bg-slate-100 hover:bg-slate-200 rounded-full border border-slate-200 transition-colors"
             title="消息">
             <MessageCircle size={14} />
@@ -108,9 +108,9 @@ function SquareApp() {
         <FriendsPanel userId={identity.nickname} onClose={() => setShowFriends(false)}
           onViewProfile={(n) => { setShowFriends(false); setShowProfile(n); }} onChat={setShowChat} />
       )}
-      {showChat !== null && (
+      {showChat !== undefined && (
         <ChatPanel userId={identity.nickname} initialPartner={showChat || undefined}
-          onClose={() => setShowChat(null)} onViewProfile={setShowProfile} />
+          onClose={() => setShowChat(undefined)} onViewProfile={setShowProfile} />
       )}
     </div>
   );
@@ -136,7 +136,7 @@ function CustomerApp() {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfile, setShowProfile] = useState<string | null>(null);
   const [showFriends, setShowFriends] = useState(false);
-  const [showChat, setShowChat] = useState<string | null>(null);
+  const [showChat, setShowChat] = useState<string | undefined>(undefined);
 
   // Fetch unread notification count
   useEffect(() => {
@@ -211,7 +211,7 @@ function CustomerApp() {
               title="好友">
               <Users size={14} />
             </button>
-            <button onClick={() => setShowChat(null)}
+            <button onClick={() => setShowChat("")}
               className="w-9 h-9 flex items-center justify-center bg-slate-100 hover:bg-slate-200 rounded-full border border-slate-200 transition-colors"
               title="消息">
               <MessageCircle size={14} />
@@ -502,9 +502,9 @@ function CustomerApp() {
         <FriendsPanel userId={state.identity!.nickname} onClose={() => setShowFriends(false)}
           onViewProfile={(n) => { setShowFriends(false); setShowProfile(n); }} onChat={setShowChat} />
       )}
-      {showChat !== null && (
+      {showChat !== undefined && (
         <ChatPanel userId={state.identity!.nickname} initialPartner={showChat || undefined}
-          onClose={() => setShowChat(null)} onViewProfile={setShowProfile} />
+          onClose={() => setShowChat(undefined)} onViewProfile={setShowProfile} />
       )}
     </div>
   );
