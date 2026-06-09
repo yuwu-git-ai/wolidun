@@ -2,7 +2,7 @@ import { lazy, Suspense, useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   ShoppingBag, Check, Flame, Utensils, Pizza, Coffee, IceCream, Package,
-  User as UserIcon, Search, Edit3, X, LogOut, Clock, MessageCircle, Bell,
+  User as UserIcon, Search, Edit3, X, LogOut, Clock, MessageCircle, Bell, Users,
 } from 'lucide-react';
 import { fetchUnreadCount } from './shared/api';
 import { DEFAULT_CATEGORIES } from './shared/constants';
@@ -13,6 +13,9 @@ import ProfileForm from './features/ordering/components/ProfileForm';
 import OrderHistory from './features/ordering/components/OrderHistory';
 import NotificationPanel from './features/ordering/components/NotificationPanel';
 import CartPanel from './features/ordering/components/CartPanel';
+import ProfilePanel from './features/profile/components/ProfilePanel';
+import FriendsPanel from './features/friends/components/FriendsPanel';
+import ChatPanel from './features/chat/components/ChatPanel';
 import { getItemUnitPrice } from './shared/utils';
 import { Routes, Route, Link, useNavigate } from 'react-router-dom';
 import ErrorBoundary from './shared/components/ErrorBoundary';
@@ -38,6 +41,9 @@ const SquarePanel = lazy(() => import('./features/square/components/SquarePanel'
 function SquareApp() {
   const identity = getIdentity();
   const navigate = useNavigate();
+  const [showProfile, setShowProfile] = useState<string | null>(null);
+  const [showFriends, setShowFriends] = useState(false);
+  const [showChat, setShowChat] = useState<string | null>(null);
 
   if (!identity) {
     return (
@@ -62,11 +68,22 @@ function SquareApp() {
         </div>
         <div className="flex shrink-0 items-center gap-2">
           <div className="flex items-center gap-1.5 px-2 py-1 bg-slate-50 border border-slate-100 rounded-full">
-            <div className="w-5 h-5 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center">
+            <button onClick={() => setShowProfile(identity.nickname)}
+              className="w-5 h-5 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center hover:bg-indigo-200 transition-colors">
               <UserIcon size={10} />
-            </div>
+            </button>
             <span className="text-[10px] font-bold text-slate-600 truncate max-w-[60px]">{identity.nickname}</span>
           </div>
+          <button onClick={() => setShowFriends(true)}
+            className="w-9 h-9 flex items-center justify-center bg-slate-100 hover:bg-slate-200 rounded-full border border-slate-200 transition-colors"
+            title="好友">
+            <Users size={14} />
+          </button>
+          <button onClick={() => setShowChat(null)}
+            className="w-9 h-9 flex items-center justify-center bg-slate-100 hover:bg-slate-200 rounded-full border border-slate-200 transition-colors"
+            title="消息">
+            <MessageCircle size={14} />
+          </button>
           <Link to="/"
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-orange-500 text-white hover:bg-orange-600 transition-all">
             <ShoppingBag size={14} />
@@ -78,9 +95,23 @@ function SquareApp() {
       {/* Square content */}
       <div className="flex-1 overflow-hidden">
         <Suspense fallback={<PageLoading />}>
-          <SquarePanel identity={identity} />
+          <SquarePanel identity={identity} onViewProfile={setShowProfile} />
         </Suspense>
       </div>
+
+      {/* Overlays */}
+      {showProfile && (
+        <ProfilePanel nickname={showProfile} myIdentity={identity} onClose={() => setShowProfile(null)}
+          onChat={setShowChat} />
+      )}
+      {showFriends && (
+        <FriendsPanel userId={identity.nickname} onClose={() => setShowFriends(false)}
+          onViewProfile={(n) => { setShowFriends(false); setShowProfile(n); }} onChat={setShowChat} />
+      )}
+      {showChat !== null && (
+        <ChatPanel userId={identity.nickname} initialPartner={showChat || undefined}
+          onClose={() => setShowChat(null)} onViewProfile={setShowProfile} />
+      )}
     </div>
   );
 }
@@ -103,6 +134,9 @@ function CustomerApp() {
   const { state, actions } = useCustomerApp();
   const [unreadCount, setUnreadCount] = useState(0);
   const [showNotifications, setShowNotifications] = useState(false);
+  const [showProfile, setShowProfile] = useState<string | null>(null);
+  const [showFriends, setShowFriends] = useState(false);
+  const [showChat, setShowChat] = useState<string | null>(null);
 
   // Fetch unread notification count
   useEffect(() => {
@@ -164,13 +198,24 @@ function CustomerApp() {
           )}
           {state.identity && (
             <div className="flex items-center gap-1.5 px-2 py-1 bg-slate-50 border border-slate-100 rounded-full">
-              <div className="w-5 h-5 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center">
+              <button onClick={() => setShowProfile(state.identity!.nickname)}
+                className="w-5 h-5 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center hover:bg-indigo-200 transition-colors">
                 <UserIcon size={10} />
-              </div>
+              </button>
               <span className="text-[10px] font-bold text-slate-600 truncate max-w-[60px]">{state.identity.nickname}</span>
             </div>
           )}
           {state.identity ? (<>
+            <button onClick={() => setShowFriends(true)}
+              className="w-9 h-9 flex items-center justify-center bg-slate-100 hover:bg-slate-200 rounded-full border border-slate-200 transition-colors"
+              title="好友">
+              <Users size={14} />
+            </button>
+            <button onClick={() => setShowChat(null)}
+              className="w-9 h-9 flex items-center justify-center bg-slate-100 hover:bg-slate-200 rounded-full border border-slate-200 transition-colors"
+              title="消息">
+              <MessageCircle size={14} />
+            </button>
             <button onClick={() => setShowNotifications(true)}
               className="w-9 h-9 flex items-center justify-center bg-slate-100 hover:bg-slate-200 rounded-full border border-slate-200 transition-colors relative"
               title="通知">
@@ -447,6 +492,20 @@ function CustomerApp() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Social overlays */}
+      {showProfile && (
+        <ProfilePanel nickname={showProfile} myIdentity={state.identity!} onClose={() => setShowProfile(null)}
+          onChat={setShowChat} />
+      )}
+      {showFriends && (
+        <FriendsPanel userId={state.identity!.nickname} onClose={() => setShowFriends(false)}
+          onViewProfile={(n) => { setShowFriends(false); setShowProfile(n); }} onChat={setShowChat} />
+      )}
+      {showChat !== null && (
+        <ChatPanel userId={state.identity!.nickname} initialPartner={showChat || undefined}
+          onClose={() => setShowChat(null)} onViewProfile={setShowProfile} />
+      )}
     </div>
   );
 }

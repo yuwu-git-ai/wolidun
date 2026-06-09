@@ -17,7 +17,7 @@ const SQUARE_TABS = [
 const TYPE_LABELS: Record<string, string> = { help: '求助', skill: '技能', feedback: '反馈', teamup: '组队' };
 const TYPE_COLORS: Record<string, string> = { help: 'bg-rose-50 text-rose-600', skill: 'bg-indigo-50 text-indigo-600', feedback: 'bg-emerald-50 text-emerald-600', teamup: 'bg-amber-50 text-amber-600' };
 
-export default function SquarePanel({ identity }: { identity: { nickname: string; dorm: string } }) {
+export default function SquarePanel({ identity, onViewProfile }: { identity: { nickname: string; dorm: string }; onViewProfile?: (nickname: string) => void }) {
   const [activeTab, setActiveTab] = useState<string>('help');
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
@@ -276,7 +276,11 @@ export default function SquarePanel({ identity }: { identity: { nickname: string
                     {post.status === 'done' && <span className="text-[10px] text-green-500 font-bold">已完成</span>}
                     {post.status === 'claimed' && <span className="text-[10px] text-blue-500 font-bold">已接单</span>}
                   </div>
-                  <h4 className="font-bold text-sm mt-1 truncate">{post.anonymous ? '🕶️ 匿名' : post.user_id}：{post.title}</h4>
+                  <h4 className="font-bold text-sm mt-1 truncate">
+                    {post.anonymous ? '🕶️ 匿名' : (
+                      <span className="hover:text-orange-500 transition-colors cursor-pointer" onClick={(e) => { e.stopPropagation(); onViewProfile?.(post.user_id); }}>{post.user_id}</span>
+                    )}：{post.title}
+                  </h4>
                   {post.content && <p className="text-xs text-slate-500 mt-1 line-clamp-2">{post.content}</p>}
                   <div className="flex items-center gap-4 mt-2 text-[10px] text-slate-400">
                     <span>{formatTime(post.created_at)}</span>
@@ -365,7 +369,12 @@ export default function SquarePanel({ identity }: { identity: { nickname: string
                  <Users size={18} className={TYPE_COLORS[selectedPost.type]?.split(' ')[1]} />}
               </div>
               <div className="flex-1">
-                <h3 className="font-black text-base">{selectedPost.anonymous ? '🕶️ 匿名' : selectedPost.user_id}：{selectedPost.title}</h3>
+                <h3 className="font-black text-base">
+                  {selectedPost.anonymous ? '🕶️ 匿名' : (
+                    <button onClick={(e) => { e.stopPropagation(); onViewProfile?.(selectedPost.user_id); }}
+                      className="hover:text-orange-500 transition-colors underline decoration-dotted underline-offset-2 cursor-pointer">{selectedPost.user_id}</button>
+                  )}：{selectedPost.title}
+                </h3>
                 <div className="flex items-center gap-2 mt-0.5">
                   <span className={`text-[10px] px-1.5 py-0.5 rounded font-bold ${TYPE_COLORS[selectedPost.type]}`}>{TYPE_LABELS[selectedPost.type]}</span>
                   {selectedPost.price && <span className="text-[10px] font-bold text-orange-500">{selectedPost.price}</span>}

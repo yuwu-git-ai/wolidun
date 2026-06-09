@@ -251,6 +251,45 @@ function runMigrations() {
     db.prepare('INSERT INTO schema_version (version) VALUES (10)').run();
     console.log('[DB] Migrated to schema v10 (notifications).');
   }
+
+  if (current < 11) {
+    db.exec(`
+      CREATE TABLE IF NOT EXISTS user_profiles (
+        user_id TEXT PRIMARY KEY,
+        avatar TEXT DEFAULT '😊',
+        bio TEXT DEFAULT '',
+        skills TEXT DEFAULT '[]',
+        contact TEXT DEFAULT '{}',
+        status_text TEXT DEFAULT '',
+        updated_at TEXT DEFAULT (datetime('now'))
+      );
+
+      CREATE TABLE IF NOT EXISTS friendships (
+        id TEXT PRIMARY KEY,
+        from_user TEXT NOT NULL,
+        to_user TEXT NOT NULL,
+        status TEXT DEFAULT 'pending' CHECK(status IN ('pending','accepted','blocked')),
+        created_at TEXT DEFAULT (datetime('now')),
+        accepted_at TEXT,
+        UNIQUE(from_user, to_user)
+      );
+      CREATE INDEX IF NOT EXISTS idx_friendships_from ON friendships(from_user);
+      CREATE INDEX IF NOT EXISTS idx_friendships_to ON friendships(to_user);
+
+      CREATE TABLE IF NOT EXISTS messages (
+        id TEXT PRIMARY KEY,
+        from_user TEXT NOT NULL,
+        to_user TEXT NOT NULL,
+        content TEXT NOT NULL,
+        is_read INTEGER DEFAULT 0,
+        created_at TEXT DEFAULT (datetime('now'))
+      );
+      CREATE INDEX IF NOT EXISTS idx_messages_users ON messages(from_user, to_user);
+      CREATE INDEX IF NOT EXISTS idx_messages_created ON messages(created_at);
+    `);
+    db.prepare('INSERT INTO schema_version (version) VALUES (11)').run();
+    console.log('[DB] Migrated to schema v11 (user_profiles, friendships, messages).');
+  }
 }
 
 function initTables() {

@@ -1,0 +1,128 @@
+import { useState, useEffect, useCallback } from 'react';
+import { X, UserX, UserPlus, Check, Clock, MessageCircle, Users } from 'lucide-react';
+import { fetchFriends, respondFriendRequest, deleteFriend, fetchUnreadCount } from '../../../shared/api';
+import type { FriendInfo } from '../../../shared/api';
+import { getErrorMessage } from '../../../shared/utils';
+
+interface Props {
+  userId: string;
+  onClose: () => void;
+  onViewProfile: (nickname: string) => void;
+  onChat?: (partner: string) => void;
+}
+
+export default function FriendsPanel({ userId, onClose, onViewProfile, onChat }: Props) {
+  const [friends, setFriends] = useState<FriendInfo[]>([]);
+  const [received, setReceived] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [tab, setTab] = useState<'friends' | 'requests'>('friends');
+
+  const load = useCallback(() => {
+    fetchFriends(userId)
+      .then(data => {
+        setFriends(data.friends);
+        setReceived(data.received);
+      })
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }, [userId]);
+
+  useEffect(() => { load(); }, [load]);
+
+  const handleRespond = async (from: string, to: string, action: 'accept' | 'reject') => {
+    try {
+      await respondFriendRequest(from, to, action);
+      load();
+    } catch (err) { alert(getErrorMessage(err)); }
+  };
+
+  const handleDelete = async (nickname: string) => {
+    if (!confirm(`确定删除好友 ${nickname}？`)) return;
+    try {
+      await deleteFriend(userId, nickname);
+      load();
+    } catch (err) { alert(getErrorMessage(err)); }
+  };
+
+  return (
+    <div className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm flex items-end sm:items-center justify-center p-4"
+      onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
+      <div className="w-full max-w-md bg-white rounded-t-[28px] sm:rounded-[28px] p-6 max-h-[85vh] overflow-y-auto shadow-2xl space-y-4">
+        {/* Header */}
+        <div className="flex items-center gap-3">
+          <Users size={20} className="text-slate-600" />
+          <h2 className="font-black text-lg flex-1">好友</h2>
+          <div className="flex bg-slate-100 rounded-xl p-0.5">
+            <button onClick={() => setTab('friends')}
+              className={`px-3 py-1 rounded-lg text-xs font-bold transition-colors ${tab === 'friends' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-400'}`}>好友</button>
+            <button onClick={() => setTab('requests')}
+              className={`px-3 py-1 rounded-lg text-xs font-bold transition-colors ${tab === 'requests' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-400'}`}>
+              申请{received.length > 0 ? ` ${received.length}` : ''}
+            </button>
+          </div>
+          <button onClick={onClose} className="text-slate-400 hover:text-slate-600"><X size={20} /></button>
+        </div>
+
+        {loading ? (
+          <p className="text-center text-slate-400 py-10 text-sm">加载中...</p>
+        ) : tab === 'friends' ? (
+          friends.length === 0 ? (
+            <div className="text-center py-12">
+              <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-3 text-2xl">👥</div>
+              <p className="font-bold text-slate-400 text-sm">还没有好友</p>
+              <p className="text-xs text-slate-300 mt-1">去广场找人加好友吧</p>
+            </div>
+          ) : (
+            <div className="space-y-2">
+              {friends.map(f => (
+                <div key={f.id} className="flex items-center gap-3 p-3 bg-slate-50 rounded-xl hover:bg-slate-100 transition-colors">
+                  <button onClick={() => onViewProfile(f.friend_nickname)} className="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center text-xl shrink-0">{f.avatar}</button>
+                  <div className="flex-1 min-w-0 cursor-pointer" onClick={() => onViewProfile(f.friend_nickname)}>
+                    <p className="text-sm font-bold truncate">{f.friend_nickname}</p>
+                    {f.status_text && <p className="text-xs text-orange-400 truncate">{f.status_text}</p>}
+                    {!f.status_text && f.bio && <p className="text-xs text-slate-400 truncate">{f.bio}</p>}
+                  </div>
+                  <div className="flex gap-1 shrink-0">
+                    <button onClick={() => onChat?.(f.friend_nickname)}
+                      className="p-2 bg-slate-800 text-white rounded-lg hover:bg-slate-700 transition-colors" title="发消息">
+                      <MessageCircle size={14} />
+                    </button>
+                    <button onClick={() => handleDelete(f.friend_nickname)}
+                      className="p-2 text-slate-300 hover:text-red-500 transition-colors" title="删除好友">
+                      <UserX size={14} />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )
+        ) : (
+          received.length === 0 ? (
+            <div className="text-center py-12">
+              <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-3 text-2xl">📭</div>
+              <p className="font-bold text-slate-400 text-sm">没有待处理的申请</p>
+            </div>
+          ) : (
+            <div className="space-y-2">
+              {received.map(r => (
+                <div key={r.id} className="flex items-center gap-3 p-3 bg-amber-50 rounded-xl">
+                  <button onClick={() => onViewProfile(r.from_user)} className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center text-xl shrink-0">👤</button>
+                  <div className="flex-1 min-w-0 cursor-pointer" onClick={() => onViewProfile(r.from_user)}>
+                    <p className="text-sm font-bold">{r.from_user}</p>
+                    <p className="text-xs text-amber-500 flex items-center gap-1"><Clock size={10} />请求加为好友</p>
+                  </div>
+                  <div className="flex gap-1 shrink-0">
+                    <button onClick={() => handleRespond(r.from_user, r.to_user, 'accept')}
+                      className="px-3 py-1.5 bg-green-500 text-white rounded-lg text-xs font-bold hover:bg-green-600"><Check size={12} /></button>
+                    <button onClick={() => handleRespond(r.from_user, r.to_user, 'reject')}
+                      className="px-3 py-1.5 bg-slate-200 text-slate-500 rounded-lg text-xs font-bold hover:bg-red-100 hover:text-red-500"><X size={12} /></button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )
+        )}
+      </div>
+    </div>
+  );
+}

@@ -377,3 +377,112 @@ export async function fetchUnreadCount(userId: string): Promise<{ count: number 
 export async function markNotificationRead(id: string): Promise<{ success: boolean }> {
   return request(`${BASE}/notifications/${id}/read`, { method: 'PUT' });
 }
+
+// ── Users & Profiles ──
+
+export interface UserProfile {
+  nickname: string;
+  dorm: string;
+  created_at: string;
+  avatar: string;
+  bio: string;
+  skills: string[];
+  contact: { wechat?: string; phone?: string; qq?: string };
+  status_text: string;
+  friend_count: number;
+  posts: Post[];
+  friendship: { id: string; from_user: string; to_user: string; status: string } | null;
+}
+
+export interface FriendInfo {
+  id: string;
+  from_user: string;
+  to_user: string;
+  accepted_at: string;
+  friend_nickname: string;
+  avatar: string;
+  bio: string;
+  status_text: string;
+}
+
+export interface Conversation {
+  partner: string;
+  dorm: string;
+  avatar: string;
+  last_message: Message | null;
+  unread: number;
+}
+
+export interface Message {
+  id: string;
+  from_user: string;
+  to_user: string;
+  content: string;
+  is_read: number;
+  created_at: string;
+}
+
+export async function fetchUserProfile(nickname: string, viewer?: string): Promise<UserProfile> {
+  const qs = viewer ? `?viewer=${encodeURIComponent(viewer)}` : '';
+  return request(`${BASE}/users/${encodeURIComponent(nickname)}${qs}`);
+}
+
+export async function updateUserProfile(nickname: string, data: {
+  avatar?: string; bio?: string; skills?: string[]; contact?: object; status_text?: string;
+}): Promise<any> {
+  return request(`${BASE}/users/${encodeURIComponent(nickname)}`, {
+    method: 'PUT',
+    body: JSON.stringify(data),
+  });
+}
+
+export async function searchUsers(q: string): Promise<{ users: { nickname: string; dorm: string }[] }> {
+  return request(`${BASE}/users/search`, {
+    method: 'POST',
+    body: JSON.stringify({ q }),
+  });
+}
+
+// ── Friends ──
+
+export async function sendFriendRequest(from: string, to: string): Promise<{ ok: boolean; auto_accepted?: boolean }> {
+  return request(`${BASE}/friends/request`, {
+    method: 'POST',
+    body: JSON.stringify({ from, to }),
+  });
+}
+
+export async function respondFriendRequest(from: string, to: string, action: 'accept' | 'reject'): Promise<{ ok: boolean }> {
+  return request(`${BASE}/friends/respond`, {
+    method: 'PUT',
+    body: JSON.stringify({ from, to, action }),
+  });
+}
+
+export async function fetchFriends(userId: string): Promise<{ friends: FriendInfo[]; sent: any[]; received: any[] }> {
+  return request(`${BASE}/friends?user_id=${encodeURIComponent(userId)}`);
+}
+
+export async function deleteFriend(userId: string, friendNickname: string): Promise<{ ok: boolean }> {
+  return request(`${BASE}/friends/${encodeURIComponent(friendNickname)}`, {
+    method: 'DELETE',
+    body: JSON.stringify({ user_id: userId }),
+  });
+}
+
+// ── Messages ──
+
+export async function sendMessage(from: string, to: string, content: string): Promise<Message> {
+  return request(`${BASE}/messages`, {
+    method: 'POST',
+    body: JSON.stringify({ from, to, content }),
+  });
+}
+
+export async function fetchConversation(userId: string, partner: string): Promise<{ messages: Message[] }> {
+  return request(`${BASE}/messages/${encodeURIComponent(partner)}?user_id=${encodeURIComponent(userId)}`);
+}
+
+export async function fetchConversations(userId: string): Promise<{ conversations: Conversation[] }> {
+  return request(`${BASE}/messages?user_id=${encodeURIComponent(userId)}`);
+}
