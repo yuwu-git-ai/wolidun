@@ -238,11 +238,6 @@ function CustomerApp() {
             </Link>
           )}
           {state.identity ? (<>
-            <button onClick={() => setShowFriends(true)}
-              className="w-9 h-9 flex items-center justify-center bg-slate-100 hover:bg-slate-200 rounded-full border border-slate-200 transition-colors hidden sm:flex"
-              title="好友">
-              <Users size={14} />
-            </button>
             <button onClick={() => setShowChat("")}
               className="w-9 h-9 flex items-center justify-center bg-slate-100 hover:bg-slate-200 rounded-full border border-slate-200 transition-colors"
               title="消息">
@@ -277,9 +272,13 @@ function CustomerApp() {
                     <Clock size={12} />历史订单
                   </button>
                   <button onClick={() => { setShowFriends(true); setShowUserMenu(false); }}
-                    className="w-full flex items-center gap-2 px-3 py-2 text-xs font-bold hover:bg-slate-50 text-left sm:hidden">
+                    className="w-full flex items-center gap-2 px-3 py-2 text-xs font-bold hover:bg-slate-50 text-left">
                     <Users size={12} />好友
                   </button>
+                  <Link to="/square" onClick={() => setShowUserMenu(false)}
+                    className="w-full flex items-center gap-2 px-3 py-2 text-xs font-bold hover:bg-slate-50 text-left">
+                    <Sparkles size={12} />回到广场
+                  </Link>
                   <button onClick={() => { actions.setShowProfileForm(true); setShowUserMenu(false); }}
                     className="w-full flex items-center gap-2 px-3 py-2 text-xs font-bold hover:bg-slate-50 text-left">
                     <Edit3 size={12} />编辑资料
