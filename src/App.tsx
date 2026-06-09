@@ -2,7 +2,7 @@ import { lazy, Suspense, useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   ShoppingBag, Check, Flame, Utensils, Pizza, Coffee, IceCream, Package,
-  User as UserIcon, Search, Edit3, X, LogOut, Clock, MessageCircle, Bell, Users, ChevronDown, Sparkles,
+  User as UserIcon, Search, Edit3, X, LogOut, Clock, MessageCircle, Bell, Users, ChevronDown, Sparkles, FileText,
 } from 'lucide-react';
 import { fetchUnreadCount } from './shared/api';
 import { DEFAULT_CATEGORIES } from './shared/constants';
@@ -112,6 +112,10 @@ function SquareApp() {
                 <button onClick={() => { setShowProfile(identity.nickname); setShowUserMenu(false); }}
                   className="w-full flex items-center gap-2 px-3 py-2 text-xs font-bold hover:bg-slate-50 text-left">
                   <UserIcon size={12} />我的名片
+                </button>
+                <button onClick={() => { setShowProfile(identity.nickname); setShowUserMenu(false); }}
+                  className="w-full flex items-center gap-2 px-3 py-2 text-xs font-bold hover:bg-slate-50 text-left">
+                  <FileText size={12} />历史帖子
                 </button>
                 <button onClick={() => { setShowFriends(true); setShowUserMenu(false); }}
                   className="w-full flex items-center gap-2 px-3 py-2 text-xs font-bold hover:bg-slate-50 text-left sm:hidden">
