@@ -109,7 +109,7 @@ function SquareApp() {
               <ChevronDown size={10} className="text-slate-400 hidden sm:block" />
             </button>
             {showUserMenu && (
-              <div className="absolute right-0 top-full mt-1 w-36 bg-white rounded-xl shadow-xl border border-slate-200 py-1 z-50">
+              <div className="fixed top-12 right-4 mt-1 w-36 bg-white rounded-xl shadow-xl border border-slate-200 py-1 z-[100]">
                 <button onClick={() => { setShowProfile(identity.nickname); setShowProfileScroll(undefined); setShowUserMenu(false); }}
                   className="w-full flex items-center gap-2 px-3 py-2 text-xs font-bold hover:bg-slate-50 text-left">
                   <UserIcon size={12} />我的名片
@@ -125,7 +125,7 @@ function SquareApp() {
               </div>
             )}
           </div>
-          {showUserMenu && <div className="fixed inset-0 z-40" onClick={() => setShowUserMenu(false)} />}
+          {showUserMenu && <div className="fixed inset-0 z-[90]" onClick={() => setShowUserMenu(false)} />}
         </div>
       </nav>
 
@@ -267,7 +267,7 @@ function CustomerApp() {
                 <ChevronDown size={10} className="text-slate-400 hidden sm:block" />
               </button>
               {showUserMenu && (
-                <div className="absolute right-0 top-full mt-1 w-36 bg-white rounded-xl shadow-xl border border-slate-200 py-1 z-50">
+                <div className="fixed top-12 right-4 mt-1 w-36 bg-white rounded-xl shadow-xl border border-slate-200 py-1 z-[100]">
                   <button onClick={() => { setShowProfile(state.identity!.nickname); setShowUserMenu(false); }}
                     className="w-full flex items-center gap-2 px-3 py-2 text-xs font-bold hover:bg-slate-50 text-left">
                     <UserIcon size={12} />我的名片
@@ -293,7 +293,7 @@ function CustomerApp() {
               )}
             </div>
             {/* Click outside to close */}
-            {showUserMenu && <div className="fixed inset-0 z-40" onClick={() => setShowUserMenu(false)} />}
+            {showUserMenu && <div className="fixed inset-0 z-[90]" onClick={() => setShowUserMenu(false)} />}
           </>) : (
             <button onClick={() => actions.setShowIdentityForm(true)}
               className="px-4 py-2 bg-orange-500 text-white rounded-full font-bold text-sm hover:bg-orange-600 transition-all">
