@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
-import { X, Edit3, Save, UserPlus, MessageCircle, Users, MapPin, Copy, Check, UserX, Clock } from 'lucide-react';
-import { fetchUserProfile, updateUserProfile, sendFriendRequest, respondFriendRequest, deleteFriend, fetchFriends } from '../../../shared/api';
+import { X, Edit3, Save, UserPlus, MessageCircle, Users, MapPin, Copy, Check, UserX, Clock, Trash2 } from 'lucide-react';
+import { fetchUserProfile, updateUserProfile, sendFriendRequest, respondFriendRequest, deleteFriend, fetchFriends, deletePost } from '../../../shared/api';
 import type { UserProfile } from '../../../shared/api';
 import { getErrorMessage } from '../../../shared/utils';
 
@@ -90,6 +90,14 @@ export default function ProfilePanel({ nickname, myIdentity, onClose, onChat }: 
       setCopied(label);
       setTimeout(() => setCopied(''), 1500);
     }).catch(() => {});
+  };
+
+  const handleDeletePost = async (postId: string) => {
+    if (!confirm('确定删除这条帖子？')) return;
+    try {
+      await deletePost(postId, myIdentity.nickname);
+      loadProfile();
+    } catch (err) { alert(getErrorMessage(err)); }
   };
 
   const getFriendButton = () => {
@@ -256,10 +264,16 @@ export default function ProfilePanel({ nickname, myIdentity, onClose, onChat }: 
                 <div key={p.id} className="p-3 bg-slate-50 rounded-xl">
                   <div className="flex items-center gap-2">
                     <span className="text-[10px] px-1.5 py-0.5 rounded font-bold bg-slate-200 text-slate-500">{p.type}</span>
-                    <span className="text-sm font-bold truncate">{p.title}</span>
-                    <span className={`text-[10px] ml-auto ${p.status === 'done' ? 'text-green-500' : p.status === 'claimed' ? 'text-blue-500' : 'text-slate-400'}`}>
+                    <span className="text-sm font-bold truncate flex-1">{p.title}</span>
+                    <span className={`text-[10px] ${p.status === 'done' ? 'text-green-500' : p.status === 'claimed' ? 'text-blue-500' : 'text-slate-400'}`}>
                       {p.status === 'open' ? '进行中' : p.status === 'claimed' ? '已接单' : p.status === 'done' ? '已完成' : ''}
                     </span>
+                    {isMe && (
+                      <button onClick={(e) => { e.stopPropagation(); handleDeletePost(p.id); }}
+                        className="text-slate-300 hover:text-red-500 transition-colors shrink-0" title="删除帖子">
+                        <Trash2 size={14} />
+                      </button>
+                    )}
                   </div>
                 </div>
               ))}
