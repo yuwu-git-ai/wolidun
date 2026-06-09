@@ -98,6 +98,7 @@ export default function SquarePanel({ identity }: { identity: { nickname: string
   const handleDone = async (post: Post) => {
     try {
       await updatePost(post.id, { status: 'done', user_id: identity.nickname });
+      setSelectedPost(prev => prev?.id === post.id ? { ...prev, status: 'done' } : prev);
       loadPosts();
     } catch (err) { alert(getErrorMessage(err)); }
   };
@@ -374,8 +375,12 @@ export default function SquarePanel({ identity }: { identity: { nickname: string
               {selectedPost.type === 'help' && selectedPost.status === 'open' && selectedPost.user_id !== identity.nickname && (
                 <button onClick={() => handleClaim(selectedPost)} className="ml-auto px-3 py-1.5 bg-slate-800 text-white rounded-lg text-xs font-bold hover:bg-slate-700">我能搞定</button>
               )}
-              {selectedPost.user_id === identity.nickname && (selectedPost.status === 'open' || selectedPost.status === 'claimed') && (
-                <button onClick={() => handleDone(selectedPost)} className="ml-auto px-3 py-1.5 bg-green-500 text-white rounded-lg text-xs font-bold hover:bg-green-600 active:scale-95 transition-all">标记完成</button>
+              {selectedPost.user_id === identity.nickname && (
+                selectedPost.status === 'done' ? (
+                  <span className="ml-auto px-3 py-1.5 bg-slate-200 text-slate-400 rounded-lg text-xs font-bold">已完成</span>
+                ) : (
+                  <button onClick={() => handleDone(selectedPost)} className="ml-auto px-3 py-1.5 bg-green-500 text-white rounded-lg text-xs font-bold hover:bg-green-600 active:scale-95 transition-all">标记完成</button>
+                )
               )}
               {selectedPost.type === 'teamup' && (
                 selectedPost.user_id === identity.nickname ? (
