@@ -213,4 +213,21 @@ router.delete('/friends/:nickname', (req: Request, res: Response) => {
   res.json({ ok: true });
 });
 
+// GET /api/admin/users — list all registered users (admin only)
+router.get('/admin/users', (req: Request, res: Response) => {
+  const adminKey = req.headers['x-admin-key'] as string;
+  const expectedKey = process.env.ADMIN_KEY || 'admin123';
+  if (adminKey !== expectedKey) return res.status(403).json({ error: '需要管理员权限' });
+
+  const db = getDb();
+  const users = db.prepare(`
+    SELECT u.nickname, u.dorm, u.created_at,
+      (SELECT COUNT(*) FROM friendships WHERE (from_user = u.nickname OR to_user = u.nickname) AND status = 'accepted') as friend_count,
+      (SELECT COUNT(*) FROM posts WHERE user_id = u.nickname) as post_count
+    FROM users u ORDER BY u.created_at DESC
+  `).all();
+
+  res.json({ users });
+});
+
 export default router;

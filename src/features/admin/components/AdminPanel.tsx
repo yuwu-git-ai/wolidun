@@ -9,14 +9,14 @@ import {
   updateOrderStatus, deleteOrder, createProduct, updateProduct, deleteProduct,
 } from '../../../shared/api';
 import type { Order, Product, Combo } from '../../../shared/types';
-import { fetchCombos, createCombo, updateCombo, deleteCombo } from '../../../shared/api';
+import { fetchCombos, createCombo, updateCombo, deleteCombo, fetchAllUsers, broadcastNotification } from '../../../shared/api';
 import { DEFAULT_CATEGORIES } from '../../../shared/constants';
 import { STATUS_LABELS, getErrorMessage } from '../../../shared/utils';
 
 const NOTIFICATION_SOUND = 'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACAf39/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/g';
 
 export default function AdminPanel({ adminKey }: { adminKey: string }) {
-  const [tab, setTab] = useState<'orders' | 'products' | 'analytics' | 'combos'>('orders');
+  const [tab, setTab] = useState<'orders' | 'products' | 'analytics' | 'combos' | 'users' | 'broadcast'>('orders');
   const [orders, setOrders] = useState<Order[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
@@ -41,6 +41,10 @@ export default function AdminPanel({ adminKey }: { adminKey: string }) {
   const [editingCombo, setEditingCombo] = useState<Combo | null>(null);
   const [showComboForm, setShowComboForm] = useState(false);
   const [comboForm, setComboForm] = useState({ name: '', discount: '', items: [] as { productId: string; variantId: string }[] });
+  const [users, setUsers] = useState<{ nickname: string; dorm: string; created_at: string; friend_count: number; post_count: number }[]>([]);
+  const [broadcastTitle, setBroadcastTitle] = useState('');
+  const [broadcastContent, setBroadcastContent] = useState('');
+  const [broadcasting, setBroadcasting] = useState(false);
 
   const loadOrders = useCallback(() => {
     fetchOrders().then(setOrders).catch(err => console.warn('Failed to load orders (admin):', err));
@@ -78,6 +82,13 @@ export default function AdminPanel({ adminKey }: { adminKey: string }) {
     return () => clearInterval(t);
   }, [pendingCount, loadOrders]);
 
+  // Load users when tab changes to users
+  useEffect(() => {
+    if (tab === 'users') {
+      fetchAllUsers(adminKey).then(data => setUsers(data.users)).catch(() => {});
+    }
+  }, [tab, adminKey]);
+
   // Title flashing
   useEffect(() => {
     if (!titleFlashing) return;
@@ -109,6 +120,19 @@ export default function AdminPanel({ adminKey }: { adminKey: string }) {
     } catch (err) {
       alert(getErrorMessage(err));
     }
+  };
+
+  const handleBroadcast = async () => {
+    if (!broadcastTitle.trim()) { alert('请填写标题'); return; }
+    if (!confirm(`确定向所有 ${users.length} 个用户发送通知？`)) return;
+    setBroadcasting(true);
+    try {
+      const r = await broadcastNotification(adminKey, broadcastTitle.trim(), broadcastContent.trim());
+      alert(`已发送给 ${r.count} 个用户`);
+      setBroadcastTitle('');
+      setBroadcastContent('');
+    } catch (err) { alert(getErrorMessage(err)); }
+    finally { setBroadcasting(false); }
   };
 
   const resetProductForm = () => {
@@ -301,6 +325,14 @@ export default function AdminPanel({ adminKey }: { adminKey: string }) {
         <button onClick={() => setTab('combos')}
           className={`px-5 py-2.5 rounded-2xl font-bold text-sm transition-all ${tab === 'combos' ? 'bg-slate-800 text-white' : 'bg-white text-slate-500 border border-slate-200'}`}>
           🍱 套餐管理
+        </button>
+        <button onClick={() => setTab('users')}
+          className={`px-5 py-2.5 rounded-2xl font-bold text-sm transition-all ${tab === 'users' ? 'bg-slate-800 text-white' : 'bg-white text-slate-500 border border-slate-200'}`}>
+          👥 用户
+        </button>
+        <button onClick={() => setTab('broadcast')}
+          className={`px-5 py-2.5 rounded-2xl font-bold text-sm transition-all ${tab === 'broadcast' ? 'bg-slate-800 text-white' : 'bg-white text-slate-500 border border-slate-200'}`}>
+          📢 群发
         </button>
       </div>
 
@@ -710,6 +742,66 @@ export default function AdminPanel({ adminKey }: { adminKey: string }) {
                   </form>
                 </div>
               )}
+            </div>
+          </div>
+        )}
+
+        {tab === 'users' && (
+          <div className="max-w-6xl mx-auto px-4 pb-20">
+            <h3 className="font-bold text-lg mb-4">注册用户 ({users.length})</h3>
+            <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-slate-100 bg-slate-50 text-left">
+                      <th className="px-4 py-3 font-bold text-slate-500">昵称</th>
+                      <th className="px-4 py-3 font-bold text-slate-500">宿舍</th>
+                      <th className="px-4 py-3 font-bold text-slate-500">注册时间</th>
+                      <th className="px-4 py-3 font-bold text-slate-500 text-center">好友</th>
+                      <th className="px-4 py-3 font-bold text-slate-500 text-center">帖子</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {users.length === 0 ? (
+                      <tr><td colSpan={5} className="px-4 py-10 text-center text-slate-400">暂无注册用户</td></tr>
+                    ) : (
+                      users.map(u => (
+                        <tr key={u.nickname} className="border-b border-slate-50 hover:bg-slate-50/50">
+                          <td className="px-4 py-3 font-bold">{u.nickname}</td>
+                          <td className="px-4 py-3 text-slate-500">{u.dorm}</td>
+                          <td className="px-4 py-3 text-slate-400 text-xs">{u.created_at}</td>
+                          <td className="px-4 py-3 text-center">{u.friend_count}</td>
+                          <td className="px-4 py-3 text-center">{u.post_count}</td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {tab === 'broadcast' && (
+          <div className="max-w-6xl mx-auto px-4 pb-20">
+            <h3 className="font-bold text-lg mb-4">📢 群发通知</h3>
+            <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 space-y-4 max-w-lg">
+              <div>
+                <label className="block text-xs font-bold text-slate-500 mb-1">标题</label>
+                <input value={broadcastTitle} onChange={e => setBroadcastTitle(e.target.value)}
+                  placeholder="通知标题" className="w-full p-3 bg-slate-50 rounded-xl border border-slate-200 outline-none focus:border-slate-400 text-sm" />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-slate-500 mb-1">内容</label>
+                <textarea value={broadcastContent} onChange={e => setBroadcastContent(e.target.value)}
+                  placeholder="通知内容..." rows={4}
+                  className="w-full p-3 bg-slate-50 rounded-xl border border-slate-200 outline-none focus:border-slate-400 text-sm resize-none" />
+              </div>
+              <button onClick={handleBroadcast} disabled={broadcasting}
+                className="px-6 py-3 bg-slate-800 text-white rounded-xl font-bold hover:bg-slate-700 disabled:opacity-50 transition-all">
+                {broadcasting ? '发送中...' : `发送给全部 ${users.length} 个用户`}
+              </button>
+              <p className="text-xs text-slate-400">所有注册用户都会在铃铛通知中收到此消息</p>
             </div>
           </div>
         )}

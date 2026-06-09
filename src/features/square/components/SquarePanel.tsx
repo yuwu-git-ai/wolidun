@@ -2,7 +2,8 @@ import { useState, useEffect, useCallback, useRef, FormEvent } from 'react';
 import { Plus, Heart, MessageCircle, HelpCircle, Wrench, MessageSquareText, Users, X, Send, Search, LogOut, Trash2 } from 'lucide-react';
 import {
   fetchPosts, createPost, updatePost, toggleLike,
-  addComment, deleteComment, joinPost, fetchPostById, fetchJoinedPostIds, leavePost, deletePost
+  addComment, deleteComment, joinPost, fetchPostById, fetchJoinedPostIds, leavePost, deletePost,
+  getAdminKey
 } from '../../../shared/api';
 import type { Post } from '../../../shared/api';
 import { getErrorMessage } from '../../../shared/utils';
@@ -17,7 +18,7 @@ const SQUARE_TABS = [
 const TYPE_LABELS: Record<string, string> = { help: '求助', skill: '技能', feedback: '反馈', teamup: '组队' };
 const TYPE_COLORS: Record<string, string> = { help: 'bg-rose-50 text-rose-600', skill: 'bg-indigo-50 text-indigo-600', feedback: 'bg-emerald-50 text-emerald-600', teamup: 'bg-amber-50 text-amber-600' };
 
-export default function SquarePanel({ identity, onViewProfile }: { identity: { nickname: string; dorm: string }; onViewProfile?: (nickname: string) => void }) {
+export default function SquarePanel({ identity, onViewProfile, isAdmin }: { identity: { nickname: string; dorm: string }; onViewProfile?: (nickname: string) => void; isAdmin?: boolean }) {
   const [activeTab, setActiveTab] = useState<string>('help');
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
@@ -136,10 +137,19 @@ export default function SquarePanel({ identity, onViewProfile }: { identity: { n
     } catch (err) { alert(getErrorMessage(err)); }
   };
 
-  const handleDeleteComment = async (postId: string, commentId: string) => {
-    if (!confirm('确定删除这条评论？')) return;
+  const handleDeleteComment = async (postId: string, commentId: string, isOwn: boolean) => {
+    let reason = '';
+    const adminKey = getAdminKey();
+    if (!isOwn && adminKey) {
+      reason = prompt('请输入删除原因（将通知评论作者）：') || '';
+      if (!reason) return;
+    } else if (!isOwn) {
+      return;
+    } else if (!confirm('确定删除这条评论？')) {
+      return;
+    }
     try {
-      await deleteComment(postId, commentId, identity.nickname);
+      await deleteComment(postId, commentId, identity.nickname, adminKey || undefined, reason || undefined);
       const updated = await fetchPostById(postId);
       setSelectedPost(updated);
     } catch (err) { alert(getErrorMessage(err)); }
@@ -452,9 +462,10 @@ export default function SquarePanel({ identity, onViewProfile }: { identity: { n
                       <div className="flex items-center gap-2">
                         <span className="text-xs font-bold">{c.anonymous ? '匿名' : c.user_id}</span>
                         <span className="text-[10px] text-slate-400">{formatTime(c.created_at)}</span>
-                        {c.user_id === identity.nickname && (
-                          <button onClick={() => handleDeleteComment(selectedPost.id, c.id)}
-                            className="text-slate-300 hover:text-red-500 transition-colors" title="删除评论">
+                        {(c.user_id === identity.nickname || isAdmin) && (
+                          <button onClick={() => handleDeleteComment(selectedPost.id, c.id, c.user_id === identity.nickname)}
+                            className={`transition-colors ${c.user_id === identity.nickname ? 'text-slate-300 hover:text-red-500' : 'text-orange-300 hover:text-red-500'}`}
+                            title={c.user_id === identity.nickname ? '删除评论' : '管理员删除'}>
                             <Trash2 size={12} />
                           </button>
                         )}

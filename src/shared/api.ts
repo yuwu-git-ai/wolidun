@@ -307,10 +307,13 @@ export async function addComment(postId: string, data: { user_id: string; conten
   });
 }
 
-export async function deleteComment(postId: string, commentId: string, userId: string): Promise<{ success: boolean }> {
+export async function deleteComment(postId: string, commentId: string, userId: string, adminKey?: string, reason?: string): Promise<{ success: boolean }> {
+  const headers: Record<string, string> = {};
+  if (adminKey) headers['X-Admin-Key'] = adminKey;
   return request(`${BASE}/posts/${postId}/comments/${commentId}`, {
     method: 'DELETE',
-    body: JSON.stringify({ user_id: userId }),
+    headers: Object.keys(headers).length > 0 ? headers : undefined,
+    body: JSON.stringify({ user_id: userId, reason }),
   });
 }
 
@@ -375,6 +378,13 @@ export async function deleteCombo(id: string, adminKey: string): Promise<{ succe
   });
 }
 
+// ── Admin ──
+export async function fetchAllUsers(adminKey: string): Promise<{ users: { nickname: string; dorm: string; created_at: string; friend_count: number; post_count: number }[] }> {
+  return request(`${BASE}/admin/users`, {
+    headers: { 'X-Admin-Key': adminKey },
+  });
+}
+
 // ── Notifications ──
 export async function fetchNotifications(userId: string): Promise<any[]> {
   return request(`${BASE}/notifications?user_id=${encodeURIComponent(userId)}`);
@@ -386,6 +396,14 @@ export async function fetchUnreadCount(userId: string): Promise<{ count: number 
 
 export async function markNotificationRead(id: string): Promise<{ success: boolean }> {
   return request(`${BASE}/notifications/${id}/read`, { method: 'PUT' });
+}
+
+export async function broadcastNotification(adminKey: string, title: string, content: string): Promise<{ success: boolean; count: number }> {
+  return request(`${BASE}/notifications/broadcast`, {
+    method: 'POST',
+    headers: { 'X-Admin-Key': adminKey },
+    body: JSON.stringify({ title, content }),
+  });
 }
 
 // ── Users & Profiles ──

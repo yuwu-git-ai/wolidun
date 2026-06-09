@@ -50,4 +50,25 @@ router.post('/notifications', requireAdmin, (req: Request, res: Response) => {
   res.status(201).json({ id, user_id, title, content });
 });
 
+// POST /api/notifications/broadcast — admin sends to all users
+router.post('/notifications/broadcast', requireAdmin, (req: Request, res: Response) => {
+  const db = getDb();
+  const { title, content } = req.body;
+  if (!title) return res.status(400).json({ error: '缺少标题' });
+
+  const users = db.prepare('SELECT nickname FROM users').all() as { nickname: string }[];
+
+  const insertStmt = db.prepare(
+    'INSERT INTO notifications (id, user_id, title, content) VALUES (?, ?, ?, ?)'
+  );
+  const tx = db.transaction(() => {
+    for (const u of users) {
+      insertStmt.run(uuid(), u.nickname, title, content || '');
+    }
+  });
+  tx();
+
+  res.json({ success: true, count: users.length });
+});
+
 export default router;

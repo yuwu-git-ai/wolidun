@@ -20,7 +20,7 @@ import { getItemUnitPrice } from './shared/utils';
 import { Routes, Route, Link, useNavigate } from 'react-router-dom';
 import ErrorBoundary from './shared/components/ErrorBoundary';
 import { useCustomerApp } from './features/ordering/hooks/useCustomerApp';
-import { getIdentity } from './shared/api';
+import { getIdentity, getAdminKey } from './shared/api';
 
 const ICON_MAP: Record<string, React.ComponentType<{ size?: number; className?: string }>> = { Flame, Utensils, Pizza, Coffee, IceCream, Package };
 
@@ -156,7 +156,7 @@ function SquareApp() {
       {/* Square content */}
       <div className="flex-1 overflow-hidden">
         <Suspense fallback={<PageLoading />}>
-          <SquarePanel identity={identity} onViewProfile={setShowProfile} />
+          <SquarePanel identity={identity} onViewProfile={setShowProfile} isAdmin={!!getAdminKey()} />
         </Suspense>
       </div>
 
