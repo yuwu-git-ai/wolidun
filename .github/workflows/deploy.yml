@@ -23,5 +23,7 @@ jobs:
               echo "[deploy] pull failed, retrying in 10s..."
               sleep 10
             done
-            docker compose down
+            docker compose down --remove-orphans || true
+            docker rm -f app-app-1 2>/dev/null || true
+            docker network rm app_default 2>/dev/null || true
             docker compose up -d --build
