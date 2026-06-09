@@ -11,9 +11,10 @@ interface Props {
   onChat?: (partner: string) => void;
   scrollTo?: 'posts';
   viewMode?: 'full' | 'posts';
+  startEditing?: boolean;
 }
 
-export default function ProfilePanel({ nickname, myIdentity, onClose, onChat, scrollTo, viewMode = 'full' }: Props) {
+export default function ProfilePanel({ nickname, myIdentity, onClose, onChat, scrollTo, viewMode = 'full', startEditing }: Props) {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const postsRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(true);
@@ -51,6 +52,11 @@ export default function ProfilePanel({ nickname, myIdentity, onClose, onChat, sc
   }, [nickname, myIdentity.nickname]);
 
   useEffect(() => { loadProfile(); }, [loadProfile]);
+
+  // Auto-enter edit mode
+  useEffect(() => {
+    if (startEditing && isMe && !loading) setEditing(true);
+  }, [startEditing, isMe, loading]);
 
   // Auto-scroll to posts section
   useEffect(() => {

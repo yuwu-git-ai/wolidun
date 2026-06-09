@@ -43,6 +43,7 @@ function SquareApp() {
   const navigate = useNavigate();
   const [showProfile, setShowProfile] = useState<string | null>(null);
   const [showProfileScroll, setShowProfileScroll] = useState<'posts' | undefined>(undefined);
+  const [profileStartEditing, setProfileStartEditing] = useState(false);
   const [showFriends, setShowFriends] = useState(false);
   const [showChat, setShowChat] = useState<string | undefined>(undefined);
   const [showUserMenu, setShowUserMenu] = useState(false);
@@ -119,8 +120,12 @@ function SquareApp() {
                   <FileText size={12} />历史帖子
                 </button>
                 <button onClick={() => { setShowFriends(true); setShowUserMenu(false); }}
-                  className="w-full flex items-center gap-2 px-3 py-2 text-xs font-bold hover:bg-slate-50 text-left sm:hidden">
+                  className="w-full flex items-center gap-2 px-3 py-2 text-xs font-bold hover:bg-slate-50 text-left">
                   <Users size={12} />好友
+                </button>
+                <button onClick={() => { setShowProfile(identity.nickname); setShowProfileScroll(undefined); setProfileStartEditing(true); setShowUserMenu(false); }}
+                  className="w-full flex items-center gap-2 px-3 py-2 text-xs font-bold hover:bg-slate-50 text-left">
+                  <Edit3 size={12} />编辑资料
                 </button>
                 <Link to="/" onClick={() => setShowUserMenu(false)}
                   className="w-full flex items-center gap-2 px-3 py-2 text-xs font-bold hover:bg-slate-50 text-left">
@@ -145,8 +150,8 @@ function SquareApp() {
         <NotificationPanel nickname={identity.nickname} onClose={() => { setShowNotifications(false); setUnreadCount(0); }} />
       )}
       {showProfile && (
-        <ProfilePanel nickname={showProfile} myIdentity={identity} onClose={() => setShowProfile(null)}
-          onChat={setShowChat} scrollTo={showProfileScroll} viewMode={showProfileScroll === 'posts' ? 'posts' : 'full'} />
+        <ProfilePanel nickname={showProfile} myIdentity={identity} onClose={() => { setShowProfile(null); setProfileStartEditing(false); }}
+          onChat={setShowChat} scrollTo={showProfileScroll} viewMode={showProfileScroll === 'posts' ? 'posts' : 'full'} startEditing={profileStartEditing} />
       )}
       {showFriends && (
         <FriendsPanel userId={identity.nickname} onClose={() => setShowFriends(false)}
