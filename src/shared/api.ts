@@ -191,9 +191,12 @@ export async function fetchOrderById(id: string): Promise<Order> {
   return request(`${BASE}/orders/${id}`);
 }
 
-export async function deleteOrder(id: string, nickname: string): Promise<{ success: boolean }> {
+export async function deleteOrder(id: string, nickname: string, adminKey?: string): Promise<{ success: boolean }> {
+  const headers: Record<string, string> = {};
+  if (adminKey) headers['X-Admin-Key'] = adminKey;
   return request(`${BASE}/orders/${id}`, {
     method: 'DELETE',
+    headers: Object.keys(headers).length > 0 ? headers : undefined,
     body: JSON.stringify({ nickname }),
   });
 }

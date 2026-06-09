@@ -6,7 +6,7 @@ import OrderCard from './OrderCard';
 import AnalyticsPanel from './AnalyticsPanel';
 import {
   fetchOrders, fetchProducts, fetchStats,
-  updateOrderStatus, createProduct, updateProduct, deleteProduct,
+  updateOrderStatus, deleteOrder, createProduct, updateProduct, deleteProduct,
 } from '../../../shared/api';
 import type { Order, Product, Combo } from '../../../shared/types';
 import { fetchCombos, createCombo, updateCombo, deleteCombo } from '../../../shared/api';
@@ -94,6 +94,16 @@ export default function AdminPanel({ adminKey }: { adminKey: string }) {
   const handleStatusChange = async (orderId: string, status: string) => {
     try {
       await updateOrderStatus(orderId, status, adminKey);
+      loadOrders();
+      loadProducts();
+    } catch (err) {
+      alert(getErrorMessage(err));
+    }
+  };
+
+  const handleDeleteOrder = async (orderId: string) => {
+    try {
+      await deleteOrder(orderId, '', adminKey);
       loadOrders();
       loadProducts();
     } catch (err) {
@@ -339,7 +349,7 @@ export default function AdminPanel({ adminKey }: { adminKey: string }) {
                     <div key={order.id}>
                       <OrderCard order={order} expanded={expandedOrder === order.id}
                         onToggle={() => setExpandedOrder(expandedOrder === order.id ? null : order.id)}
-                        onStatusChange={handleStatusChange} />
+                        onStatusChange={handleStatusChange} onDelete={handleDeleteOrder} />
                     </div>
                   ))}
                 </div>
@@ -353,7 +363,7 @@ export default function AdminPanel({ adminKey }: { adminKey: string }) {
                   <div key={order.id}>
                     <OrderCard order={order} expanded={expandedOrder === order.id}
                       onToggle={() => setExpandedOrder(expandedOrder === order.id ? null : order.id)}
-                      onStatusChange={handleStatusChange} />
+                      onStatusChange={handleStatusChange} onDelete={handleDeleteOrder} />
                   </div>
                 ))}
               </div>
@@ -366,7 +376,7 @@ export default function AdminPanel({ adminKey }: { adminKey: string }) {
                       <div key={order.id}>
                         <OrderCard order={order} expanded={expandedOrder === order.id}
                           onToggle={() => setExpandedOrder(expandedOrder === order.id ? null : order.id)}
-                          onStatusChange={handleStatusChange} />
+                          onStatusChange={handleStatusChange} onDelete={handleDeleteOrder} />
                       </div>
                     ))}
                   </div>

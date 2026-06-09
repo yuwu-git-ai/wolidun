@@ -1,4 +1,4 @@
-import { ChevronUp, ChevronDown } from 'lucide-react';
+import { ChevronUp, ChevronDown, Trash2 } from 'lucide-react';
 import { Order } from '../../../shared/types';
 import { STATUS_LABELS, STATUS_COLORS, getItemUnitPrice } from '../../../shared/utils';
 
@@ -7,9 +7,10 @@ interface OrderCardProps {
   expanded: boolean;
   onToggle: () => void;
   onStatusChange: (id: string, status: string) => void;
+  onDelete: (id: string) => void;
 }
 
-export default function OrderCard({ order, expanded, onToggle, onStatusChange }: OrderCardProps) {
+export default function OrderCard({ order, expanded, onToggle, onStatusChange, onDelete }: OrderCardProps) {
   const nextStatus = order.status === 'pending' ? 'preparing' : order.status === 'preparing' ? 'delivered' : null;
 
   return (
@@ -43,6 +44,10 @@ export default function OrderCard({ order, expanded, onToggle, onStatusChange }:
               取消
             </button>
           )}
+          <button onClick={e => { e.stopPropagation(); if (confirm('确定永久删除该订单？此操作不可撤销。')) onDelete(order.id); }}
+            className="p-1.5 text-slate-300 hover:text-red-500 transition-colors" title="删除订单">
+            <Trash2 size={14} />
+          </button>
           {expanded ? <ChevronUp size={16} className="text-slate-400 shrink-0" /> : <ChevronDown size={16} className="text-slate-400 shrink-0" />}
         </div>
       </div>
