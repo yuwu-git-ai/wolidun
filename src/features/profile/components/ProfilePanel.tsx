@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { X, Edit3, Save, UserPlus, MessageCircle, Users, MapPin, Copy, Check, UserX, Clock, Trash2 } from 'lucide-react';
+import { X, Edit3, Save, UserPlus, MessageCircle, Users, MapPin, Copy, Check, UserX, Clock, Trash2, FileText } from 'lucide-react';
 import { fetchUserProfile, updateUserProfile, sendFriendRequest, respondFriendRequest, deleteFriend, fetchFriends, deletePost } from '../../../shared/api';
 import type { UserProfile } from '../../../shared/api';
 import { getErrorMessage } from '../../../shared/utils';
@@ -10,9 +10,10 @@ interface Props {
   onClose: () => void;
   onChat?: (partner: string) => void;
   scrollTo?: 'posts';
+  viewMode?: 'full' | 'posts';
 }
 
-export default function ProfilePanel({ nickname, myIdentity, onClose, onChat, scrollTo }: Props) {
+export default function ProfilePanel({ nickname, myIdentity, onClose, onChat, scrollTo, viewMode = 'full' }: Props) {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const postsRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(true);
@@ -146,8 +147,17 @@ export default function ProfilePanel({ nickname, myIdentity, onClose, onChat, sc
       onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
       <div className="w-full max-w-md bg-white rounded-[28px] p-6 max-h-[85vh] overflow-y-auto shadow-2xl space-y-4">
         {/* Close */}
-        <button onClick={onClose} className="absolute top-4 right-4 text-slate-400 hover:text-slate-600"><X size={20} /></button>
+        <button onClick={onClose} className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 z-10"><X size={20} /></button>
 
+        {/* Posts-only header */}
+        {viewMode === 'posts' && (
+          <h2 className="font-black text-lg flex items-center gap-2">
+            <FileText size={20} className="text-slate-500" />历史帖子
+          </h2>
+        )}
+
+        {/* Full profile content */}
+        {viewMode === 'full' && (<>
         {/* Avatar & Name */}
         <div className="text-center">
           {editing ? (
@@ -264,7 +274,7 @@ export default function ProfilePanel({ nickname, myIdentity, onClose, onChat, sc
             <button onClick={() => { setEditing(false); setEditError(''); }} className="px-4 py-2 bg-slate-100 text-slate-500 rounded-xl text-sm font-bold">取消</button>
           )}
         </div>
-
+        </>)}
         {/* Posts */}
         <div ref={postsRef}>
           <p className="text-xs font-bold text-slate-400 mb-2">历史帖子 ({profile.posts?.length || 0})</p>

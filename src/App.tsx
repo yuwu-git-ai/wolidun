@@ -142,7 +142,7 @@ function SquareApp() {
       )}
       {showProfile && (
         <ProfilePanel nickname={showProfile} myIdentity={identity} onClose={() => setShowProfile(null)}
-          onChat={setShowChat} scrollTo={showProfileScroll} />
+          onChat={setShowChat} scrollTo={showProfileScroll} viewMode={showProfileScroll === 'posts' ? 'posts' : 'full'} />
       )}
       {showFriends && (
         <FriendsPanel userId={identity.nickname} onClose={() => setShowFriends(false)}
