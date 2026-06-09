@@ -456,16 +456,16 @@ export default function AdminPanel({ adminKey }: { adminKey: string }) {
                   {/* ── Variant Management ── */}
                   <div className="space-y-3 p-4 bg-slate-50 rounded-xl border border-slate-100">
                     <div className="flex justify-between items-center">
-                      <h5 className="font-bold text-sm text-slate-700">规格管理</h5>
+                      <h5 className="font-bold text-sm text-slate-700">选项管理</h5>
                       <button type="button" onClick={() => setProductForm(p => ({
                         ...p, variants: [...p.variants, { name: '', price: '', stock: '0' }]
                       }))}
                         className="px-3 py-1.5 bg-orange-500 text-white rounded-lg text-xs font-bold hover:bg-orange-600 transition-all">
-                        + 添加规格
+                        + 添加选项
                       </button>
                     </div>
                     {productForm.variants.length === 0 && (
-                      <p className="text-xs text-slate-400">无需规格则留空（如普通商品）。有规格时库存以规格为准。</p>
+                      <p className="text-xs text-slate-400">无需选项则留空（如普通商品）。有选项时库存以选项为准。</p>
                     )}
                     {productForm.variants.map((v, idx) => (
                       <div key={idx} className="flex gap-2 items-center">
@@ -476,7 +476,7 @@ export default function AdminPanel({ adminKey }: { adminKey: string }) {
                             next[idx] = { ...next[idx], name: e.target.value };
                             setProductForm(p => ({ ...p, variants: next }));
                           }}
-                          placeholder="规格名称（如：红烧牛肉味）"
+                          placeholder="选项名称（如：红烧牛肉味）"
                           className="flex-1 p-2 bg-white rounded-lg border border-slate-200 text-sm outline-none focus:border-orange-300"
                         />
                         <input
@@ -565,7 +565,7 @@ export default function AdminPanel({ adminKey }: { adminKey: string }) {
                       </span>
                       {p.variants && p.variants.length > 0 && (
                         <span className="text-[10px] bg-green-100 text-green-700 px-2 py-0.5 rounded-full">
-                          {p.variants.length}个规格
+                          {p.variants.length}个选项
                         </span>
                       )}
                       {p.allowBrewing && <span className="text-[10px] bg-orange-100 text-orange-600 px-2 py-0.5 rounded-full">帮泡</span>}

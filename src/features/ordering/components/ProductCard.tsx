@@ -72,7 +72,7 @@ export default function ProductCard({ product, onAdd, cart, isPopular }: Product
         {/* Variant selector */}
         {hasVariants && (
           <div className="flex flex-col gap-1 mt-1 pt-1.5 border-t border-slate-50">
-            <span className="text-[9px] sm:text-[10px] font-bold text-slate-500">选择规格</span>
+            <span className="text-[9px] sm:text-[10px] font-bold text-slate-500">选择</span>
             <div className="flex flex-wrap gap-1 sm:gap-1.5">
               {product.variants!.map(v => {
                 const vStock = v.stock;
@@ -123,7 +123,7 @@ export default function ProductCard({ product, onAdd, cart, isPopular }: Product
         disabled={!canAdd}
         className="w-full min-h-10 bg-orange-500 text-white py-2.5 sm:py-3 rounded-xl sm:rounded-2xl font-bold text-[11px] sm:text-base hover:bg-orange-600 transition-all shadow-lg shadow-orange-500/20 active:scale-[0.98] mt-auto flex items-center justify-center gap-1 sm:gap-2 disabled:bg-slate-200 disabled:shadow-none disabled:text-slate-400"
       >
-        {canAdd ? <><Plus size={16} /> 加入购物车</> : hasVariants && !selectedVariantId ? '请选择规格' : '暂时缺货'}
+        {canAdd ? <><Plus size={16} /> 加入购物车</> : hasVariants && !selectedVariantId ? '请选择' : '暂时缺货'}
       </button>
     </div>
   );
