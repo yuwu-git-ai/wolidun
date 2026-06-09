@@ -90,6 +90,7 @@ export default function SquarePanel({ identity }: { identity: { nickname: string
   const handleClaim = async (post: Post) => {
     try {
       await updatePost(post.id, { status: 'claimed', user_id: identity.nickname });
+      setSelectedPost(prev => prev?.id === post.id ? { ...prev, status: 'claimed', claimed_by: identity.nickname } : prev);
       loadPosts();
     } catch (err) { alert(getErrorMessage(err)); }
   };
