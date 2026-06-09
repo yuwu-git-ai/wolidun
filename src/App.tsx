@@ -162,7 +162,7 @@ function SquareApp() {
 
       {/* Overlays */}
       {showNotifications && (
-        <NotificationPanel nickname={identity.nickname} onClose={() => { setShowNotifications(false); setUnreadCount(0); }} />
+        <NotificationPanel nickname={identity.nickname} onClose={() => { setShowNotifications(false); }} />
       )}
       {showProfile && (
         <ProfilePanel nickname={showProfile} myIdentity={identity} onClose={() => { setShowProfile(null); setProfileStartEditing(false); setShowProfileScroll(undefined); }}
@@ -571,7 +571,7 @@ function CustomerApp() {
       {/* Notification & Order overlays */}
       {showNotifications && state.identity && (
         <div className="fixed top-14 sm:top-16 left-0 right-0 bottom-0 z-40 bg-slate-50 overflow-y-auto">
-          <NotificationPanel nickname={state.identity.nickname} onClose={() => { setShowNotifications(false); setUnreadCount(0); }} />
+          <NotificationPanel nickname={state.identity.nickname} onClose={() => { setShowNotifications(false); }} />
         </div>
       )}
       {state.showOrderHistory && state.identity && (

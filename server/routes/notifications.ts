@@ -12,7 +12,7 @@ router.get('/notifications', (req: Request, res: Response) => {
   if (!user_id) return res.status(400).json({ error: '缺少 user_id' });
 
   const rows = db.prepare(
-    'SELECT * FROM notifications WHERE user_id = ? ORDER BY created_at DESC LIMIT 50'
+    'SELECT * FROM notifications WHERE user_id = ? ORDER BY created_at DESC LIMIT 200'
   ).all(user_id);
 
   // Also fetch global announcements

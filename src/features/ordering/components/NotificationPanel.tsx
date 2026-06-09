@@ -15,6 +15,7 @@ export default function NotificationPanel({ nickname, onClose }: NotificationPan
   const [loading, setLoading] = useState(true);
   const [actingId, setActingId] = useState<string | null>(null);
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [showUnreadOnly, setShowUnreadOnly] = useState(false);
 
   useEffect(() => {
     Promise.all([
@@ -47,7 +48,8 @@ export default function NotificationPanel({ nickname, onClose }: NotificationPan
     setExpandedId(prev => prev === id ? null : id);
   };
 
-  const totalItems = announcements.length + friendRequests.length + notifs.length;
+  const filteredNotifs = showUnreadOnly ? notifs.filter((n: any) => !n.is_read) : notifs;
+  const totalItems = announcements.length + friendRequests.length + filteredNotifs.length;
 
   return (
     <div className="min-h-[100dvh] bg-slate-50 font-sans">
@@ -56,7 +58,11 @@ export default function NotificationPanel({ nickname, onClose }: NotificationPan
           <ArrowLeft size={18} />
         </button>
         <h1 className="font-bold text-lg">消息通知</h1>
-        <Bell size={18} className="ml-auto text-slate-400" />
+        <button onClick={() => setShowUnreadOnly(!showUnreadOnly)}
+          className={`ml-auto px-3 py-1.5 rounded-full text-xs font-bold transition-all ${showUnreadOnly ? 'bg-orange-100 text-orange-600' : 'bg-slate-100 text-slate-400'}`}>
+          {showUnreadOnly ? '只看未读' : '全部'}
+        </button>
+        <Bell size={18} className="text-slate-400" />
       </nav>
 
       <div className="max-w-lg mx-auto p-4 space-y-3 pb-20">
@@ -137,10 +143,10 @@ export default function NotificationPanel({ nickname, onClose }: NotificationPan
             )}
 
             {/* System notifications */}
-            {notifs.length > 0 && (
+            {filteredNotifs.length > 0 && (
               <div className="space-y-2">
                 {(announcements.length > 0 || friendRequests.length > 0) && <p className="text-xs font-bold text-slate-400 px-1">系统通知</p>}
-                {notifs.map(n => {
+                {filteredNotifs.map(n => {
                   const isExpanded = expandedId === n.id;
                   return (
                     <div key={n.id}
