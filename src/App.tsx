@@ -2,7 +2,7 @@ import { lazy, Suspense, useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   ShoppingBag, Check, Flame, Utensils, Pizza, Coffee, IceCream, Package,
-  User as UserIcon, Search, Edit3, X, LogOut, Clock, MessageCircle, Bell, Users,
+  User as UserIcon, Search, Edit3, X, LogOut, Clock, MessageCircle, Bell, Users, ChevronDown,
 } from 'lucide-react';
 import { fetchUnreadCount } from './shared/api';
 import { DEFAULT_CATEGORIES } from './shared/constants';
@@ -137,6 +137,7 @@ function CustomerApp() {
   const [showProfile, setShowProfile] = useState<string | null>(null);
   const [showFriends, setShowFriends] = useState(false);
   const [showChat, setShowChat] = useState<string | undefined>(undefined);
+  const [showUserMenu, setShowUserMenu] = useState(false);
 
   // Fetch unread notification count
   useEffect(() => {
@@ -196,18 +197,9 @@ function CustomerApp() {
               <span className="hidden sm:inline">广场</span>
             </Link>
           )}
-          {state.identity && (
-            <div className="flex items-center gap-1.5 px-2 py-1 bg-slate-50 border border-slate-100 rounded-full">
-              <button onClick={() => setShowProfile(state.identity!.nickname)}
-                className="w-5 h-5 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center hover:bg-indigo-200 transition-colors">
-                <UserIcon size={10} />
-              </button>
-              <span className="text-[10px] font-bold text-slate-600 truncate max-w-[60px]">{state.identity.nickname}</span>
-            </div>
-          )}
           {state.identity ? (<>
             <button onClick={() => setShowFriends(true)}
-              className="w-9 h-9 flex items-center justify-center bg-slate-100 hover:bg-slate-200 rounded-full border border-slate-200 transition-colors"
+              className="w-9 h-9 flex items-center justify-center bg-slate-100 hover:bg-slate-200 rounded-full border border-slate-200 transition-colors hidden sm:flex"
               title="好友">
               <Users size={14} />
             </button>
@@ -224,21 +216,44 @@ function CustomerApp() {
                 <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center">{unreadCount > 9 ? '9+' : unreadCount}</span>
               )}
             </button>
-            <button onClick={() => actions.setShowOrderHistory(true)}
-              className="w-9 h-9 flex items-center justify-center bg-slate-100 hover:bg-slate-200 rounded-full border border-slate-200 transition-colors"
-              title="历史订单">
-              <Clock size={16} />
-            </button>
-            <button onClick={() => { actions.setShowProfileForm(true); }}
-              className="w-9 h-9 flex items-center justify-center bg-slate-100 hover:bg-red-50 hover:text-red-500 rounded-full border border-slate-200 transition-colors"
-              title="个人信息">
-              <Edit3 size={14} />
-            </button>
-            <button onClick={actions.handleLogout}
-              className="w-9 h-9 flex items-center justify-center bg-slate-100 hover:bg-red-50 hover:text-red-500 rounded-full border border-slate-200 transition-colors"
-              title="退出登录">
-              <LogOut size={14} />
-            </button>
+            {/* User menu dropdown */}
+            <div className="relative">
+              <button onClick={() => setShowUserMenu(!showUserMenu)}
+                className="flex items-center gap-1 px-2 py-1.5 bg-slate-50 border border-slate-200 rounded-full hover:bg-slate-100 transition-colors">
+                <div className="w-5 h-5 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center">
+                  <UserIcon size={10} />
+                </div>
+                <span className="text-[10px] font-bold text-slate-600 truncate max-w-[48px] hidden sm:inline">{state.identity.nickname}</span>
+                <ChevronDown size={10} className="text-slate-400 hidden sm:block" />
+              </button>
+              {showUserMenu && (
+                <div className="absolute right-0 top-full mt-1 w-36 bg-white rounded-xl shadow-xl border border-slate-200 py-1 z-50">
+                  <button onClick={() => { setShowProfile(state.identity!.nickname); setShowUserMenu(false); }}
+                    className="w-full flex items-center gap-2 px-3 py-2 text-xs font-bold hover:bg-slate-50 text-left">
+                    <UserIcon size={12} />我的名片
+                  </button>
+                  <button onClick={() => { actions.setShowOrderHistory(true); setShowUserMenu(false); }}
+                    className="w-full flex items-center gap-2 px-3 py-2 text-xs font-bold hover:bg-slate-50 text-left">
+                    <Clock size={12} />历史订单
+                  </button>
+                  <button onClick={() => { setShowFriends(true); setShowUserMenu(false); }}
+                    className="w-full flex items-center gap-2 px-3 py-2 text-xs font-bold hover:bg-slate-50 text-left sm:hidden">
+                    <Users size={12} />好友
+                  </button>
+                  <button onClick={() => { actions.setShowProfileForm(true); setShowUserMenu(false); }}
+                    className="w-full flex items-center gap-2 px-3 py-2 text-xs font-bold hover:bg-slate-50 text-left">
+                    <Edit3 size={12} />编辑资料
+                  </button>
+                  <hr className="my-1 border-slate-100" />
+                  <button onClick={() => { actions.handleLogout(); setShowUserMenu(false); }}
+                    className="w-full flex items-center gap-2 px-3 py-2 text-xs font-bold hover:bg-red-50 text-red-500 text-left">
+                    <LogOut size={12} />退出
+                  </button>
+                </div>
+              )}
+            </div>
+            {/* Click outside to close */}
+            {showUserMenu && <div className="fixed inset-0 z-40" onClick={() => setShowUserMenu(false)} />}
           </>) : (
             <button onClick={() => actions.setShowIdentityForm(true)}
               className="px-4 py-2 bg-orange-500 text-white rounded-full font-bold text-sm hover:bg-orange-600 transition-all">
