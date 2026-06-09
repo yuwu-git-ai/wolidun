@@ -192,7 +192,7 @@ function CustomerApp() {
     return () => clearInterval(t);
   }, [state.identity]);
 
-  // Profile editor
+  // Profile editor — still full-screen (settings page)
   if (state.showProfileForm && state.identity) {
     return (
       <ProfileForm
@@ -201,16 +201,6 @@ function CustomerApp() {
         onClose={() => actions.setShowProfileForm(false)}
       />
     );
-  }
-
-  // Order history
-  if (state.showOrderHistory && state.identity) {
-    return <OrderHistory identity={state.identity} onClose={() => actions.setShowOrderHistory(false)} onReorder={actions.reorder} />;
-  }
-
-  // Notifications
-  if (showNotifications && state.identity) {
-    return <NotificationPanel nickname={state.identity.nickname} onClose={() => { setShowNotifications(false); setUnreadCount(0); }} />;
   }
 
   return (
@@ -546,6 +536,18 @@ function CustomerApp() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Notification & Order overlays */}
+      {showNotifications && state.identity && (
+        <div className="fixed inset-0 z-40 bg-slate-50 overflow-y-auto">
+          <NotificationPanel nickname={state.identity.nickname} onClose={() => { setShowNotifications(false); setUnreadCount(0); }} />
+        </div>
+      )}
+      {state.showOrderHistory && state.identity && (
+        <div className="fixed inset-0 z-40 bg-slate-50 overflow-y-auto">
+          <OrderHistory identity={state.identity} onClose={() => actions.setShowOrderHistory(false)} onReorder={actions.reorder} />
+        </div>
+      )}
 
       {/* Social overlays */}
       {showProfile && (
