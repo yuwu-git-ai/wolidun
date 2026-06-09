@@ -80,9 +80,9 @@ export default function ChatPanel({ userId, initialPartner, onClose, onViewProfi
   };
 
   return (
-    <div className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm flex items-end sm:items-center justify-center p-4"
+    <div className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4"
       onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
-      <div className="w-full max-w-md bg-white rounded-t-[28px] sm:rounded-[28px] max-h-[85vh] shadow-2xl flex flex-col overflow-hidden" style={{ height: '80vh' }}>
+      <div className="w-full max-w-md bg-white rounded-[28px] shadow-2xl flex flex-col overflow-hidden" style={{ height: '70vh', maxHeight: '85vh' }}>
         {activePartner ? (
           /* Chat window */
           <>

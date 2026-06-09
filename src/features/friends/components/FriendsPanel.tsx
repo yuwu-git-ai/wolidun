@@ -78,9 +78,9 @@ export default function FriendsPanel({ userId, onClose, onViewProfile, onChat }:
   };
 
   return (
-    <div className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm flex items-end sm:items-center justify-center p-4"
+    <div className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4"
       onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
-      <div className="w-full max-w-md bg-white rounded-t-[28px] sm:rounded-[28px] p-6 max-h-[85vh] overflow-y-auto shadow-2xl space-y-4">
+      <div className="w-full max-w-md bg-white rounded-[28px] p-6 max-h-[85vh] overflow-y-auto shadow-2xl space-y-4">
         {/* Header */}
         <div className="flex items-center gap-3">
           <Users size={20} className="text-slate-600" />
