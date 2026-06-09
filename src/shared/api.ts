@@ -307,6 +307,13 @@ export async function addComment(postId: string, data: { user_id: string; conten
   });
 }
 
+export async function deleteComment(postId: string, commentId: string, userId: string): Promise<{ success: boolean }> {
+  return request(`${BASE}/posts/${postId}/comments/${commentId}`, {
+    method: 'DELETE',
+    body: JSON.stringify({ user_id: userId }),
+  });
+}
+
 export async function toggleLike(postId: string, userId: string): Promise<{ liked: boolean }> {
   return request(`${BASE}/posts/${postId}/like`, {
     method: 'POST',

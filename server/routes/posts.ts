@@ -147,6 +147,22 @@ router.post('/posts/:id/comments', (req: Request, res: Response) => {
   res.status(201).json(comment);
 });
 
+// DELETE /api/posts/:postId/comments/:commentId — delete own comment
+router.delete('/posts/:postId/comments/:commentId', (req: Request, res: Response) => {
+  const db = getDb();
+  const comment = db.prepare('SELECT * FROM comments WHERE id = ?').get(req.params.commentId) as any;
+  if (!comment) return res.status(404).json({ error: '评论不存在' });
+  if (comment.post_id !== req.params.postId) return res.status(400).json({ error: '评论不属于该帖子' });
+
+  const { user_id } = req.body;
+  if (!user_id) return res.status(400).json({ error: '缺少 user_id' });
+  if (comment.user_id !== user_id) return res.status(403).json({ error: '只能删除自己的评论' });
+
+  db.prepare('DELETE FROM comments WHERE id = ?').run(req.params.commentId);
+  db.prepare('UPDATE posts SET comments_count = MAX(0, comments_count - 1) WHERE id = ?').run(req.params.postId);
+  res.json({ success: true });
+});
+
 // POST /api/posts/:id/like — toggle like
 router.post('/posts/:id/like', (req: Request, res: Response) => {
   const db = getDb();

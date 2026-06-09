@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useRef, FormEvent } from 'react';
 import { Plus, Heart, MessageCircle, HelpCircle, Wrench, MessageSquareText, Users, X, Send, Search, LogOut, Trash2 } from 'lucide-react';
 import {
   fetchPosts, createPost, updatePost, toggleLike,
-  addComment, joinPost, fetchPostById, fetchJoinedPostIds, leavePost, deletePost
+  addComment, deleteComment, joinPost, fetchPostById, fetchJoinedPostIds, leavePost, deletePost
 } from '../../../shared/api';
 import type { Post } from '../../../shared/api';
 import { getErrorMessage } from '../../../shared/utils';
@@ -131,6 +131,15 @@ export default function SquarePanel({ identity, onViewProfile }: { identity: { n
       await addComment(postId, { user_id: identity.nickname, content: commentText.trim() });
       setCommentText('');
       // Reload post detail
+      const updated = await fetchPostById(postId);
+      setSelectedPost(updated);
+    } catch (err) { alert(getErrorMessage(err)); }
+  };
+
+  const handleDeleteComment = async (postId: string, commentId: string) => {
+    if (!confirm('确定删除这条评论？')) return;
+    try {
+      await deleteComment(postId, commentId, identity.nickname);
       const updated = await fetchPostById(postId);
       setSelectedPost(updated);
     } catch (err) { alert(getErrorMessage(err)); }
@@ -443,6 +452,12 @@ export default function SquarePanel({ identity, onViewProfile }: { identity: { n
                       <div className="flex items-center gap-2">
                         <span className="text-xs font-bold">{c.anonymous ? '匿名' : c.user_id}</span>
                         <span className="text-[10px] text-slate-400">{formatTime(c.created_at)}</span>
+                        {c.user_id === identity.nickname && (
+                          <button onClick={() => handleDeleteComment(selectedPost.id, c.id)}
+                            className="text-slate-300 hover:text-red-500 transition-colors" title="删除评论">
+                            <Trash2 size={12} />
+                          </button>
+                        )}
                       </div>
                       <p className="text-sm text-slate-600">{c.content}</p>
                     </div>
