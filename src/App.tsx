@@ -539,12 +539,12 @@ function CustomerApp() {
 
       {/* Notification & Order overlays */}
       {showNotifications && state.identity && (
-        <div className="fixed inset-0 z-40 bg-slate-50 overflow-y-auto">
+        <div className="fixed top-14 sm:top-16 left-0 right-0 bottom-0 z-40 bg-slate-50 overflow-y-auto">
           <NotificationPanel nickname={state.identity.nickname} onClose={() => { setShowNotifications(false); setUnreadCount(0); }} />
         </div>
       )}
       {state.showOrderHistory && state.identity && (
-        <div className="fixed inset-0 z-40 bg-slate-50 overflow-y-auto">
+        <div className="fixed top-14 sm:top-16 left-0 right-0 bottom-0 z-40 bg-slate-50 overflow-y-auto">
           <OrderHistory identity={state.identity} onClose={() => actions.setShowOrderHistory(false)} onReorder={actions.reorder} />
         </div>
       )}
