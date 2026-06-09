@@ -329,7 +329,7 @@ function CustomerApp() {
           </aside>
 
           {/* Search + Main content */}
-          <div className="flex-1 flex flex-col overflow-hidden">
+          <div className="flex-1 flex flex-col overflow-hidden relative">
             {/* Search bar */}
             <div className="px-3 sm:px-6 py-2.5 bg-white border-b border-slate-100 shrink-0">
               <div className="relative">
@@ -344,7 +344,7 @@ function CustomerApp() {
             </div>
 
             {/* Main content */}
-            <main className="flex-1 p-3 sm:p-6 overflow-y-auto flex flex-col gap-3 sm:gap-6 pb-32 lg:pb-6">
+            <main className="flex-1 p-3 sm:p-6 overflow-y-auto flex flex-col gap-3 sm:gap-6 pb-32 lg:pb-28">
 
             {state.searchQuery ? (
               <div className="flex items-center justify-between">
@@ -378,17 +378,18 @@ function CustomerApp() {
               </AnimatePresence>
             </div>
 
-            <div className="hidden lg:flex mt-4 sm:mt-6 p-4 sm:p-6 bg-gradient-to-br from-orange-500 via-orange-600 to-rose-500 rounded-[24px] sm:rounded-[32px] text-white items-center justify-between shadow-xl shadow-orange-500/20 mb-4 sm:mb-0">
-              <div>
-                <p className="text-[11px] sm:text-sm font-bold opacity-90 tracking-wide">今日特惠</p>
-                <p className="font-black text-base sm:text-2xl mt-0.5">满 ¥20 免配送费</p>
-                <p className="text-[10px] sm:text-xs opacity-70 mt-1 hidden sm:block">下单满 20 元，配送到寝不收配送费</p>
-              </div>
-              <div className="bg-white/25 px-4 sm:px-6 py-2 sm:py-3 rounded-full text-[11px] sm:text-sm font-black backdrop-blur-md shrink-0 ml-2 border border-white/20">
-                即刻下单
-              </div>
-            </div>
           </main>
+          {/* Desktop fixed promo bar */}
+          <div className="hidden lg:flex absolute bottom-0 left-3 sm:left-6 right-3 sm:right-6 mb-3 sm:mb-6 p-4 sm:p-6 bg-gradient-to-br from-orange-500 via-orange-600 to-rose-500 rounded-[24px] sm:rounded-[32px] text-white items-center justify-between shadow-xl shadow-orange-500/20">
+            <div>
+              <p className="text-[11px] sm:text-sm font-bold opacity-90 tracking-wide">今日特惠</p>
+              <p className="font-black text-base sm:text-2xl mt-0.5">满 ¥20 免配送费</p>
+              <p className="text-[10px] sm:text-xs opacity-70 mt-1 hidden sm:block">下单满 20 元，配送到寝不收配送费</p>
+            </div>
+            <div className="bg-white/25 px-4 sm:px-6 py-2 sm:py-3 rounded-full text-[11px] sm:text-sm font-black backdrop-blur-md shrink-0 ml-2 border border-white/20">
+              即刻下单
+            </div>
+          </div>
           </div>
 
           {/* Desktop cart sidebar */}
