@@ -17,7 +17,7 @@ router.get('/users/:nickname', (req: Request, res: Response) => {
   const db = getDb();
   const { nickname } = req.params;
 
-  const user = db.prepare('SELECT nickname, dorm, created_at FROM users WHERE nickname = ?').get(nickname) as any;
+  const user = db.prepare('SELECT nickname, dorm, created_at, is_admin FROM users WHERE nickname = ?').get(nickname) as any;
   if (!user) return res.status(404).json({ error: '用户不存在' });
 
   ensureProfile(db, nickname);
@@ -87,15 +87,21 @@ router.put('/users/:nickname', (req: Request, res: Response) => {
   });
 });
 
-// POST /api/users/search — search users
+// POST /api/users/search — search users (empty q = all users)
 router.post('/users/search', (req: Request, res: Response) => {
   const db = getDb();
   const { q } = req.body;
-  if (!q) return res.json({ users: [] });
 
-  const users = db.prepare(
-    'SELECT nickname, dorm, created_at FROM users WHERE nickname LIKE ? LIMIT 20'
-  ).all(`%${q}%`);
+  let users;
+  if (q) {
+    users = db.prepare(
+      'SELECT nickname, dorm, created_at FROM users WHERE nickname LIKE ? LIMIT 20'
+    ).all(`%${q}%`);
+  } else {
+    users = db.prepare(
+      'SELECT nickname, dorm, created_at FROM users ORDER BY created_at DESC LIMIT 50'
+    ).all();
+  }
 
   res.json({ users });
 });
@@ -225,6 +231,26 @@ router.put('/admin/users/:nickname/admin', (req: Request, res: Response) => {
 
   const newVal = user.is_admin ? 0 : 1;
   db.prepare('UPDATE users SET is_admin = ? WHERE nickname = ?').run(newVal, req.params.nickname);
+
+  // When setting admin, auto-friend all existing users
+  if (newVal === 1) {
+    const allUsers = db.prepare("SELECT nickname FROM users WHERE nickname != ?").all(req.params.nickname) as { nickname: string }[];
+    const tx = db.transaction(() => {
+      for (const u of allUsers) {
+        const existing = db.prepare(
+          "SELECT * FROM friendships WHERE (from_user = ? AND to_user = ?) OR (from_user = ? AND to_user = ?)"
+        ).get(req.params.nickname, u.nickname, u.nickname, req.params.nickname) as any;
+        if (!existing) {
+          db.prepare("INSERT INTO friendships (id, from_user, to_user, status, accepted_at) VALUES (?, ?, ?, 'accepted', datetime('now'))")
+            .run(randomUUID(), req.params.nickname, u.nickname);
+        } else if (existing.status === 'pending') {
+          db.prepare("UPDATE friendships SET status = 'accepted', accepted_at = datetime('now') WHERE id = ?").run(existing.id);
+        }
+      }
+    });
+    tx();
+  }
+
   res.json({ nickname: req.params.nickname, is_admin: newVal === 1 });
 });
 

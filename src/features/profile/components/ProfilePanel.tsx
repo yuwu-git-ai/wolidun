@@ -179,7 +179,9 @@ export default function ProfilePanel({ nickname, myIdentity, onClose, onChat, sc
           ) : (
             <div className="w-20 h-20 mx-auto rounded-full bg-slate-100 flex items-center justify-center text-4xl">{profile.avatar}</div>
           )}
-          <h2 className="font-black text-lg mt-2">{profile.nickname}</h2>
+          <h2 className="font-black text-lg mt-2">{profile.nickname}
+            {profile.is_admin ? <span className="ml-1.5 text-[10px] px-1.5 py-0.5 bg-indigo-100 text-indigo-600 rounded font-bold align-middle">管理员</span> : null}
+          </h2>
           <p className="text-xs text-slate-400 flex items-center justify-center gap-1"><MapPin size={12} />{profile.dorm}</p>
           {profile.status_text && !editing && <p className="text-xs text-orange-500 font-bold mt-1">"{profile.status_text}"</p>}
           {editing && (

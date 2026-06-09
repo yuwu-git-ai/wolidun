@@ -58,11 +58,15 @@ export default function FriendsPanel({ userId, onClose, onViewProfile, onChat }:
     finally { setSearching(false); }
   }, [searchQuery, userId]);
 
-  // Debounced search
+  // Debounced search + load all users on tab enter
   useEffect(() => {
     if (tab !== 'discover') return;
-    const timer = setTimeout(handleSearch, 300);
-    return () => clearTimeout(timer);
+    if (searchQuery.trim()) {
+      const timer = setTimeout(handleSearch, 300);
+      return () => clearTimeout(timer);
+    } else {
+      handleSearch(); // Load all users when no query
+    }
   }, [searchQuery, handleSearch, tab]);
 
   const handleAddFriend = async (to: string) => {
@@ -133,8 +137,13 @@ export default function FriendsPanel({ userId, onClose, onViewProfile, onChat }:
               ) : !searchQuery ? (
                 <div className="text-center py-10">
                   <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-3 text-2xl">🌍</div>
-                  <p className="font-bold text-slate-400 text-sm">搜索添加好友</p>
-                  <p className="text-xs text-slate-300 mt-1">输入昵称即可找到其他用户</p>
+                  <p className="font-bold text-slate-400 text-sm">发现新朋友</p>
+                  <p className="text-xs text-slate-300 mt-1">以下是所有注册用户，输入昵称可搜索</p>
+                </div>
+              ) : !searchQuery && searchResults.length === 0 ? (
+                <div className="text-center py-10">
+                  <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-3 text-2xl">🌍</div>
+                  <p className="font-bold text-slate-400 text-sm">暂无其他用户</p>
                 </div>
               ) : (
                 <div className="space-y-2">

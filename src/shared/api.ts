@@ -445,6 +445,7 @@ export interface UserProfile {
   friend_count: number;
   posts: Post[];
   friendship: { id: string; from_user: string; to_user: string; status: string } | null;
+  is_admin?: number;
 }
 
 export interface FriendInfo {
