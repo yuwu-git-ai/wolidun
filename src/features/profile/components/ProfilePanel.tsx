@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { X, Edit3, Save, UserPlus, MessageCircle, Users, MapPin, Copy, Check, UserX, Clock, Trash2 } from 'lucide-react';
 import { fetchUserProfile, updateUserProfile, sendFriendRequest, respondFriendRequest, deleteFriend, fetchFriends, deletePost } from '../../../shared/api';
 import type { UserProfile } from '../../../shared/api';
@@ -9,10 +9,12 @@ interface Props {
   myIdentity: { nickname: string; dorm: string };
   onClose: () => void;
   onChat?: (partner: string) => void;
+  scrollTo?: 'posts';
 }
 
-export default function ProfilePanel({ nickname, myIdentity, onClose, onChat }: Props) {
+export default function ProfilePanel({ nickname, myIdentity, onClose, onChat, scrollTo }: Props) {
   const [profile, setProfile] = useState<UserProfile | null>(null);
+  const postsRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(false);
   const [copied, setCopied] = useState('');
@@ -48,6 +50,13 @@ export default function ProfilePanel({ nickname, myIdentity, onClose, onChat }: 
   }, [nickname, myIdentity.nickname]);
 
   useEffect(() => { loadProfile(); }, [loadProfile]);
+
+  // Auto-scroll to posts section
+  useEffect(() => {
+    if (scrollTo === 'posts' && !loading && postsRef.current) {
+      setTimeout(() => postsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 200);
+    }
+  }, [scrollTo, loading]);
 
   const handleSave = async () => {
     try {
@@ -257,7 +266,7 @@ export default function ProfilePanel({ nickname, myIdentity, onClose, onChat }: 
         </div>
 
         {/* Posts */}
-        <div>
+        <div ref={postsRef}>
           <p className="text-xs font-bold text-slate-400 mb-2">历史帖子 ({profile.posts?.length || 0})</p>
           {profile.posts && profile.posts.length > 0 ? (
             <div className="space-y-2">

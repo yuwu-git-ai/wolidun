@@ -42,6 +42,7 @@ function SquareApp() {
   const identity = getIdentity();
   const navigate = useNavigate();
   const [showProfile, setShowProfile] = useState<string | null>(null);
+  const [showProfileScroll, setShowProfileScroll] = useState<'posts' | undefined>(undefined);
   const [showFriends, setShowFriends] = useState(false);
   const [showChat, setShowChat] = useState<string | undefined>(undefined);
   const [showUserMenu, setShowUserMenu] = useState(false);
@@ -109,11 +110,11 @@ function SquareApp() {
             </button>
             {showUserMenu && (
               <div className="absolute right-0 top-full mt-1 w-36 bg-white rounded-xl shadow-xl border border-slate-200 py-1 z-50">
-                <button onClick={() => { setShowProfile(identity.nickname); setShowUserMenu(false); }}
+                <button onClick={() => { setShowProfile(identity.nickname); setShowProfileScroll(undefined); setShowUserMenu(false); }}
                   className="w-full flex items-center gap-2 px-3 py-2 text-xs font-bold hover:bg-slate-50 text-left">
                   <UserIcon size={12} />我的名片
                 </button>
-                <button onClick={() => { setShowProfile(identity.nickname); setShowUserMenu(false); }}
+                <button onClick={() => { setShowProfile(identity.nickname); setShowProfileScroll('posts'); setShowUserMenu(false); }}
                   className="w-full flex items-center gap-2 px-3 py-2 text-xs font-bold hover:bg-slate-50 text-left">
                   <FileText size={12} />历史帖子
                 </button>
@@ -141,7 +142,7 @@ function SquareApp() {
       )}
       {showProfile && (
         <ProfilePanel nickname={showProfile} myIdentity={identity} onClose={() => setShowProfile(null)}
-          onChat={setShowChat} />
+          onChat={setShowChat} scrollTo={showProfileScroll} />
       )}
       {showFriends && (
         <FriendsPanel userId={identity.nickname} onClose={() => setShowFriends(false)}
