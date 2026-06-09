@@ -406,7 +406,7 @@ function CustomerApp() {
 
         {/* Mobile bottom: promo + cart bar */}
         <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40">
-          <div className="bg-gradient-to-br from-orange-500 via-orange-600 to-rose-500 text-white px-4 py-2 flex items-center justify-between rounded-t-2xl shadow-2xl">
+          <div className="bg-gradient-to-br from-orange-500 via-orange-600 to-rose-500 text-white px-4 py-2 flex items-center justify-between rounded-t-[16px] shadow-2xl">
             <div>
               <p className="text-[11px] font-bold opacity-90 tracking-wide">今日特惠</p>
               <p className="font-black text-sm">满 ¥20 免配送费</p>
