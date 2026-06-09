@@ -191,6 +191,13 @@ export async function fetchOrderById(id: string): Promise<Order> {
   return request(`${BASE}/orders/${id}`);
 }
 
+export async function deleteOrder(id: string, nickname: string): Promise<{ success: boolean }> {
+  return request(`${BASE}/orders/${id}`, {
+    method: 'DELETE',
+    body: JSON.stringify({ nickname }),
+  });
+}
+
 // ── Stats ──
 export async function fetchStats(params?: { view?: 'monthly' | 'yearly'; year?: number; month?: number }): Promise<{
   popular: { id: string; count: number }[];
@@ -319,6 +326,13 @@ export async function joinPost(postId: string, userId: string): Promise<Post> {
 export async function leavePost(postId: string, userId: string): Promise<Post> {
   return request(`${BASE}/posts/${postId}/leave`, {
     method: 'POST',
+    body: JSON.stringify({ user_id: userId }),
+  });
+}
+
+export async function deletePost(postId: string, userId: string): Promise<{ success: boolean }> {
+  return request(`${BASE}/posts/${postId}`, {
+    method: 'DELETE',
     body: JSON.stringify({ user_id: userId }),
   });
 }

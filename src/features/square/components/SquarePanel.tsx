@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback, useRef, FormEvent } from 'react';
-import { Plus, Heart, MessageCircle, HelpCircle, Wrench, MessageSquareText, Users, X, Send, Search, List, LogOut } from 'lucide-react';
+import { Plus, Heart, MessageCircle, HelpCircle, Wrench, MessageSquareText, Users, X, Send, Search, List, LogOut, Trash2 } from 'lucide-react';
 import {
   fetchPosts, createPost, updatePost, toggleLike,
-  addComment, joinPost, fetchPostById, fetchJoinedPostIds, leavePost
+  addComment, joinPost, fetchPostById, fetchJoinedPostIds, leavePost, deletePost
 } from '../../../shared/api';
 import type { Post } from '../../../shared/api';
 import { getErrorMessage } from '../../../shared/utils';
@@ -139,6 +139,15 @@ export default function SquarePanel({ identity }: { identity: { nickname: string
     try {
       await leavePost(postId, identity.nickname);
       setJoinedPostIds(prev => { const next = new Set(prev); next.delete(postId); return next; });
+      loadPosts();
+    } catch (err) { alert(getErrorMessage(err)); }
+  };
+
+  const handleDelete = async (postId: string) => {
+    if (!confirm('确定删除这条帖子？')) return;
+    try {
+      await deletePost(postId, identity.nickname);
+      setSelectedPost(null);
       loadPosts();
     } catch (err) { alert(getErrorMessage(err)); }
   };
@@ -362,6 +371,9 @@ export default function SquarePanel({ identity }: { identity: { nickname: string
                   <span className="text-[10px] text-slate-400">{formatTime(selectedPost.created_at)}</span>
                 </div>
               </div>
+              {selectedPost.user_id === identity.nickname && (
+                <button onClick={() => handleDelete(selectedPost.id)} className="text-slate-300 hover:text-red-500 transition-colors"><Trash2 size={16} /></button>
+              )}
               <button onClick={() => setSelectedPost(null)} className="text-slate-400 hover:text-slate-600"><X size={20} /></button>
             </div>
 

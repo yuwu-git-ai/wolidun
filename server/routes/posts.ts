@@ -241,4 +241,18 @@ router.post('/posts/:id/leave', (req: Request, res: Response) => {
   res.json(updated2);
 });
 
+// DELETE /api/posts/:id — creator deletes own post
+router.delete('/posts/:id', (req: Request, res: Response) => {
+  const db = getDb();
+  const post = db.prepare('SELECT * FROM posts WHERE id = ?').get(req.params.id) as any;
+  if (!post) return res.status(404).json({ error: '帖子不存在' });
+
+  const { user_id } = req.body;
+  if (!user_id) return res.status(400).json({ error: '缺少 user_id' });
+  if (post.user_id !== user_id) return res.status(403).json({ error: '只有发帖人可以删除' });
+
+  db.prepare('DELETE FROM posts WHERE id = ?').run(req.params.id);
+  res.json({ success: true });
+});
+
 export default router;

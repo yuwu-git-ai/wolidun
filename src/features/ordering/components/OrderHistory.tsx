@@ -1,7 +1,7 @@
 import { useState, useEffect, FormEvent } from 'react';
-import { ArrowLeft, Clock, Search } from 'lucide-react';
+import { ArrowLeft, Clock, Search, Trash2 } from 'lucide-react';
 import { Order, CartItem } from '../../../shared/types';
-import { fetchOrders, fetchOrderById } from '../../../shared/api';
+import { fetchOrders, fetchOrderById, deleteOrder } from '../../../shared/api';
 import { STATUS_LABELS, STATUS_COLORS, getItemUnitPrice, getErrorMessage } from '../../../shared/utils';
 
 interface OrderHistoryProps {
@@ -180,11 +180,25 @@ export default function OrderHistory({ identity, onClose, onReorder }: OrderHist
                     <span>总计</span>
                     <span className="text-orange-600">¥{order.totalPrice.toFixed(2)}</span>
                   </div>
-                  <button
-                    onClick={() => onReorder(order.items)}
-                    className="w-full py-2.5 mt-2 bg-orange-500 text-white rounded-xl font-bold text-sm hover:bg-orange-600 transition-all active:scale-[0.98]">
-                    再来一单
-                  </button>
+                  <div className="flex gap-2 mt-2">
+                    <button
+                      onClick={() => onReorder(order.items)}
+                      className="flex-1 py-2.5 bg-orange-500 text-white rounded-xl font-bold text-sm hover:bg-orange-600 transition-all active:scale-[0.98]">
+                      再来一单
+                    </button>
+                    <button
+                      onClick={async () => {
+                        if (!confirm('确定删除该订单？')) return;
+                        try {
+                          await deleteOrder(order.id, identity.nickname);
+                          setOrders(prev => prev.filter(o => o.id !== order.id));
+                        } catch (err) { alert(getErrorMessage(err)); }
+                      }}
+                      className="px-3 py-2.5 bg-red-50 text-red-400 hover:bg-red-100 rounded-xl transition-all"
+                      title="删除订单">
+                      <Trash2 size={16} />
+                    </button>
+                  </div>
                 </div>
               )}
             </div>

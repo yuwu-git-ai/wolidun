@@ -204,4 +204,43 @@ router.put('/orders/:id', requireAdmin, (req: Request, res: Response) => {
   res.json(serializeOrder(row));
 });
 
+// DELETE /api/orders/:id — owner or admin
+router.delete('/orders/:id', (req: Request, res: Response) => {
+  const db = getDb();
+  const order = db.prepare('SELECT * FROM orders WHERE id = ?').get(req.params.id) as any;
+  if (!order) return res.status(404).json({ error: '订单不存在' });
+
+  const { nickname } = req.body;
+  const adminKey = req.headers['x-admin-key'] as string;
+  const expectedKey = process.env.ADMIN_KEY || 'admin123';
+  const isAdmin = adminKey === expectedKey;
+  if (!isAdmin && order.nickname !== nickname) return res.status(403).json({ error: '无权删除' });
+
+  // Restore stock
+  const items = typeof order.items === 'string' ? JSON.parse(order.items) : order.items;
+  for (const item of items) {
+    if (item.comboId) {
+      const combo = db.prepare('SELECT * FROM combos WHERE id = ?').get(item.comboId) as any;
+      if (combo) {
+        const comboItems: { productId: string; variantId?: string | null }[] =
+          typeof combo.items === 'string' ? JSON.parse(combo.items) : combo.items;
+        for (const ci of comboItems) {
+          if (ci.variantId) {
+            db.prepare('UPDATE product_variants SET stock = stock + ? WHERE id = ?').run(item.quantity, ci.variantId);
+          } else {
+            db.prepare('UPDATE products SET stock = stock + ? WHERE id = ?').run(item.quantity, ci.productId);
+          }
+        }
+      }
+    } else if (item.variantId) {
+      db.prepare('UPDATE product_variants SET stock = stock + ? WHERE id = ?').run(item.quantity, item.variantId);
+    } else {
+      db.prepare('UPDATE products SET stock = stock + ? WHERE id = ?').run(item.quantity, item.id);
+    }
+  }
+
+  db.prepare('DELETE FROM orders WHERE id = ?').run(req.params.id);
+  res.json({ success: true });
+});
+
 export default router;
