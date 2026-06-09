@@ -26,7 +26,7 @@ export default function SquarePanel({ identity }: { identity: { nickname: string
   const [showCreate, setShowCreate] = useState(false);
   const [selectedPost, setSelectedPost] = useState<Post | null>(null);
   const [sort, setSort] = useState<'newest' | 'hot'>('newest');
-  const [teamupFilter, setTeamupFilter] = useState<'active' | 'history'>('active');
+  const [statusFilter, setStatusFilter] = useState<'active' | 'history'>('active');
   const [search, setSearch] = useState('');
 
   // Create form
@@ -48,8 +48,7 @@ export default function SquarePanel({ identity }: { identity: { nickname: string
   const loadPosts = useCallback(() => {
     if (initialLoadRef.current) setLoading(true);
     const params: { type?: string; sort?: string; status?: string; search?: string } = { type: activeTab, sort };
-    if (activeTab === 'teamup' && teamupFilter === 'history') params.status = 'done';
-    else if (activeTab === 'teamup' && teamupFilter === 'active') params.status = 'open';
+    if (statusFilter === 'history') params.status = 'done';
     if (search.trim()) params.search = search.trim();
     fetchPosts(params).then(r => setPosts(r.posts as Post[])).catch(err => console.warn('Failed to load posts:', err)).finally(() => {
       setLoading(false);
@@ -57,7 +56,7 @@ export default function SquarePanel({ identity }: { identity: { nickname: string
     });
     // Refresh joined status in background
     fetchJoinedPostIds(identity.nickname).then(ids => setJoinedPostIds(new Set(ids))).catch(() => {});
-  }, [activeTab, sort, identity.nickname, teamupFilter, search]);
+  }, [activeTab, sort, identity.nickname, statusFilter, search]);
 
   useEffect(() => { initialLoadRef.current = true; loadPosts(); }, [loadPosts]);
   useEffect(() => { const t = setInterval(loadPosts, 15000); return () => clearInterval(t); }, [loadPosts]);
@@ -174,12 +173,10 @@ export default function SquarePanel({ identity }: { identity: { nickname: string
           );
         })}
         <div className="flex-1" />
-        {activeTab === 'teamup' && (
-          <button onClick={() => { setTeamupFilter(tf => tf === 'active' ? 'history' : 'active'); }}
-            className={`text-xs px-2 py-0.5 rounded-lg font-bold transition-colors ${teamupFilter === 'history' ? 'bg-slate-100 text-slate-500' : 'text-slate-400 hover:text-slate-600'}`}>
-            {teamupFilter === 'active' ? '历史' : '进行中'}
-          </button>
-        )}
+        <button onClick={() => { setStatusFilter(f => f === 'active' ? 'history' : 'active'); }}
+          className={`text-xs px-2 py-0.5 rounded-lg font-bold transition-colors ${statusFilter === 'history' ? 'bg-slate-100 text-slate-500' : 'text-slate-400 hover:text-slate-600'}`}>
+          {statusFilter === 'active' ? '历史' : '进行中'}
+        </button>
         <button onClick={() => setSort(sort === 'newest' ? 'hot' : 'newest')}
           className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold transition-all ${sort === 'newest' ? 'bg-slate-100 text-slate-600' : 'bg-orange-50 text-orange-500'}`}>
           <List size={12} />{sort === 'newest' ? '最新' : '最热'}
