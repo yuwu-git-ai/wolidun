@@ -677,7 +677,7 @@ export default function AdminPanel({ adminKey }: { adminKey: string }) {
                           {selVariants.length > 0 && (
                             <select value={item.variantId} onChange={e => updateComboItem(idx, 'variantId', e.target.value)}
                               className="w-28 px-2 py-2 bg-slate-50 rounded-xl border border-slate-200 text-xs outline-none focus:border-amber-300">
-                              <option value="">默认</option>
+                              <option value="" disabled>请选择</option>
                               {selVariants.map(v => (
                                 <option key={v.id} value={v.id}>{v.name}{v.price != null ? ` ¥${v.price}` : ''}</option>
                               ))}

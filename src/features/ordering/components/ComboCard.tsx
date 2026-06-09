@@ -54,6 +54,13 @@ export default function ComboCard({ combo, cart, products, onAddCombo }: ComboCa
     return ci.productPrice || 0;
   };
 
+  const allRequiredSelected = combo.items.every(ci => {
+    const product = products.find(p => p.id === ci.productId);
+    const hasVariants = (product?.variants?.filter(v => v.stock > 0) || []).length > 0;
+    if (!hasVariants) return true;
+    return !!(variantIds.get(ci.productId) || ci.variantId);
+  });
+
   return (
     <div className="bg-white p-2.5 sm:p-4 rounded-[16px] sm:rounded-[32px] shadow-sm border border-amber-200 flex flex-col gap-2 sm:gap-4 group hover:shadow-md transition-all duration-300 ring-1 ring-amber-100 h-full">
       <div className="flex items-center gap-2">
@@ -94,7 +101,7 @@ export default function ComboCard({ combo, cart, products, onAddCombo }: ComboCa
                 onChange={e => setVariant(ci.productId, e.target.value)}
                 className="w-full px-2 py-1.5 bg-white rounded-lg border border-slate-200 text-[10px] outline-none focus:border-amber-300"
               >
-                <option value="">默认规格</option>
+                <option value="" disabled>请选择</option>
                 {productVariants.map(v => (
                   <option key={v.id} value={v.id}>{v.name}{v.price != null ? ` ¥${v.price}` : ''}</option>
                 ))}
@@ -141,10 +148,11 @@ export default function ComboCard({ combo, cart, products, onAddCombo }: ComboCa
       </div>
 
       <button
+        disabled={!allRequiredSelected}
         onClick={() => onAddCombo(combo, brewingIds, freezingIds, variantIds)}
-        className="w-full min-h-10 bg-amber-500 text-white py-2.5 sm:py-3 rounded-xl sm:rounded-2xl font-bold text-[11px] sm:text-base hover:bg-amber-600 transition-all shadow-lg shadow-amber-500/20 active:scale-[0.98] flex items-center justify-center gap-1 sm:gap-2"
+        className={`w-full min-h-10 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl font-bold text-[11px] sm:text-base transition-all flex items-center justify-center gap-1 sm:gap-2 ${allRequiredSelected ? 'bg-amber-500 text-white hover:bg-amber-600 shadow-lg shadow-amber-500/20 active:scale-[0.98]' : 'bg-slate-200 text-slate-400 cursor-not-allowed'}`}
       >
-        <Plus size={16} /> 加入购物车
+        <Plus size={16} /> {allRequiredSelected ? '加入购物车' : '请选择规格'}
       </button>
     </div>
   );
