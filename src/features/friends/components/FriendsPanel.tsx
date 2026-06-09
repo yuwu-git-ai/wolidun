@@ -103,8 +103,9 @@ export default function FriendsPanel({ userId, onClose, onViewProfile, onChat }:
         {loading ? (
           <p className="text-center text-slate-400 py-10 text-sm">加载中...</p>
         ) : tab === 'discover' ? (
-          <div className="space-y-3">
-            <div className="flex items-center gap-2 bg-slate-50 rounded-xl px-3 py-2 border border-slate-100">
+          <div className="flex flex-col flex-1 min-h-0">
+            {/* Fixed search bar */}
+            <div className="flex items-center gap-2 bg-slate-50 rounded-xl px-3 py-2 border border-slate-100 shrink-0 mb-3">
               <Search size={14} className="text-slate-400 shrink-0" />
               <input
                 value={searchQuery}
@@ -119,38 +120,41 @@ export default function FriendsPanel({ userId, onClose, onViewProfile, onChat }:
                 </button>
               )}
             </div>
-            {searching ? (
-              <p className="text-center text-slate-400 py-6 text-sm">搜索中...</p>
-            ) : searchQuery && searchResults.length === 0 ? (
-              <div className="text-center py-10">
-                <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-3 text-2xl">🔍</div>
-                <p className="font-bold text-slate-400 text-sm">未找到用户</p>
-                <p className="text-xs text-slate-300 mt-1">换个关键词试试</p>
-              </div>
-            ) : !searchQuery ? (
-              <div className="text-center py-10">
-                <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-3 text-2xl">🌍</div>
-                <p className="font-bold text-slate-400 text-sm">搜索添加好友</p>
-                <p className="text-xs text-slate-300 mt-1">输入昵称即可找到其他用户</p>
-              </div>
-            ) : (
-              <div className="space-y-2">
-                {searchResults.map(u => (
-                  <div key={u.nickname} className="flex items-center gap-3 p-3 bg-slate-50 rounded-xl">
-                    <button onClick={() => onViewProfile(u.nickname)}
-                      className="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center text-lg shrink-0 hover:ring-2 hover:ring-orange-300 transition-all">👤</button>
-                    <div className="flex-1 min-w-0 cursor-pointer" onClick={() => onViewProfile(u.nickname)}>
-                      <p className="text-sm font-bold">{u.nickname}</p>
-                      <p className="text-xs text-slate-400">{u.dorm}</p>
+            {/* Fixed-height results area */}
+            <div className="min-h-[280px]">
+              {searching ? (
+                <p className="text-center text-slate-400 py-10 text-sm">搜索中...</p>
+              ) : searchQuery && searchResults.length === 0 ? (
+                <div className="text-center py-10">
+                  <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-3 text-2xl">🔍</div>
+                  <p className="font-bold text-slate-400 text-sm">未找到用户</p>
+                  <p className="text-xs text-slate-300 mt-1">换个关键词试试</p>
+                </div>
+              ) : !searchQuery ? (
+                <div className="text-center py-10">
+                  <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-3 text-2xl">🌍</div>
+                  <p className="font-bold text-slate-400 text-sm">搜索添加好友</p>
+                  <p className="text-xs text-slate-300 mt-1">输入昵称即可找到其他用户</p>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  {searchResults.map(u => (
+                    <div key={u.nickname} className="flex items-center gap-3 p-3 bg-slate-50 rounded-xl">
+                      <button onClick={() => onViewProfile(u.nickname)}
+                        className="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center text-lg shrink-0 hover:ring-2 hover:ring-orange-300 transition-all">👤</button>
+                      <div className="flex-1 min-w-0 cursor-pointer" onClick={() => onViewProfile(u.nickname)}>
+                        <p className="text-sm font-bold">{u.nickname}</p>
+                        <p className="text-xs text-slate-400">{u.dorm}</p>
+                      </div>
+                      <button onClick={() => handleAddFriend(u.nickname)} disabled={addingUser === u.nickname}
+                        className="px-3 py-1.5 bg-indigo-500 text-white rounded-lg text-xs font-bold hover:bg-indigo-600 disabled:opacity-50 flex items-center gap-1 shrink-0">
+                        <UserPlus size={12} />{addingUser === u.nickname ? '发送中' : '加好友'}
+                      </button>
                     </div>
-                    <button onClick={() => handleAddFriend(u.nickname)} disabled={addingUser === u.nickname}
-                      className="px-3 py-1.5 bg-indigo-500 text-white rounded-lg text-xs font-bold hover:bg-indigo-600 disabled:opacity-50 flex items-center gap-1 shrink-0">
-                      <UserPlus size={12} />{addingUser === u.nickname ? '发送中' : '加好友'}
-                    </button>
-                  </div>
-                ))}
-              </div>
-            )}
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         ) : tab === 'friends' ? (
           friends.length === 0 ? (
