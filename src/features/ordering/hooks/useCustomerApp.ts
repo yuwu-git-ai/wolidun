@@ -42,7 +42,7 @@ export interface CustomerAppActions {
   setIsMobileCartOpen: (v: boolean) => void;
   copyToClipboard: (text: string) => boolean;
   confirmAndCopy: () => Promise<void>;
-  addComboToCart: (combo: Combo, brewingIds: Set<string>, freezingIds: Set<string>) => void;
+  addComboToCart: (combo: Combo, brewingIds: Set<string>, freezingIds: Set<string>, variantIds: Map<string, string>) => void;
   handleSaveIdentity: (nickname: string, dorm: string) => void;
   handleUpdateProfile: (nickname: string, dorm: string) => void;
   handleLogout: () => void;
@@ -197,8 +197,8 @@ export function useCustomerApp(): { state: CustomerAppState; actions: CustomerAp
 
   const setIsMobileCartOpen = (v: boolean) => dispatch({ type: 'SET_IS_MOBILE_CART_OPEN', payload: v });
 
-  const addComboToCart = (combo: Combo, brewingIds: Set<string>, freezingIds: Set<string>) =>
-    dispatch({ type: 'ADD_COMBO_TO_CART', payload: { combo, brewingIds, freezingIds } });
+  const addComboToCart = (combo: Combo, brewingIds: Set<string>, freezingIds: Set<string>, variantIds: Map<string, string>) =>
+    dispatch({ type: 'ADD_COMBO_TO_CART', payload: { combo, brewingIds, freezingIds, variantIds } });
 
   // Robust clipboard copy — works in WeChat browser, HTTP, and HTTPS
   const copyToClipboard = (text: string): boolean => {

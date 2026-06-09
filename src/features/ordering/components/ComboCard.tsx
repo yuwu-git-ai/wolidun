@@ -1,20 +1,23 @@
 import { useState, useEffect } from 'react';
 import { Plus } from 'lucide-react';
-import { Combo, CartItem } from '../../../shared/types';
+import { Combo, CartItem, Product } from '../../../shared/types';
 
 interface ComboCardProps {
   combo: Combo;
   cart: CartItem[];
-  onAddCombo: (combo: Combo, brewingIds: Set<string>, freezingIds: Set<string>) => void;
+  products: Product[];
+  onAddCombo: (combo: Combo, brewingIds: Set<string>, freezingIds: Set<string>, variantIds: Map<string, string>) => void;
 }
 
-export default function ComboCard({ combo, cart, onAddCombo }: ComboCardProps) {
+export default function ComboCard({ combo, cart, products, onAddCombo }: ComboCardProps) {
   const [brewingIds, setBrewingIds] = useState<Set<string>>(new Set());
   const [freezingIds, setFreezingIds] = useState<Set<string>>(new Set());
+  const [variantIds, setVariantIds] = useState<Map<string, string>>(new Map());
 
   useEffect(() => {
     setBrewingIds(new Set());
     setFreezingIds(new Set());
+    setVariantIds(new Map());
   }, [combo.id]);
 
   const toggleBrewing = (productId: string) => {
@@ -33,6 +36,24 @@ export default function ComboCard({ combo, cart, onAddCombo }: ComboCardProps) {
     });
   };
 
+  const setVariant = (productId: string, variantId: string) => {
+    setVariantIds(prev => {
+      const next = new Map(prev);
+      if (variantId) next.set(productId, variantId); else next.delete(productId);
+      return next;
+    });
+  };
+
+  const getItemPrice = (ci: Combo['items'][0]) => {
+    const vid = variantIds.get(ci.productId) || ci.variantId;
+    if (vid) {
+      const product = products.find(p => p.id === ci.productId);
+      const v = product?.variants?.find(v => v.id === vid);
+      if (v && v.price != null) return v.price;
+    }
+    return ci.productPrice || 0;
+  };
+
   return (
     <div className="bg-white p-2.5 sm:p-4 rounded-[16px] sm:rounded-[32px] shadow-sm border border-amber-200 flex flex-col gap-2 sm:gap-4 group hover:shadow-md transition-all duration-300 ring-1 ring-amber-100 h-full">
       <div className="flex items-center gap-2">
@@ -47,7 +68,11 @@ export default function ComboCard({ combo, cart, onAddCombo }: ComboCardProps) {
 
         {/* Sub-items */}
         <div className="flex flex-col gap-2">
-        {combo.items.map(ci => (
+        {combo.items.map(ci => {
+          const product = products.find(p => p.id === ci.productId);
+          const productVariants = product?.variants?.filter(v => v.stock > 0) || [];
+          const itemPrice = getItemPrice(ci);
+          return (
           <div key={ci.productId} className="flex flex-col gap-1">
             <div className="flex items-center gap-2 p-2 bg-slate-50 rounded-xl">
               <div className="w-10 h-10 bg-white rounded-lg overflow-hidden shrink-0 border border-slate-200">
@@ -60,8 +85,21 @@ export default function ComboCard({ combo, cart, onAddCombo }: ComboCardProps) {
               <div className="flex-1 min-w-0">
                 <p className="text-[10px] sm:text-xs font-bold truncate">{ci.productName}</p>
               </div>
-              <span className="text-[10px] sm:text-xs text-slate-400">¥{ci.productPrice}</span>
+              <span className="text-[10px] sm:text-xs text-slate-400">¥{itemPrice}</span>
             </div>
+            {/* Variant selector */}
+            {productVariants.length > 0 && (
+              <select
+                value={variantIds.get(ci.productId) || ci.variantId || ''}
+                onChange={e => setVariant(ci.productId, e.target.value)}
+                className="w-full px-2 py-1.5 bg-white rounded-lg border border-slate-200 text-[10px] outline-none focus:border-amber-300"
+              >
+                <option value="">默认规格</option>
+                {productVariants.map(v => (
+                  <option key={v.id} value={v.id}>{v.name}{v.price != null ? ` ¥${v.price}` : ''}</option>
+                ))}
+              </select>
+            )}
             {/* Brewing / Freezing options per sub-item */}
             {(ci.allowBrewing || ci.allowFreezing) && (
               <div className="flex gap-3 px-1">
@@ -84,7 +122,7 @@ export default function ComboCard({ combo, cart, onAddCombo }: ComboCardProps) {
               </div>
             )}
           </div>
-        ))}
+        );})}
       </div>
 
       {/* Price */}
@@ -96,7 +134,7 @@ export default function ComboCard({ combo, cart, onAddCombo }: ComboCardProps) {
       </div>
 
       <button
-        onClick={() => onAddCombo(combo, brewingIds, freezingIds)}
+        onClick={() => onAddCombo(combo, brewingIds, freezingIds, variantIds)}
         className="w-full min-h-10 bg-amber-500 text-white py-2.5 sm:py-3 rounded-xl sm:rounded-2xl font-bold text-[11px] sm:text-base hover:bg-amber-600 transition-all shadow-lg shadow-amber-500/20 active:scale-[0.98] flex items-center justify-center gap-1 sm:gap-2"
       >
         <Plus size={16} /> 加入购物车

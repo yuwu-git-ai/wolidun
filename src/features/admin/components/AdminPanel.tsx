@@ -217,7 +217,7 @@ export default function AdminPanel({ adminKey }: { adminKey: string }) {
 
   const updateComboItem = (idx: number, field: 'productId' | 'variantId', value: string) => {
     const newItems = comboForm.items.map((item, i) =>
-      i === idx ? { ...item, [field]: value } : item
+      i === idx ? { ...item, [field]: value, ...(field === 'productId' ? { variantId: '' } : {}) } : item
     );
     setComboForm({ ...comboForm, items: newItems });
   };
@@ -662,7 +662,10 @@ export default function AdminPanel({ adminKey }: { adminKey: string }) {
                         <button type="button" onClick={addComboItem}
                           className="text-xs font-bold text-amber-600 hover:text-amber-700">+ 添加商品</button>
                       </div>
-                      {comboForm.items.map((item, idx) => (
+                      {comboForm.items.map((item, idx) => {
+                        const sel = products.find(p => p.id === item.productId);
+                        const selVariants = sel?.variants?.filter(v => v.stock > 0) || [];
+                        return (
                         <div key={idx} className="flex gap-2 items-center">
                           <select value={item.productId} onChange={e => updateComboItem(idx, 'productId', e.target.value)}
                             className="flex-1 px-3 py-2 bg-slate-50 rounded-xl border border-slate-200 text-xs outline-none focus:border-amber-300">
@@ -671,11 +674,20 @@ export default function AdminPanel({ adminKey }: { adminKey: string }) {
                               <option key={p.id} value={p.id}>{p.name} (¥{p.price})</option>
                             ))}
                           </select>
+                          {selVariants.length > 0 && (
+                            <select value={item.variantId} onChange={e => updateComboItem(idx, 'variantId', e.target.value)}
+                              className="w-28 px-2 py-2 bg-slate-50 rounded-xl border border-slate-200 text-xs outline-none focus:border-amber-300">
+                              <option value="">默认</option>
+                              {selVariants.map(v => (
+                                <option key={v.id} value={v.id}>{v.name}{v.price != null ? ` ¥${v.price}` : ''}</option>
+                              ))}
+                            </select>
+                          )}
                           <button type="button" onClick={() => removeComboItem(idx)}
                             className="w-7 h-7 bg-red-50 text-red-400 hover:bg-red-100 rounded-lg flex items-center justify-center shrink-0">
                             <X size={12} /></button>
                         </div>
-                      ))}
+                      );})}
                       {comboForm.items.length === 0 && (
                         <p className="text-[10px] text-slate-400">请添加至少2个商品组成套餐</p>
                       )}

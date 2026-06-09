@@ -63,7 +63,7 @@ export type CustomerAction =
   | { type: 'SET_IS_MOBILE_CART_OPEN'; payload: boolean }
   | { type: 'SET_POPULAR_IDS'; payload: Set<string> }
   | { type: 'SET_COMBOS'; payload: Combo[] }
-  | { type: 'ADD_COMBO_TO_CART'; payload: { combo: Combo; brewingIds: Set<string>; freezingIds: Set<string> } };
+  | { type: 'ADD_COMBO_TO_CART'; payload: { combo: Combo; brewingIds: Set<string>; freezingIds: Set<string>; variantIds: Map<string, string> } };
 
 // ── Reducer ──
 
@@ -185,16 +185,27 @@ export function customerReducer(state: CustomerRawState, action: CustomerAction)
       return { ...state, combos: action.payload };
 
     case 'ADD_COMBO_TO_CART': {
-      const { combo, brewingIds, freezingIds } = action.payload;
-      const tempComboItems = combo.items.map(ci => ({
-        productId: ci.productId,
-        variantId: ci.variantId || null,
-        productName: ci.productName,
-        productPrice: ci.productPrice,
-        image: ci.image,
-        selectedBrewing: brewingIds.has(ci.productId),
-        selectedFreezing: freezingIds.has(ci.productId),
-      }));
+      const { combo, brewingIds, freezingIds, variantIds } = action.payload;
+      const tempComboItems = combo.items.map(ci => {
+        const selectedVariantId = variantIds.get(ci.productId) || ci.variantId || null;
+        // Recalculate price based on selected variant
+        let price = ci.productPrice || 0;
+        if (selectedVariantId) {
+          // Look up variant price from combo item data (if available) or use default
+          const product = state.products.find(p => p.id === ci.productId);
+          const variant = product?.variants?.find(v => v.id === selectedVariantId);
+          if (variant && variant.price != null) price = variant.price;
+        }
+        return {
+          productId: ci.productId,
+          variantId: selectedVariantId,
+          productName: ci.productName,
+          productPrice: price,
+          image: ci.image,
+          selectedBrewing: brewingIds.has(ci.productId),
+          selectedFreezing: freezingIds.has(ci.productId),
+        };
+      });
       const lookupKey = getCartKey({ id: combo.id, comboId: combo.id, comboItems: tempComboItems });
       const existingIdx = state.cart.findIndex(item => getCartKey(item) === lookupKey);
       let newCart: CartItem[];
