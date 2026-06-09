@@ -44,6 +44,7 @@ function SquareApp() {
   const [showProfile, setShowProfile] = useState<string | null>(null);
   const [showFriends, setShowFriends] = useState(false);
   const [showChat, setShowChat] = useState<string | undefined>(undefined);
+  const [showUserMenu, setShowUserMenu] = useState(false);
 
   if (!identity) {
     return (
@@ -67,15 +68,8 @@ function SquareApp() {
           <h1 className="min-w-0 truncate text-base sm:text-xl font-bold tracking-tight">窝里蹲广场</h1>
         </div>
         <div className="flex shrink-0 items-center gap-2">
-          <div className="flex items-center gap-1.5 px-2 py-1 bg-slate-50 border border-slate-100 rounded-full">
-            <button onClick={() => setShowProfile(identity.nickname)}
-              className="w-5 h-5 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center hover:bg-indigo-200 transition-colors">
-              <UserIcon size={10} />
-            </button>
-            <span className="text-[10px] font-bold text-slate-600 truncate max-w-[60px]">{identity.nickname}</span>
-          </div>
           <button onClick={() => setShowFriends(true)}
-            className="w-9 h-9 flex items-center justify-center bg-slate-100 hover:bg-slate-200 rounded-full border border-slate-200 transition-colors"
+            className="w-9 h-9 flex items-center justify-center bg-slate-100 hover:bg-slate-200 rounded-full border border-slate-200 transition-colors hidden sm:flex"
             title="好友">
             <Users size={14} />
           </button>
@@ -84,6 +78,35 @@ function SquareApp() {
             title="消息">
             <MessageCircle size={14} />
           </button>
+          {/* User menu dropdown */}
+          <div className="relative">
+            <button onClick={() => setShowUserMenu(!showUserMenu)}
+              className="flex items-center gap-1 px-2 py-1.5 bg-slate-50 border border-slate-200 rounded-full hover:bg-slate-100 transition-colors">
+              <div className="w-5 h-5 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center">
+                <UserIcon size={10} />
+              </div>
+              <span className="text-[10px] font-bold text-slate-600 truncate max-w-[48px] hidden sm:inline">{identity.nickname}</span>
+              <ChevronDown size={10} className="text-slate-400 hidden sm:block" />
+            </button>
+            {showUserMenu && (
+              <div className="absolute right-0 top-full mt-1 w-36 bg-white rounded-xl shadow-xl border border-slate-200 py-1 z-50">
+                <button onClick={() => { setShowProfile(identity.nickname); setShowUserMenu(false); }}
+                  className="w-full flex items-center gap-2 px-3 py-2 text-xs font-bold hover:bg-slate-50 text-left">
+                  <UserIcon size={12} />我的名片
+                </button>
+                <button onClick={() => { setShowFriends(true); setShowUserMenu(false); }}
+                  className="w-full flex items-center gap-2 px-3 py-2 text-xs font-bold hover:bg-slate-50 text-left sm:hidden">
+                  <Users size={12} />好友
+                </button>
+                <hr className="my-1 border-slate-100 sm:hidden" />
+                <Link to="/" onClick={() => setShowUserMenu(false)}
+                  className="w-full flex items-center gap-2 px-3 py-2 text-xs font-bold hover:bg-slate-50 text-left">
+                  <ShoppingBag size={12} />回到点单
+                </Link>
+              </div>
+            )}
+          </div>
+          {showUserMenu && <div className="fixed inset-0 z-40" onClick={() => setShowUserMenu(false)} />}
           <Link to="/"
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-orange-500 text-white hover:bg-orange-600 transition-all">
             <ShoppingBag size={14} />
