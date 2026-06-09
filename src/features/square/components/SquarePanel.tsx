@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef, FormEvent } from 'react';
-import { Plus, Heart, MessageCircle, HelpCircle, Wrench, MessageSquareText, Users, X, Send, Search } from 'lucide-react';
+import { Plus, Heart, MessageCircle, HelpCircle, Wrench, MessageSquareText, Users, X, Send, Search, List } from 'lucide-react';
 import {
   fetchPosts, createPost, updatePost, toggleLike,
   addComment, joinPost, fetchPostById, fetchJoinedPostIds
@@ -180,8 +180,8 @@ export default function SquarePanel({ identity }: { identity: { nickname: string
           </button>
         )}
         <button onClick={() => setSort(sort === 'newest' ? 'hot' : 'newest')}
-          className="text-xs text-slate-400 px-2 hover:text-slate-600 transition-colors">
-          {sort === 'newest' ? '最新' : '最热'}
+          className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold transition-all ${sort === 'newest' ? 'bg-slate-100 text-slate-600' : 'bg-orange-50 text-orange-500'}`}>
+          <List size={12} />{sort === 'newest' ? '最新' : '最热'}
         </button>
       </div>
 
@@ -312,7 +312,14 @@ export default function SquarePanel({ identity }: { identity: { nickname: string
               <div className="flex gap-3">
                 <button type="button" onClick={() => setShowCreate(false)}
                   className="flex-1 py-3 bg-slate-100 text-slate-600 rounded-2xl font-bold text-sm">取消</button>
-                <button type="button" onClick={() => formRef.current?.requestSubmit()}
+                <button type="button" onClick={(e) => {
+                    const form = formRef.current || (e.target as HTMLElement).closest('form');
+                    if (form && typeof form.requestSubmit === 'function') {
+                      form.requestSubmit();
+                    } else if (form) {
+                      form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+                    }
+                  }}
                   className="flex-1 py-3 bg-slate-800 text-white rounded-2xl font-bold text-sm hover:bg-slate-700 transition-all">发布</button>
               </div>
             </div>
