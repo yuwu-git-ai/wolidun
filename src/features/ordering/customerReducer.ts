@@ -196,6 +196,8 @@ export function customerReducer(state: CustomerRawState, action: CustomerAction)
           const variant = product?.variants?.find(v => v.id === selectedVariantId);
           if (variant && variant.price != null) price = variant.price;
         }
+        if (brewingIds.has(ci.productId)) price += 1;
+        if (freezingIds.has(ci.productId)) price += 0.5;
         return {
           productId: ci.productId,
           variantId: selectedVariantId,

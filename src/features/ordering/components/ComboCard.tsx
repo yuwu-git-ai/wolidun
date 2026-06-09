@@ -46,12 +46,15 @@ export default function ComboCard({ combo, cart, products, onAddCombo }: ComboCa
 
   const getItemPrice = (ci: Combo['items'][0]) => {
     const vid = variantIds.get(ci.productId) || ci.variantId;
+    let price = ci.productPrice || 0;
     if (vid) {
       const product = products.find(p => p.id === ci.productId);
       const v = product?.variants?.find(v => v.id === vid);
-      if (v && v.price != null) return v.price;
+      if (v && v.price != null) price = v.price;
     }
-    return ci.productPrice || 0;
+    if (brewingIds.has(ci.productId)) price += 1;
+    if (freezingIds.has(ci.productId)) price += 0.5;
+    return price;
   };
 
   const allRequiredSelected = combo.items.every(ci => {
