@@ -105,22 +105,19 @@ function SquareApp() {
             className="w-9 h-9 flex items-center justify-center bg-slate-100 hover:bg-slate-200 rounded-full border border-slate-200 transition-colors relative"
             title="通知">
             <Bell size={16} />
-            {unreadCount > 0 && (
-              <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center">{unreadCount > 9 ? '9+' : unreadCount}</span>
+            {(unreadCount + pendingFriendRequests) > 0 && (
+              <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center">{(unreadCount + pendingFriendRequests) > 9 ? '9+' : unreadCount + pendingFriendRequests}</span>
             )}
           </button>
           {/* User menu dropdown */}
           <div className="relative">
             <button onClick={() => setShowUserMenu(!showUserMenu)}
-              className="flex items-center gap-1 px-2 py-1.5 bg-slate-50 border border-slate-200 rounded-full hover:bg-slate-100 transition-colors relative">
+              className="flex items-center gap-1 px-2 py-1.5 bg-slate-50 border border-slate-200 rounded-full hover:bg-slate-100 transition-colors">
               <div className="w-5 h-5 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center">
                 <UserIcon size={10} />
               </div>
               <span className="text-[10px] font-bold text-slate-600 truncate max-w-[48px] hidden sm:inline">{identity.nickname}</span>
               <ChevronDown size={10} className="text-slate-400 hidden sm:block" />
-              {pendingFriendRequests > 0 && (
-                <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center">{pendingFriendRequests > 9 ? '9+' : pendingFriendRequests}</span>
-              )}
             </button>
             {showUserMenu && (
               <div className="fixed top-12 right-4 mt-1 w-36 bg-white rounded-xl shadow-xl border border-slate-200 py-1 z-[100]">
@@ -270,22 +267,19 @@ function CustomerApp() {
               className="w-9 h-9 flex items-center justify-center bg-slate-100 hover:bg-slate-200 rounded-full border border-slate-200 transition-colors relative"
               title="通知">
               <Bell size={16} />
-              {unreadCount > 0 && (
-                <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center">{unreadCount > 9 ? '9+' : unreadCount}</span>
+              {(unreadCount + pendingFriendRequests) > 0 && (
+                <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center">{(unreadCount + pendingFriendRequests) > 9 ? '9+' : unreadCount + pendingFriendRequests}</span>
               )}
             </button>
             {/* User menu dropdown */}
             <div className="relative">
               <button onClick={() => setShowUserMenu(!showUserMenu)}
-                className="flex items-center gap-1 px-2 py-1.5 bg-slate-50 border border-slate-200 rounded-full hover:bg-slate-100 transition-colors relative">
+                className="flex items-center gap-1 px-2 py-1.5 bg-slate-50 border border-slate-200 rounded-full hover:bg-slate-100 transition-colors">
                 <div className="w-5 h-5 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center">
                   <UserIcon size={10} />
                 </div>
                 <span className="text-[10px] font-bold text-slate-600 truncate max-w-[48px] hidden sm:inline">{state.identity.nickname}</span>
                 <ChevronDown size={10} className="text-slate-400 hidden sm:block" />
-                {pendingFriendRequests > 0 && (
-                  <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center">{pendingFriendRequests > 9 ? '9+' : pendingFriendRequests}</span>
-                )}
               </button>
               {showUserMenu && (
                 <div className="fixed top-12 right-4 mt-1 w-36 bg-white rounded-xl shadow-xl border border-slate-200 py-1 z-[100]">
