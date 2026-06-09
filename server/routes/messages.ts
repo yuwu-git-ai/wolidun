@@ -22,6 +22,18 @@ router.post('/messages', (req: Request, res: Response) => {
   res.status(201).json(msg);
 });
 
+// GET /api/messages/unread-total — total unread across all conversations
+router.get('/messages/unread-total', (req: Request, res: Response) => {
+  const db = getDb();
+  const { user_id } = req.query;
+  if (!user_id) return res.status(400).json({ error: '缺少 user_id' });
+
+  const row = db.prepare(
+    'SELECT COUNT(*) as count FROM messages WHERE to_user = ? AND is_read = 0'
+  ).get(user_id) as any;
+  res.json({ count: row.count });
+});
+
 // GET /api/messages/:nickname — conversation with a specific user
 router.get('/messages/:nickname', (req: Request, res: Response) => {
   const db = getDb();

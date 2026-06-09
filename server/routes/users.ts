@@ -148,6 +148,18 @@ router.put('/friends/respond', (req: Request, res: Response) => {
   res.json({ ok: true });
 });
 
+// GET /api/friends/pending-count — count of pending friend requests (BEFORE /friends)
+router.get('/friends/pending-count', (req: Request, res: Response) => {
+  const db = getDb();
+  const { user_id } = req.query;
+  if (!user_id) return res.status(400).json({ error: '缺少 user_id' });
+
+  const row = db.prepare(
+    "SELECT COUNT(*) as count FROM friendships WHERE to_user = ? AND status = 'pending'"
+  ).get(user_id) as any;
+  res.json({ count: row.count });
+});
+
 // GET /api/friends — list friends + pending requests for a user
 router.get('/friends', (req: Request, res: Response) => {
   const db = getDb();

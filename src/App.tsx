@@ -4,7 +4,7 @@ import {
   ShoppingBag, Check, Flame, Utensils, Pizza, Coffee, IceCream, Package,
   User as UserIcon, Search, Edit3, X, LogOut, Clock, MessageCircle, Bell, Users, ChevronDown, Sparkles, FileText,
 } from 'lucide-react';
-import { fetchUnreadCount } from './shared/api';
+import { fetchUnreadCount, fetchTotalUnread, fetchPendingFriendCount } from './shared/api';
 import { DEFAULT_CATEGORIES } from './shared/constants';
 import ProductCard from './features/ordering/components/ProductCard';
 import ComboCard from './features/ordering/components/ComboCard';
@@ -49,11 +49,18 @@ function SquareApp() {
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [unreadMessages, setUnreadMessages] = useState(0);
+  const [pendingFriendRequests, setPendingFriendRequests] = useState(0);
 
-  // Poll unread notification count
+  // Poll unread counts
   useEffect(() => {
     if (!identity) return;
-    const load = () => fetchUnreadCount(identity.nickname).then(r => setUnreadCount(r.count)).catch(() => {});
+    const nick = identity.nickname;
+    const load = () => {
+      fetchUnreadCount(nick).then(r => setUnreadCount(r.count)).catch(() => {});
+      fetchTotalUnread(nick).then(r => setUnreadMessages(r.count)).catch(() => {});
+      fetchPendingFriendCount(nick).then(r => setPendingFriendRequests(r.count)).catch(() => {});
+    };
     load();
     const t = setInterval(load, 30000);
     return () => clearInterval(t);
@@ -86,17 +93,20 @@ function SquareApp() {
             <ShoppingBag size={14} />
             <span className="hidden sm:inline">点单</span>
           </Link>
-          <button onClick={() => setShowChat("")}
-            className="w-9 h-9 flex items-center justify-center bg-slate-100 hover:bg-slate-200 rounded-full border border-slate-200 transition-colors"
+          <button onClick={() => { setShowChat(""); setUnreadMessages(0); }}
+            className="w-9 h-9 flex items-center justify-center bg-slate-100 hover:bg-slate-200 rounded-full border border-slate-200 transition-colors relative"
             title="消息">
             <MessageCircle size={14} />
+            {unreadMessages > 0 && (
+              <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center">{unreadMessages > 9 ? '9+' : unreadMessages}</span>
+            )}
           </button>
           <button onClick={() => setShowNotifications(true)}
             className="w-9 h-9 flex items-center justify-center bg-slate-100 hover:bg-slate-200 rounded-full border border-slate-200 transition-colors relative"
             title="通知">
             <Bell size={16} />
-            {unreadCount > 0 && (
-              <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center">{unreadCount > 9 ? '9+' : unreadCount}</span>
+            {(unreadCount + pendingFriendRequests) > 0 && (
+              <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center">{(unreadCount + pendingFriendRequests) > 9 ? '9+' : unreadCount + pendingFriendRequests}</span>
             )}
           </button>
           {/* User menu dropdown */}
@@ -159,7 +169,7 @@ function SquareApp() {
           onChat={setShowChat} scrollTo={showProfileScroll} viewMode={showProfileScroll === 'posts' ? 'posts' : 'full'} startEditing={profileStartEditing} />
       )}
       {showFriends && (
-        <FriendsPanel userId={identity.nickname} onClose={() => setShowFriends(false)}
+        <FriendsPanel userId={identity.nickname} onClose={() => { setShowFriends(false); setPendingFriendRequests(0); }}
           onViewProfile={(n) => { setShowFriends(false); setShowProfile(n); }} onChat={setShowChat} />
       )}
       {showChat !== undefined && (
@@ -187,19 +197,22 @@ function AdminPage() {
 function CustomerApp() {
   const { state, actions } = useCustomerApp();
   const [unreadCount, setUnreadCount] = useState(0);
+  const [unreadMessages, setUnreadMessages] = useState(0);
+  const [pendingFriendRequests, setPendingFriendRequests] = useState(0);
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfile, setShowProfile] = useState<string | null>(null);
   const [showFriends, setShowFriends] = useState(false);
   const [showChat, setShowChat] = useState<string | undefined>(undefined);
   const [showUserMenu, setShowUserMenu] = useState(false);
 
-  // Fetch unread notification count
+  // Poll unread counts
   useEffect(() => {
     if (!state.identity) return;
+    const nick = state.identity.nickname;
     const load = () => {
-      fetchUnreadCount(state.identity!.nickname)
-        .then(r => setUnreadCount(r.count))
-        .catch(() => {});
+      fetchUnreadCount(nick).then(r => setUnreadCount(r.count)).catch(() => {});
+      fetchTotalUnread(nick).then(r => setUnreadMessages(r.count)).catch(() => {});
+      fetchPendingFriendCount(nick).then(r => setPendingFriendRequests(r.count)).catch(() => {});
     };
     load();
     const t = setInterval(load, 30000);
@@ -242,17 +255,20 @@ function CustomerApp() {
             </Link>
           )}
           {state.identity ? (<>
-            <button onClick={() => setShowChat("")}
-              className="w-9 h-9 flex items-center justify-center bg-slate-100 hover:bg-slate-200 rounded-full border border-slate-200 transition-colors"
+            <button onClick={() => { setShowChat(""); setUnreadMessages(0); }}
+              className="w-9 h-9 flex items-center justify-center bg-slate-100 hover:bg-slate-200 rounded-full border border-slate-200 transition-colors relative"
               title="消息">
               <MessageCircle size={14} />
+              {unreadMessages > 0 && (
+                <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center">{unreadMessages > 9 ? '9+' : unreadMessages}</span>
+              )}
             </button>
             <button onClick={() => setShowNotifications(true)}
               className="w-9 h-9 flex items-center justify-center bg-slate-100 hover:bg-slate-200 rounded-full border border-slate-200 transition-colors relative"
               title="通知">
               <Bell size={16} />
-              {unreadCount > 0 && (
-                <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center">{unreadCount > 9 ? '9+' : unreadCount}</span>
+              {(unreadCount + pendingFriendRequests) > 0 && (
+                <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center">{(unreadCount + pendingFriendRequests) > 9 ? '9+' : unreadCount + pendingFriendRequests}</span>
               )}
             </button>
             {/* User menu dropdown */}
@@ -275,7 +291,7 @@ function CustomerApp() {
                     className="w-full flex items-center gap-2 px-3 py-2 text-xs font-bold hover:bg-slate-50 text-left">
                     <Clock size={12} />历史订单
                   </button>
-                  <button onClick={() => { setShowFriends(true); setShowUserMenu(false); }}
+                  <button onClick={() => { setShowFriends(true); setShowUserMenu(false); setPendingFriendRequests(0); }}
                     className="w-full flex items-center gap-2 px-3 py-2 text-xs font-bold hover:bg-slate-50 text-left">
                     <Users size={12} />好友
                   </button>
@@ -570,7 +586,7 @@ function CustomerApp() {
           onChat={setShowChat} />
       )}
       {showFriends && (
-        <FriendsPanel userId={state.identity!.nickname} onClose={() => setShowFriends(false)}
+        <FriendsPanel userId={state.identity!.nickname} onClose={() => { setShowFriends(false); setPendingFriendRequests(0); }}
           onViewProfile={(n) => { setShowFriends(false); setShowProfile(n); }} onChat={setShowChat} />
       )}
       {showChat !== undefined && (

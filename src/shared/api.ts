@@ -463,6 +463,10 @@ export async function fetchFriends(userId: string): Promise<{ friends: FriendInf
   return request(`${BASE}/friends?user_id=${encodeURIComponent(userId)}`);
 }
 
+export async function fetchPendingFriendCount(userId: string): Promise<{ count: number }> {
+  return request(`${BASE}/friends/pending-count?user_id=${encodeURIComponent(userId)}`);
+}
+
 export async function deleteFriend(userId: string, friendNickname: string): Promise<{ ok: boolean }> {
   return request(`${BASE}/friends/${encodeURIComponent(friendNickname)}`, {
     method: 'DELETE',
@@ -485,4 +489,8 @@ export async function fetchConversation(userId: string, partner: string): Promis
 
 export async function fetchConversations(userId: string): Promise<{ conversations: Conversation[] }> {
   return request(`${BASE}/messages?user_id=${encodeURIComponent(userId)}`);
+}
+
+export async function fetchTotalUnread(userId: string): Promise<{ count: number }> {
+  return request(`${BASE}/messages/unread-total?user_id=${encodeURIComponent(userId)}`);
 }
