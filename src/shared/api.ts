@@ -364,3 +364,16 @@ export async function deleteCombo(id: string, adminKey: string): Promise<{ succe
     headers: { 'X-Admin-Key': adminKey },
   });
 }
+
+// ── Notifications ──
+export async function fetchNotifications(userId: string): Promise<any[]> {
+  return request(`${BASE}/notifications?user_id=${encodeURIComponent(userId)}`);
+}
+
+export async function fetchUnreadCount(userId: string): Promise<{ count: number }> {
+  return request(`${BASE}/notifications/unread-count?user_id=${encodeURIComponent(userId)}`);
+}
+
+export async function markNotificationRead(id: string): Promise<{ success: boolean }> {
+  return request(`${BASE}/notifications/${id}/read`, { method: 'PUT' });
+}

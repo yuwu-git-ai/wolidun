@@ -210,11 +210,19 @@ router.delete('/orders/:id', (req: Request, res: Response) => {
   const order = db.prepare('SELECT * FROM orders WHERE id = ?').get(req.params.id) as any;
   if (!order) return res.status(404).json({ error: '订单不存在' });
 
-  const { nickname } = req.body;
+  const { nickname, reason } = req.body;
   const adminKey = req.headers['x-admin-key'] as string;
   const expectedKey = process.env.ADMIN_KEY || 'admin123';
   const isAdmin = adminKey === expectedKey;
   if (!isAdmin && order.nickname !== nickname) return res.status(403).json({ error: '无权删除' });
+
+  // If admin deletes with a reason, notify the user
+  if (isAdmin && reason && order.nickname !== nickname) {
+    const notifId = uuid();
+    db.prepare(
+      'INSERT INTO notifications (id, user_id, title, content) VALUES (?, ?, ?, ?)'
+    ).run(notifId, order.nickname, '订单被退回', reason);
+  }
 
   // Restore stock
   const items = typeof order.items === 'string' ? JSON.parse(order.items) : order.items;

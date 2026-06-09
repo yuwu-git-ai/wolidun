@@ -94,6 +94,13 @@ export default function SquarePanel({ identity }: { identity: { nickname: string
     } catch (err) { alert(getErrorMessage(err)); }
   };
 
+  const handleUnclaim = async (post: Post) => {
+    try {
+      await updatePost(post.id, { status: 'open', user_id: identity.nickname });
+      loadPosts();
+    } catch (err) { alert(getErrorMessage(err)); }
+  };
+
   const handleDone = async (post: Post) => {
     try {
       await updatePost(post.id, { status: 'done', user_id: identity.nickname });
@@ -391,6 +398,9 @@ export default function SquarePanel({ identity }: { identity: { nickname: string
               </span>
               {selectedPost.type === 'help' && selectedPost.status === 'open' && selectedPost.user_id !== identity.nickname && (
                 <button onClick={() => handleClaim(selectedPost)} className="ml-auto px-3 py-1.5 bg-slate-800 text-white rounded-lg text-xs font-bold hover:bg-slate-700">我能搞定</button>
+              )}
+              {selectedPost.status === 'claimed' && selectedPost.claimed_by === identity.nickname && (
+                <button onClick={() => handleUnclaim(selectedPost)} className="ml-auto px-3 py-1.5 bg-red-50 text-red-500 rounded-lg text-xs font-bold hover:bg-red-100">取消接单</button>
               )}
               {selectedPost.user_id === identity.nickname && (
                 selectedPost.status === 'done' ? (

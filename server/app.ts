@@ -6,6 +6,7 @@ import statsRoutes from './routes/stats';
 import authRoutes from './routes/auth';
 import postRoutes from './routes/posts';
 import comboRoutes from './routes/combos';
+import notificationRoutes from './routes/notifications';
 import { rateLimit } from './middleware/rateLimit';
 
 export function createApp() {
@@ -30,6 +31,7 @@ export function createApp() {
   app.use('/api', authRoutes);
   app.use('/api', postRoutes);
   app.use('/api', comboRoutes);
+  app.use('/api', notificationRoutes);
 
   // Health check
   app.get('/api/health', (_req, res) => {

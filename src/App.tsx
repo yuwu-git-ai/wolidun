@@ -1,15 +1,17 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   ShoppingBag, Check, Flame, Utensils, Pizza, Coffee, IceCream, Package,
-  User as UserIcon, Search, Edit3, X, LogOut, Clock, MessageCircle,
+  User as UserIcon, Search, Edit3, X, LogOut, Clock, MessageCircle, Bell,
 } from 'lucide-react';
+import { fetchUnreadCount } from './shared/api';
 import { DEFAULT_CATEGORIES } from './shared/constants';
 import ProductCard from './features/ordering/components/ProductCard';
 import ComboCard from './features/ordering/components/ComboCard';
 import IdentityForm from './features/ordering/components/IdentityForm';
 import ProfileForm from './features/ordering/components/ProfileForm';
 import OrderHistory from './features/ordering/components/OrderHistory';
+import NotificationPanel from './features/ordering/components/NotificationPanel';
 import CartPanel from './features/ordering/components/CartPanel';
 import { getItemUnitPrice } from './shared/utils';
 import { Routes, Route, Link, useNavigate } from 'react-router-dom';
@@ -99,6 +101,21 @@ function AdminPage() {
 
 function CustomerApp() {
   const { state, actions } = useCustomerApp();
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [showNotifications, setShowNotifications] = useState(false);
+
+  // Fetch unread notification count
+  useEffect(() => {
+    if (!state.identity) return;
+    const load = () => {
+      fetchUnreadCount(state.identity!.nickname)
+        .then(r => setUnreadCount(r.count))
+        .catch(() => {});
+    };
+    load();
+    const t = setInterval(load, 30000);
+    return () => clearInterval(t);
+  }, [state.identity]);
 
   // Profile editor
   if (state.showProfileForm && state.identity) {
@@ -114,6 +131,11 @@ function CustomerApp() {
   // Order history
   if (state.showOrderHistory && state.identity) {
     return <OrderHistory identity={state.identity} onClose={() => actions.setShowOrderHistory(false)} onReorder={actions.reorder} />;
+  }
+
+  // Notifications
+  if (showNotifications && state.identity) {
+    return <NotificationPanel nickname={state.identity.nickname} onClose={() => { setShowNotifications(false); setUnreadCount(0); }} />;
   }
 
   return (
@@ -149,6 +171,14 @@ function CustomerApp() {
             </div>
           )}
           {state.identity ? (<>
+            <button onClick={() => setShowNotifications(true)}
+              className="w-9 h-9 flex items-center justify-center bg-slate-100 hover:bg-slate-200 rounded-full border border-slate-200 transition-colors relative"
+              title="通知">
+              <Bell size={16} />
+              {unreadCount > 0 && (
+                <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center">{unreadCount > 9 ? '9+' : unreadCount}</span>
+              )}
+            </button>
             <button onClick={() => actions.setShowOrderHistory(true)}
               className="w-9 h-9 flex items-center justify-center bg-slate-100 hover:bg-slate-200 rounded-full border border-slate-200 transition-colors"
               title="历史订单">

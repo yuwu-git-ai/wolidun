@@ -107,6 +107,11 @@ router.put('/posts/:id', (req: Request, res: Response) => {
     if (post.status !== 'open') return res.status(400).json({ error: '帖子已被接单' });
     db.prepare('UPDATE posts SET status = ?, claimed_by = ? WHERE id = ?')
       .run('claimed', claimed_by || user_id, req.params.id);
+  } else if (status === 'open' && post.status === 'claimed') {
+    // Unclaim: claimed_by user gives up, post goes back to open
+    if (post.claimed_by !== user_id) return res.status(403).json({ error: '只有接单人才能取消接单' });
+    db.prepare('UPDATE posts SET status = ?, claimed_by = ? WHERE id = ?')
+      .run('open', '', req.params.id);
   } else if (status === 'done') {
     if (post.user_id !== user_id) return res.status(403).json({ error: '只有发帖人可以标记完成' });
     db.prepare('UPDATE posts SET status = ? WHERE id = ?').run('done', req.params.id);

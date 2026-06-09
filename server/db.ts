@@ -236,6 +236,21 @@ function runMigrations() {
     db.prepare('INSERT INTO schema_version (version) VALUES (9)').run();
     console.log('[DB] Migrated to schema v9 (products.is_hot).');
   }
+
+  if (current < 10) {
+    db.exec(`
+      CREATE TABLE IF NOT EXISTS notifications (
+        id TEXT PRIMARY KEY,
+        user_id TEXT NOT NULL,
+        title TEXT NOT NULL,
+        content TEXT DEFAULT '',
+        is_read INTEGER DEFAULT 0,
+        created_at TEXT DEFAULT (datetime('now'))
+      );
+    `);
+    db.prepare('INSERT INTO schema_version (version) VALUES (10)').run();
+    console.log('[DB] Migrated to schema v10 (notifications).');
+  }
 }
 
 function initTables() {
