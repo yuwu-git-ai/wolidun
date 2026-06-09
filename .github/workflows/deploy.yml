@@ -17,6 +17,11 @@ jobs:
           password: ${{ secrets.SSH_PASSWORD }}
           script: |
             cd /root/app
-            git pull origin master
+            for i in 1 2 3; do
+              echo "[deploy] git pull attempt $i/3"
+              if git pull origin master; then break; fi
+              echo "[deploy] pull failed, retrying in 10s..."
+              sleep 10
+            done
             docker compose down
             docker compose up -d --build
