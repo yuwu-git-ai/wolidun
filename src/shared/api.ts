@@ -316,6 +316,13 @@ export async function joinPost(postId: string, userId: string): Promise<Post> {
   });
 }
 
+export async function leavePost(postId: string, userId: string): Promise<Post> {
+  return request(`${BASE}/posts/${postId}/leave`, {
+    method: 'POST',
+    body: JSON.stringify({ user_id: userId }),
+  });
+}
+
 // ── Combos ──
 export async function fetchCombos(): Promise<Combo[]> {
   return request(`${BASE}/combos`);

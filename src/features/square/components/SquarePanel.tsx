@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback, useRef, FormEvent } from 'react';
-import { Plus, Heart, MessageCircle, HelpCircle, Wrench, MessageSquareText, Users, X, Send, Search, List } from 'lucide-react';
+import { Plus, Heart, MessageCircle, HelpCircle, Wrench, MessageSquareText, Users, X, Send, Search, List, LogOut } from 'lucide-react';
 import {
   fetchPosts, createPost, updatePost, toggleLike,
-  addComment, joinPost, fetchPostById, fetchJoinedPostIds
+  addComment, joinPost, fetchPostById, fetchJoinedPostIds, leavePost
 } from '../../../shared/api';
 import type { Post } from '../../../shared/api';
 import { getErrorMessage } from '../../../shared/utils';
@@ -135,6 +135,14 @@ export default function SquarePanel({ identity }: { identity: { nickname: string
     } catch (err) { alert(getErrorMessage(err)); }
   };
 
+  const handleLeave = async (postId: string) => {
+    try {
+      await leavePost(postId, identity.nickname);
+      setJoinedPostIds(prev => { const next = new Set(prev); next.delete(postId); return next; });
+      loadPosts();
+    } catch (err) { alert(getErrorMessage(err)); }
+  };
+
   const openDetail = async (post: Post) => {
     try {
       const full = await fetchPostById(post.id, identity.nickname);
@@ -246,7 +254,7 @@ export default function SquarePanel({ identity }: { identity: { nickname: string
                       </span>
                     )}
                     {post.type === 'teamup' && post.user_id === identity.nickname && <span className="text-[10px] text-slate-400 font-bold">我的队伍</span>}
-                    {post.type === 'teamup' && post.user_id !== identity.nickname && joinedPostIds.has(post.id) && <span className="text-[10px] text-amber-500 font-bold">已加入</span>}
+                    {post.type === 'teamup' && post.user_id !== identity.nickname && joinedPostIds.has(post.id) && <span className="text-[10px] text-red-500 font-bold">已加入·可退出</span>}
                     {post.status === 'done' && <span className="text-[10px] text-green-500 font-bold">已完成</span>}
                     {post.status === 'claimed' && <span className="text-[10px] text-blue-500 font-bold">已接单</span>}
                   </div>
@@ -383,7 +391,7 @@ export default function SquarePanel({ identity }: { identity: { nickname: string
                 selectedPost.user_id === identity.nickname ? (
                   <span className="ml-auto px-3 py-1.5 bg-slate-100 text-slate-400 rounded-lg text-xs font-bold">我的队伍</span>
                 ) : joinedPostIds.has(selectedPost.id) ? (
-                  <span className="ml-auto px-3 py-1.5 bg-amber-50 text-amber-600 rounded-lg text-xs font-bold">已加入</span>
+                  <button onClick={() => handleLeave(selectedPost.id)} className="ml-auto px-3 py-1.5 bg-red-50 text-red-500 rounded-lg text-xs font-bold hover:bg-red-100 active:scale-95 transition-all flex items-center gap-1"><LogOut size={12} />退出</button>
                 ) : selectedPost.status === 'open' ? (
                   <button onClick={() => handleJoin(selectedPost.id)} className="ml-auto px-3 py-1.5 bg-amber-500 text-white rounded-lg text-xs font-bold hover:bg-amber-600 active:scale-95 transition-all">加入</button>
                 ) : null

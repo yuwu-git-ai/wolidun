@@ -212,4 +212,33 @@ router.post('/posts/:id/join', (req: Request, res: Response) => {
   res.json(updated);
 });
 
+// POST /api/posts/:id/leave — leave a teamup post
+router.post('/posts/:id/leave', (req: Request, res: Response) => {
+  const db = getDb();
+  const post = db.prepare('SELECT * FROM posts WHERE id = ?').get(req.params.id) as any;
+  if (!post) return res.status(404).json({ error: '帖子不存在' });
+  if (post.type !== 'teamup') return res.status(400).json({ error: '仅组队帖支持退出' });
+
+  const { user_id } = req.body;
+  if (!user_id) return res.status(400).json({ error: '缺少 user_id' });
+
+  if (post.user_id === user_id) return res.status(400).json({ error: '创建者不能退出，请标记完成或取消' });
+
+  const membership = db.prepare(
+    'SELECT * FROM teamup_members WHERE post_id = ? AND user_id = ?'
+  ).get(req.params.id, user_id);
+  if (!membership) return res.status(400).json({ error: '你不在这个队伍里' });
+
+  if (post.status !== 'open') return res.status(400).json({ error: '队伍已结束' });
+
+  db.prepare('DELETE FROM teamup_members WHERE post_id = ? AND user_id = ?')
+    .run(req.params.id, user_id);
+
+  const newPlayers = Math.max(1, post.players - 1);
+  db.prepare('UPDATE posts SET players = ? WHERE id = ?').run(newPlayers, req.params.id);
+
+  const updated2 = db.prepare('SELECT * FROM posts WHERE id = ?').get(req.params.id);
+  res.json(updated2);
+});
+
 export default router;
