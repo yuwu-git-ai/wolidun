@@ -214,10 +214,12 @@ export function customerReducer(state: CustomerRawState, action: CustomerAction)
           idx === existingIdx ? { ...item, quantity: item.quantity + 1 } : item
         );
       } else {
+        const actualTotal = tempComboItems.reduce((s, ci) => s + ci.productPrice, 0);
+        const actualPrice = Math.max(0, actualTotal - combo.discount);
         const comboItem: CartItem = {
           id: combo.id,
           name: combo.name,
-          price: combo.comboPrice,
+          price: actualPrice,
           category: '',
           description: '',
           stock: 999,

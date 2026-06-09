@@ -125,12 +125,19 @@ export default function ComboCard({ combo, cart, products, onAddCombo }: ComboCa
         );})}
       </div>
 
-      {/* Price */}
-      <div className="flex items-baseline gap-2">
-        <span className="text-slate-400 line-through text-[10px] sm:text-xs">¥{combo.originalPrice.toFixed(1)}</span>
-        <span className="font-bold text-amber-600 text-base sm:text-xl">¥{combo.comboPrice.toFixed(1)}</span>
-        <span className="text-[9px] sm:text-[10px] text-green-600 font-bold">省 ¥{combo.discount.toFixed(1)}</span>
-      </div>
+      {/* Price — dynamic based on variant selections */}
+      {(() => {
+        const actualTotal = combo.items.reduce((s, ci) => s + getItemPrice(ci), 0);
+        const actualComboPrice = Math.max(0, actualTotal - combo.discount);
+        const actualSavings = combo.discount;
+        return (
+          <div className="flex items-baseline gap-2">
+            <span className="text-slate-400 line-through text-[10px] sm:text-xs">¥{actualTotal.toFixed(1)}</span>
+            <span className="font-bold text-amber-600 text-base sm:text-xl">¥{actualComboPrice.toFixed(1)}</span>
+            <span className="text-[9px] sm:text-[10px] text-green-600 font-bold">省 ¥{actualSavings.toFixed(1)}</span>
+          </div>
+        );
+      })()}
       </div>
 
       <button
