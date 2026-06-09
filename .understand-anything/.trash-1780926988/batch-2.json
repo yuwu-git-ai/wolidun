@@ -1,0 +1,1522 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/App.tsx",
+      "type": "file",
+      "name": "App.tsx",
+      "filePath": "src/App.tsx",
+      "summary": "应用根组件，实现顾客端完整 UI：身份认证、商品浏览、购物车、订单确认和历史追踪。",
+      "tags": [
+        "entry-point",
+        "component",
+        "customer-app"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/App.tsx:CustomerApp",
+      "type": "function",
+      "name": "CustomerApp",
+      "filePath": "src/App.tsx",
+      "lineRange": [
+        23,
+        325
+      ],
+      "summary": "顾客端主组件，管理标签切换、商品浏览、购物车操作和订单确认流程。",
+      "tags": [
+        "component",
+        "main",
+        "customer"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/App.tsx:App",
+      "type": "function",
+      "name": "App",
+      "filePath": "src/App.tsx",
+      "lineRange": [
+        329,
+        338
+      ],
+      "summary": "应用根组件，根据路径分派顾客端或管理后台界面。",
+      "tags": [
+        "entry-point",
+        "router",
+        "root"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/__tests__/IdentityForm.test.tsx",
+      "type": "file",
+      "name": "IdentityForm.test.tsx",
+      "filePath": "src/__tests__/IdentityForm.test.tsx",
+      "summary": "IdentityForm 组件的单元测试，验证表单输入和提交流程。",
+      "tags": [
+        "test",
+        "component-test",
+        "identity"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/api.ts",
+      "type": "file",
+      "name": "api.ts",
+      "filePath": "src/api.ts",
+      "summary": "前端 API 客户端，封装所有后端请求（认证、商品、订单、统计、帖子），含重试逻辑和错误处理。",
+      "tags": [
+        "api-client",
+        "fetch",
+        "error-handling",
+        "retry"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/api.ts:register",
+      "type": "function",
+      "name": "register",
+      "filePath": "src/api.ts",
+      "lineRange": [
+        6,
+        11
+      ],
+      "summary": "函数 register",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api.ts:login",
+      "type": "function",
+      "name": "login",
+      "filePath": "src/api.ts",
+      "lineRange": [
+        13,
+        18
+      ],
+      "summary": "函数 login",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api.ts:updateProfile",
+      "type": "function",
+      "name": "updateProfile",
+      "filePath": "src/api.ts",
+      "lineRange": [
+        20,
+        25
+      ],
+      "summary": "函数 updateProfile",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api.ts:changePassword",
+      "type": "function",
+      "name": "changePassword",
+      "filePath": "src/api.ts",
+      "lineRange": [
+        27,
+        32
+      ],
+      "summary": "函数 changePassword",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api.ts:getIdentity",
+      "type": "function",
+      "name": "getIdentity",
+      "filePath": "src/api.ts",
+      "lineRange": [
+        42,
+        46
+      ],
+      "summary": "函数 getIdentity",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api.ts:setIdentity",
+      "type": "function",
+      "name": "setIdentity",
+      "filePath": "src/api.ts",
+      "lineRange": [
+        48,
+        50
+      ],
+      "summary": "函数 setIdentity",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api.ts:clearIdentity",
+      "type": "function",
+      "name": "clearIdentity",
+      "filePath": "src/api.ts",
+      "lineRange": [
+        52,
+        54
+      ],
+      "summary": "函数 clearIdentity",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api.ts:getAdminKey",
+      "type": "function",
+      "name": "getAdminKey",
+      "filePath": "src/api.ts",
+      "lineRange": [
+        59,
+        61
+      ],
+      "summary": "函数 getAdminKey",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api.ts:setAdminKey",
+      "type": "function",
+      "name": "setAdminKey",
+      "filePath": "src/api.ts",
+      "lineRange": [
+        63,
+        65
+      ],
+      "summary": "函数 setAdminKey",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api.ts:isRetryableError",
+      "type": "function",
+      "name": "isRetryableError",
+      "filePath": "src/api.ts",
+      "lineRange": [
+        69,
+        81
+      ],
+      "summary": "函数 isRetryableError",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api.ts:delay",
+      "type": "function",
+      "name": "delay",
+      "filePath": "src/api.ts",
+      "lineRange": [
+        83,
+        85
+      ],
+      "summary": "函数 delay",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api.ts:request",
+      "type": "function",
+      "name": "request",
+      "filePath": "src/api.ts",
+      "lineRange": [
+        87,
+        124
+      ],
+      "summary": "通用 HTTP 请求函数，支持指数退避重试和统一错误处理。",
+      "tags": [
+        "http",
+        "retry",
+        "error-handling"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api.ts:getErrorMessage",
+      "type": "function",
+      "name": "getErrorMessage",
+      "filePath": "src/api.ts",
+      "lineRange": [
+        126,
+        130
+      ],
+      "summary": "从错误对象中提取可读的错误消息。",
+      "tags": [
+        "utility",
+        "error-handling"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api.ts:verifyAdmin",
+      "type": "function",
+      "name": "verifyAdmin",
+      "filePath": "src/api.ts",
+      "lineRange": [
+        133,
+        138
+      ],
+      "summary": "函数 verifyAdmin",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api.ts:fetchProducts",
+      "type": "function",
+      "name": "fetchProducts",
+      "filePath": "src/api.ts",
+      "lineRange": [
+        141,
+        143
+      ],
+      "summary": "获取所有商品列表。",
+      "tags": [
+        "api-client",
+        "product"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api.ts:createProduct",
+      "type": "function",
+      "name": "createProduct",
+      "filePath": "src/api.ts",
+      "lineRange": [
+        145,
+        151
+      ],
+      "summary": "函数 createProduct",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api.ts:updateProduct",
+      "type": "function",
+      "name": "updateProduct",
+      "filePath": "src/api.ts",
+      "lineRange": [
+        153,
+        159
+      ],
+      "summary": "函数 updateProduct",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api.ts:deleteProduct",
+      "type": "function",
+      "name": "deleteProduct",
+      "filePath": "src/api.ts",
+      "lineRange": [
+        161,
+        166
+      ],
+      "summary": "函数 deleteProduct",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api.ts:createOrder",
+      "type": "function",
+      "name": "createOrder",
+      "filePath": "src/api.ts",
+      "lineRange": [
+        169,
+        179
+      ],
+      "summary": "创建订单 API，发送用户身份、商品列表和配送选项。",
+      "tags": [
+        "api-client",
+        "order"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api.ts:fetchOrders",
+      "type": "function",
+      "name": "fetchOrders",
+      "filePath": "src/api.ts",
+      "lineRange": [
+        181,
+        188
+      ],
+      "summary": "函数 fetchOrders",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api.ts:fetchOrderById",
+      "type": "function",
+      "name": "fetchOrderById",
+      "filePath": "src/api.ts",
+      "lineRange": [
+        190,
+        192
+      ],
+      "summary": "函数 fetchOrderById",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api.ts:fetchStats",
+      "type": "function",
+      "name": "fetchStats",
+      "filePath": "src/api.ts",
+      "lineRange": [
+        195,
+        207
+      ],
+      "summary": "函数 fetchStats",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api.ts:updateOrderStatus",
+      "type": "function",
+      "name": "updateOrderStatus",
+      "filePath": "src/api.ts",
+      "lineRange": [
+        209,
+        215
+      ],
+      "summary": "函数 updateOrderStatus",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api.ts:fetchPosts",
+      "type": "function",
+      "name": "fetchPosts",
+      "filePath": "src/api.ts",
+      "lineRange": [
+        248,
+        261
+      ],
+      "summary": "函数 fetchPosts",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api.ts:fetchPostById",
+      "type": "function",
+      "name": "fetchPostById",
+      "filePath": "src/api.ts",
+      "lineRange": [
+        263,
+        266
+      ],
+      "summary": "函数 fetchPostById",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api.ts:createPost",
+      "type": "function",
+      "name": "createPost",
+      "filePath": "src/api.ts",
+      "lineRange": [
+        268,
+        283
+      ],
+      "summary": "函数 createPost",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api.ts:updatePost",
+      "type": "function",
+      "name": "updatePost",
+      "filePath": "src/api.ts",
+      "lineRange": [
+        285,
+        290
+      ],
+      "summary": "函数 updatePost",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api.ts:addComment",
+      "type": "function",
+      "name": "addComment",
+      "filePath": "src/api.ts",
+      "lineRange": [
+        292,
+        297
+      ],
+      "summary": "函数 addComment",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api.ts:toggleLike",
+      "type": "function",
+      "name": "toggleLike",
+      "filePath": "src/api.ts",
+      "lineRange": [
+        299,
+        304
+      ],
+      "summary": "函数 toggleLike",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api.ts:fetchJoinedPostIds",
+      "type": "function",
+      "name": "fetchJoinedPostIds",
+      "filePath": "src/api.ts",
+      "lineRange": [
+        306,
+        309
+      ],
+      "summary": "函数 fetchJoinedPostIds",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api.ts:joinPost",
+      "type": "function",
+      "name": "joinPost",
+      "filePath": "src/api.ts",
+      "lineRange": [
+        311,
+        316
+      ],
+      "summary": "函数 joinPost",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/components/AdminGate.tsx",
+      "type": "file",
+      "name": "AdminGate.tsx",
+      "filePath": "src/components/AdminGate.tsx",
+      "summary": "管理员入口守卫组件，提供密钥输入界面，验证通过后渲染后台面板。",
+      "tags": [
+        "component",
+        "admin",
+        "authentication"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/components/AdminGate.tsx:AdminGate",
+      "type": "function",
+      "name": "AdminGate",
+      "filePath": "src/components/AdminGate.tsx",
+      "lineRange": [
+        8,
+        67
+      ],
+      "summary": "管理员入口组件，提供密钥输入和自动验证功能。",
+      "tags": [
+        "component",
+        "admin",
+        "gate"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/components/CartPanel.tsx",
+      "type": "file",
+      "name": "CartPanel.tsx",
+      "filePath": "src/components/CartPanel.tsx",
+      "summary": "购物车面板组件，展示商品列表、数量调整、配送选择和价格汇总。",
+      "tags": [
+        "component",
+        "cart",
+        "checkout"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/components/CartPanel.tsx:CartPanel",
+      "type": "function",
+      "name": "CartPanel",
+      "filePath": "src/components/CartPanel.tsx",
+      "lineRange": [
+        23,
+        119
+      ],
+      "summary": "购物车面板，展示商品、调整数量、选择配送方式并计算总价。",
+      "tags": [
+        "component",
+        "cart",
+        "checkout"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/components/IdentityForm.tsx",
+      "type": "file",
+      "name": "IdentityForm.tsx",
+      "filePath": "src/components/IdentityForm.tsx",
+      "summary": "身份表单组件，支持用户注册/登录，收集昵称、宿舍号和密码。",
+      "tags": [
+        "component",
+        "identity",
+        "authentication"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/components/IdentityForm.tsx:IdentityForm",
+      "type": "function",
+      "name": "IdentityForm",
+      "filePath": "src/components/IdentityForm.tsx",
+      "lineRange": [
+        11,
+        120
+      ],
+      "summary": "身份表单，支持注册和登录模式切换，收集用户信息。",
+      "tags": [
+        "component",
+        "identity",
+        "form"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/components/OrderHistory.tsx",
+      "type": "file",
+      "name": "OrderHistory.tsx",
+      "filePath": "src/components/OrderHistory.tsx",
+      "summary": "订单历史组件，展示用户历史订单、订单追踪和状态变更实时高亮。",
+      "tags": [
+        "component",
+        "orders",
+        "tracking"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/components/OrderHistory.tsx:OrderHistory",
+      "type": "function",
+      "name": "OrderHistory",
+      "filePath": "src/components/OrderHistory.tsx",
+      "lineRange": [
+        13,
+        196
+      ],
+      "summary": "订单历史组件，支持订单列表、实时刷新和状态变更高亮。",
+      "tags": [
+        "component",
+        "orders",
+        "history"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/components/ProductCard.tsx",
+      "type": "file",
+      "name": "ProductCard.tsx",
+      "filePath": "src/components/ProductCard.tsx",
+      "summary": "商品卡片组件，展示商品图片、名称、价格、库存和加购按钮。",
+      "tags": [
+        "component",
+        "product",
+        "ui"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/components/ProductCard.tsx:ProductCard",
+      "type": "function",
+      "name": "ProductCard",
+      "filePath": "src/components/ProductCard.tsx",
+      "lineRange": [
+        12,
+        76
+      ],
+      "summary": "商品卡片，展示商品信息、库存状态、热度标签和加购按钮。",
+      "tags": [
+        "component",
+        "product",
+        "card"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/components/ProfileForm.tsx",
+      "type": "file",
+      "name": "ProfileForm.tsx",
+      "filePath": "src/components/ProfileForm.tsx",
+      "summary": "个人资料编辑组件，支持修改宿舍号和密码。",
+      "tags": [
+        "component",
+        "profile",
+        "settings"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/components/ProfileForm.tsx:ProfileForm",
+      "type": "function",
+      "name": "ProfileForm",
+      "filePath": "src/components/ProfileForm.tsx",
+      "lineRange": [
+        12,
+        109
+      ],
+      "summary": "个人资料编辑表单，支持修改宿舍号和密码。",
+      "tags": [
+        "component",
+        "profile",
+        "form"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/components/SquarePanel.tsx",
+      "type": "file",
+      "name": "SquarePanel.tsx",
+      "filePath": "src/components/SquarePanel.tsx",
+      "summary": "广场面板组件，实现社区发帖、组队、评论、点赞和帖子详情功能。",
+      "tags": [
+        "component",
+        "social",
+        "community"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/components/SquarePanel.tsx:SquarePanel",
+      "type": "function",
+      "name": "SquarePanel",
+      "filePath": "src/components/SquarePanel.tsx",
+      "lineRange": [
+        20,
+        372
+      ],
+      "summary": "广场面板主组件，管理帖子列表、创建、互动和评论区。",
+      "tags": [
+        "component",
+        "social",
+        "community"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/main.tsx",
+      "type": "file",
+      "name": "main.tsx",
+      "filePath": "src/main.tsx",
+      "summary": "React 应用入口，挂载根组件到 DOM 并加载全局样式。",
+      "tags": [
+        "entry-point",
+        "bootstrap",
+        "react"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src/App.tsx",
+      "target": "function:src/App.tsx:CustomerApp",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/App.tsx",
+      "target": "function:src/App.tsx:App",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/App.tsx",
+      "target": "function:src/App.tsx:App",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/App.tsx",
+      "target": "file:src/components/AdminGate.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/App.tsx",
+      "target": "file:src/components/CartPanel.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/App.tsx",
+      "target": "file:src/components/ErrorBoundary.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/App.tsx",
+      "target": "file:src/components/IdentityForm.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/App.tsx",
+      "target": "file:src/components/OrderHistory.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/App.tsx",
+      "target": "file:src/components/ProductCard.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/App.tsx",
+      "target": "file:src/components/ProfileForm.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/App.tsx",
+      "target": "file:src/components/SquarePanel.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/App.tsx",
+      "target": "file:src/constants.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/App.tsx",
+      "target": "file:src/hooks/useCustomerApp.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/App.tsx",
+      "target": "file:src/utils.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/__tests__/IdentityForm.test.tsx",
+      "target": "file:src/api.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/__tests__/IdentityForm.test.tsx",
+      "target": "file:src/components/IdentityForm.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/api.ts",
+      "target": "file:src/__tests__/IdentityForm.test.tsx",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:src/components/IdentityForm.tsx",
+      "target": "file:src/__tests__/IdentityForm.test.tsx",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:src/api.ts",
+      "target": "function:src/api.ts:register",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/api.ts",
+      "target": "function:src/api.ts:register",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api.ts",
+      "target": "function:src/api.ts:login",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/api.ts",
+      "target": "function:src/api.ts:login",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api.ts",
+      "target": "function:src/api.ts:updateProfile",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/api.ts",
+      "target": "function:src/api.ts:updateProfile",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api.ts",
+      "target": "function:src/api.ts:changePassword",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/api.ts",
+      "target": "function:src/api.ts:changePassword",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api.ts",
+      "target": "function:src/api.ts:getIdentity",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/api.ts",
+      "target": "function:src/api.ts:getIdentity",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api.ts",
+      "target": "function:src/api.ts:setIdentity",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/api.ts",
+      "target": "function:src/api.ts:setIdentity",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api.ts",
+      "target": "function:src/api.ts:clearIdentity",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/api.ts",
+      "target": "function:src/api.ts:clearIdentity",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api.ts",
+      "target": "function:src/api.ts:getAdminKey",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/api.ts",
+      "target": "function:src/api.ts:getAdminKey",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api.ts",
+      "target": "function:src/api.ts:setAdminKey",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/api.ts",
+      "target": "function:src/api.ts:setAdminKey",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api.ts",
+      "target": "function:src/api.ts:isRetryableError",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/api.ts",
+      "target": "function:src/api.ts:delay",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/api.ts",
+      "target": "function:src/api.ts:request",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/api.ts",
+      "target": "function:src/api.ts:getErrorMessage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/api.ts",
+      "target": "function:src/api.ts:verifyAdmin",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/api.ts",
+      "target": "function:src/api.ts:verifyAdmin",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api.ts",
+      "target": "function:src/api.ts:fetchProducts",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/api.ts",
+      "target": "function:src/api.ts:fetchProducts",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api.ts",
+      "target": "function:src/api.ts:createProduct",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/api.ts",
+      "target": "function:src/api.ts:createProduct",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api.ts",
+      "target": "function:src/api.ts:updateProduct",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/api.ts",
+      "target": "function:src/api.ts:updateProduct",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api.ts",
+      "target": "function:src/api.ts:deleteProduct",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/api.ts",
+      "target": "function:src/api.ts:deleteProduct",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api.ts",
+      "target": "function:src/api.ts:createOrder",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/api.ts",
+      "target": "function:src/api.ts:createOrder",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api.ts",
+      "target": "function:src/api.ts:fetchOrders",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/api.ts",
+      "target": "function:src/api.ts:fetchOrders",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api.ts",
+      "target": "function:src/api.ts:fetchOrderById",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/api.ts",
+      "target": "function:src/api.ts:fetchOrderById",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api.ts",
+      "target": "function:src/api.ts:fetchStats",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/api.ts",
+      "target": "function:src/api.ts:fetchStats",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api.ts",
+      "target": "function:src/api.ts:updateOrderStatus",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/api.ts",
+      "target": "function:src/api.ts:updateOrderStatus",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api.ts",
+      "target": "function:src/api.ts:fetchPosts",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/api.ts",
+      "target": "function:src/api.ts:fetchPosts",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api.ts",
+      "target": "function:src/api.ts:fetchPostById",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/api.ts",
+      "target": "function:src/api.ts:fetchPostById",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api.ts",
+      "target": "function:src/api.ts:createPost",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/api.ts",
+      "target": "function:src/api.ts:createPost",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api.ts",
+      "target": "function:src/api.ts:updatePost",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/api.ts",
+      "target": "function:src/api.ts:updatePost",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api.ts",
+      "target": "function:src/api.ts:addComment",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/api.ts",
+      "target": "function:src/api.ts:addComment",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api.ts",
+      "target": "function:src/api.ts:toggleLike",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/api.ts",
+      "target": "function:src/api.ts:toggleLike",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api.ts",
+      "target": "function:src/api.ts:fetchJoinedPostIds",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/api.ts",
+      "target": "function:src/api.ts:fetchJoinedPostIds",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api.ts",
+      "target": "function:src/api.ts:joinPost",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/api.ts",
+      "target": "function:src/api.ts:joinPost",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api.ts",
+      "target": "file:src/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/AdminGate.tsx",
+      "target": "function:src/components/AdminGate.tsx:AdminGate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/components/AdminGate.tsx",
+      "target": "function:src/components/AdminGate.tsx:AdminGate",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/components/AdminGate.tsx",
+      "target": "file:src/api.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/AdminGate.tsx",
+      "target": "file:src/components/AdminPanel.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/CartPanel.tsx",
+      "target": "function:src/components/CartPanel.tsx:CartPanel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/components/CartPanel.tsx",
+      "target": "function:src/components/CartPanel.tsx:CartPanel",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/components/CartPanel.tsx",
+      "target": "file:src/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/CartPanel.tsx",
+      "target": "file:src/utils.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/IdentityForm.tsx",
+      "target": "function:src/components/IdentityForm.tsx:IdentityForm",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/components/IdentityForm.tsx",
+      "target": "function:src/components/IdentityForm.tsx:IdentityForm",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/components/IdentityForm.tsx",
+      "target": "file:src/api.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/IdentityForm.tsx",
+      "target": "file:src/utils.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/OrderHistory.tsx",
+      "target": "function:src/components/OrderHistory.tsx:OrderHistory",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/components/OrderHistory.tsx",
+      "target": "function:src/components/OrderHistory.tsx:OrderHistory",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/components/OrderHistory.tsx",
+      "target": "file:src/api.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/OrderHistory.tsx",
+      "target": "file:src/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/OrderHistory.tsx",
+      "target": "file:src/utils.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/ProductCard.tsx",
+      "target": "function:src/components/ProductCard.tsx:ProductCard",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/components/ProductCard.tsx",
+      "target": "function:src/components/ProductCard.tsx:ProductCard",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/components/ProductCard.tsx",
+      "target": "file:src/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/ProfileForm.tsx",
+      "target": "function:src/components/ProfileForm.tsx:ProfileForm",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/components/ProfileForm.tsx",
+      "target": "function:src/components/ProfileForm.tsx:ProfileForm",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/components/ProfileForm.tsx",
+      "target": "file:src/api.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/ProfileForm.tsx",
+      "target": "file:src/utils.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/SquarePanel.tsx",
+      "target": "function:src/components/SquarePanel.tsx:SquarePanel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/components/SquarePanel.tsx",
+      "target": "function:src/components/SquarePanel.tsx:SquarePanel",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/components/SquarePanel.tsx",
+      "target": "file:src/api.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/SquarePanel.tsx",
+      "target": "file:src/utils.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/main.tsx",
+      "target": "file:src/App.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/main.tsx",
+      "target": "file:src/index.css",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    }
+  ]
+}

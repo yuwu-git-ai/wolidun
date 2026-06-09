@@ -1,0 +1,731 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 11,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "server/__tests__/api.test.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 114,
+      "nonEmptyLines": 103,
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "server/app.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 44,
+      "nonEmptyLines": 35,
+      "functions": [
+        {
+          "name": "createApp",
+          "startLine": 10,
+          "endLine": 44,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "createApp",
+          "line": 10,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "createApp",
+          "callee": "getDb",
+          "lineNumber": 12
+        },
+        {
+          "caller": "createApp",
+          "callee": "express",
+          "lineNumber": 14
+        },
+        {
+          "caller": "createApp",
+          "callee": "app.use",
+          "lineNumber": 17
+        },
+        {
+          "caller": "createApp",
+          "callee": "express.json",
+          "lineNumber": 17
+        },
+        {
+          "caller": "createApp",
+          "callee": "app.use",
+          "lineNumber": 20
+        },
+        {
+          "caller": "createApp",
+          "callee": "rateLimit",
+          "lineNumber": 20
+        },
+        {
+          "caller": "createApp",
+          "callee": "app.use",
+          "lineNumber": 23
+        },
+        {
+          "caller": "createApp",
+          "callee": "rateLimit",
+          "lineNumber": 23
+        },
+        {
+          "caller": "createApp",
+          "callee": "app.use",
+          "lineNumber": 26
+        },
+        {
+          "caller": "createApp",
+          "callee": "app.use",
+          "lineNumber": 27
+        },
+        {
+          "caller": "createApp",
+          "callee": "app.use",
+          "lineNumber": 28
+        },
+        {
+          "caller": "createApp",
+          "callee": "app.use",
+          "lineNumber": 29
+        },
+        {
+          "caller": "createApp",
+          "callee": "app.use",
+          "lineNumber": 30
+        },
+        {
+          "caller": "createApp",
+          "callee": "app.get",
+          "lineNumber": 33
+        },
+        {
+          "caller": "createApp",
+          "callee": "res.json",
+          "lineNumber": 34
+        },
+        {
+          "caller": "createApp",
+          "callee": "new Date().toISOString",
+          "lineNumber": 34
+        },
+        {
+          "caller": "createApp",
+          "callee": "app.use",
+          "lineNumber": 38
+        },
+        {
+          "caller": "createApp",
+          "callee": "console.error",
+          "lineNumber": 39
+        },
+        {
+          "caller": "createApp",
+          "callee": "res.status(500).json",
+          "lineNumber": 40
+        },
+        {
+          "caller": "createApp",
+          "callee": "res.status",
+          "lineNumber": 40
+        }
+      ],
+      "metrics": {
+        "importCount": 7,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "server/db.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 269,
+      "nonEmptyLines": 246,
+      "functions": [
+        {
+          "name": "getDb",
+          "startLine": 7,
+          "endLine": 25,
+          "params": []
+        },
+        {
+          "name": "runMigrations",
+          "startLine": 27,
+          "endLine": 167,
+          "params": []
+        },
+        {
+          "name": "initTables",
+          "startLine": 169,
+          "endLine": 195,
+          "params": []
+        },
+        {
+          "name": "seedDefaults",
+          "startLine": 255,
+          "endLine": 269,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "getDb",
+          "line": 7,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "getDb",
+          "callee": "path.join",
+          "lineNumber": 9
+        },
+        {
+          "caller": "getDb",
+          "callee": "process.cwd",
+          "lineNumber": 9
+        },
+        {
+          "caller": "getDb",
+          "callee": "path.dirname",
+          "lineNumber": 11
+        },
+        {
+          "caller": "getDb",
+          "callee": "fs.existsSync",
+          "lineNumber": 12
+        },
+        {
+          "caller": "getDb",
+          "callee": "fs.mkdirSync",
+          "lineNumber": 13
+        },
+        {
+          "caller": "getDb",
+          "callee": "db.pragma",
+          "lineNumber": 17
+        },
+        {
+          "caller": "getDb",
+          "callee": "db.pragma",
+          "lineNumber": 18
+        },
+        {
+          "caller": "getDb",
+          "callee": "runMigrations",
+          "lineNumber": 20
+        },
+        {
+          "caller": "getDb",
+          "callee": "initTables",
+          "lineNumber": 21
+        },
+        {
+          "caller": "getDb",
+          "callee": "seedDefaults",
+          "lineNumber": 22
+        },
+        {
+          "caller": "runMigrations",
+          "callee": "db.exec",
+          "lineNumber": 28
+        },
+        {
+          "caller": "runMigrations",
+          "callee": "db.prepare('SELECT MAX(version) as v FROM schema_version').get",
+          "lineNumber": 29
+        },
+        {
+          "caller": "runMigrations",
+          "callee": "db.prepare",
+          "lineNumber": 29
+        },
+        {
+          "caller": "runMigrations",
+          "callee": "db.pragma",
+          "lineNumber": 33
+        },
+        {
+          "caller": "runMigrations",
+          "callee": "db.exec",
+          "lineNumber": 36
+        },
+        {
+          "caller": "runMigrations",
+          "callee": "db.prepare(\n      \"SELECT name FROM sqlite_master WHERE type='table' AND name='products'\"\n    ).get",
+          "lineNumber": 39
+        },
+        {
+          "caller": "runMigrations",
+          "callee": "db.prepare",
+          "lineNumber": 39
+        },
+        {
+          "caller": "runMigrations",
+          "callee": "db.prepare(\n      \"SELECT name FROM sqlite_master WHERE type='table' AND name='orders'\"\n    ).get",
+          "lineNumber": 42
+        },
+        {
+          "caller": "runMigrations",
+          "callee": "db.prepare",
+          "lineNumber": 42
+        },
+        {
+          "caller": "runMigrations",
+          "callee": "db.exec",
+          "lineNumber": 47
+        },
+        {
+          "caller": "runMigrations",
+          "callee": "db.exec",
+          "lineNumber": 48
+        },
+        {
+          "caller": "runMigrations",
+          "callee": "db.exec",
+          "lineNumber": 52
+        },
+        {
+          "caller": "runMigrations",
+          "callee": "db.exec",
+          "lineNumber": 68
+        },
+        {
+          "caller": "runMigrations",
+          "callee": "db.pragma",
+          "lineNumber": 83
+        },
+        {
+          "caller": "runMigrations",
+          "callee": "db.prepare('INSERT INTO schema_version (version) VALUES (2)').run",
+          "lineNumber": 84
+        },
+        {
+          "caller": "runMigrations",
+          "callee": "db.prepare",
+          "lineNumber": 84
+        },
+        {
+          "caller": "runMigrations",
+          "callee": "console.log",
+          "lineNumber": 85
+        },
+        {
+          "caller": "runMigrations",
+          "callee": "db.exec",
+          "lineNumber": 89
+        },
+        {
+          "caller": "runMigrations",
+          "callee": "db.prepare('INSERT INTO schema_version (version) VALUES (3)').run",
+          "lineNumber": 98
+        },
+        {
+          "caller": "runMigrations",
+          "callee": "db.prepare",
+          "lineNumber": 98
+        },
+        {
+          "caller": "runMigrations",
+          "callee": "console.log",
+          "lineNumber": 99
+        },
+        {
+          "caller": "runMigrations",
+          "callee": "db.exec",
+          "lineNumber": 103
+        },
+        {
+          "caller": "runMigrations",
+          "callee": "db.prepare('INSERT INTO schema_version (version) VALUES (4)').run",
+          "lineNumber": 147
+        },
+        {
+          "caller": "runMigrations",
+          "callee": "db.prepare",
+          "lineNumber": 147
+        },
+        {
+          "caller": "runMigrations",
+          "callee": "console.log",
+          "lineNumber": 148
+        },
+        {
+          "caller": "runMigrations",
+          "callee": "db.exec",
+          "lineNumber": 152
+        },
+        {
+          "caller": "runMigrations",
+          "callee": "db.prepare('INSERT INTO schema_version (version) VALUES (5)').run",
+          "lineNumber": 164
+        },
+        {
+          "caller": "runMigrations",
+          "callee": "db.prepare",
+          "lineNumber": 164
+        },
+        {
+          "caller": "runMigrations",
+          "callee": "console.log",
+          "lineNumber": 165
+        },
+        {
+          "caller": "initTables",
+          "callee": "db.exec",
+          "lineNumber": 170
+        },
+        {
+          "caller": "seedDefaults",
+          "callee": "db.prepare('SELECT COUNT(*) as count FROM products').get",
+          "lineNumber": 256
+        },
+        {
+          "caller": "seedDefaults",
+          "callee": "db.prepare",
+          "lineNumber": 256
+        },
+        {
+          "caller": "seedDefaults",
+          "callee": "db.prepare",
+          "lineNumber": 258
+        },
+        {
+          "caller": "seedDefaults",
+          "callee": "db.transaction",
+          "lineNumber": 261
+        },
+        {
+          "caller": "seedDefaults",
+          "callee": "stmt.run",
+          "lineNumber": 263
+        },
+        {
+          "caller": "seedDefaults",
+          "callee": "insertAll",
+          "lineNumber": 266
+        },
+        {
+          "caller": "seedDefaults",
+          "callee": "console.log",
+          "lineNumber": 267
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 4,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "server/index.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 29,
+      "nonEmptyLines": 24,
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "server/middleware/auth.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 12,
+      "nonEmptyLines": 10,
+      "functions": [
+        {
+          "name": "requireAdmin",
+          "startLine": 3,
+          "endLine": 12,
+          "params": [
+            "req",
+            "res",
+            "next"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "requireAdmin",
+          "line": 3,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "requireAdmin",
+          "callee": "res.status(403).json",
+          "lineNumber": 8
+        },
+        {
+          "caller": "requireAdmin",
+          "callee": "res.status",
+          "lineNumber": 8
+        },
+        {
+          "caller": "requireAdmin",
+          "callee": "next",
+          "lineNumber": 11
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "server/middleware/rateLimit.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 49,
+      "nonEmptyLines": 39,
+      "functions": [
+        {
+          "name": "rateLimit",
+          "startLine": 18,
+          "endLine": 49,
+          "params": [
+            "windowMs",
+            "maxRequests",
+            "methods"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "rateLimit",
+          "line": 18,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "rateLimit",
+          "callee": "methods.includes",
+          "lineNumber": 21
+        },
+        {
+          "caller": "rateLimit",
+          "callee": "next",
+          "lineNumber": 22
+        },
+        {
+          "caller": "rateLimit",
+          "callee": "Date.now",
+          "lineNumber": 28
+        },
+        {
+          "caller": "rateLimit",
+          "callee": "store.get",
+          "lineNumber": 30
+        },
+        {
+          "caller": "rateLimit",
+          "callee": "store.set",
+          "lineNumber": 33
+        },
+        {
+          "caller": "rateLimit",
+          "callee": "res.setHeader",
+          "lineNumber": 38
+        },
+        {
+          "caller": "rateLimit",
+          "callee": "res.setHeader",
+          "lineNumber": 39
+        },
+        {
+          "caller": "rateLimit",
+          "callee": "Math.max",
+          "lineNumber": 39
+        },
+        {
+          "caller": "rateLimit",
+          "callee": "res.setHeader",
+          "lineNumber": 40
+        },
+        {
+          "caller": "rateLimit",
+          "callee": "Math.ceil",
+          "lineNumber": 40
+        },
+        {
+          "caller": "rateLimit",
+          "callee": "res.status(429).json",
+          "lineNumber": 43
+        },
+        {
+          "caller": "rateLimit",
+          "callee": "res.status",
+          "lineNumber": 43
+        },
+        {
+          "caller": "rateLimit",
+          "callee": "next",
+          "lineNumber": 47
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "server/routes/auth.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 97,
+      "nonEmptyLines": 81,
+      "functions": [
+        {
+          "name": "hashPassword",
+          "startLine": 7,
+          "endLine": 9,
+          "params": [
+            "password"
+          ]
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "hashPassword",
+          "callee": "crypto.createHash('sha256').update(password).digest",
+          "lineNumber": 8
+        },
+        {
+          "caller": "hashPassword",
+          "callee": "crypto.createHash('sha256').update",
+          "lineNumber": 8
+        },
+        {
+          "caller": "hashPassword",
+          "callee": "crypto.createHash",
+          "lineNumber": 8
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 0,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "server/routes/orders.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 136,
+      "nonEmptyLines": 113,
+      "functions": [
+        {
+          "name": "serializeOrder",
+          "startLine": 8,
+          "endLine": 19,
+          "params": [
+            "o"
+          ]
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "serializeOrder",
+          "callee": "JSON.parse",
+          "lineNumber": 14
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 0,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "server/routes/posts.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 210,
+      "nonEmptyLines": 168,
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "server/routes/products.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 105,
+      "nonEmptyLines": 87,
+      "functions": [
+        {
+          "name": "serializeProduct",
+          "startLine": 19,
+          "endLine": 31,
+          "params": [
+            "p"
+          ]
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 0,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "server/routes/stats.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 150,
+      "nonEmptyLines": 127,
+      "functions": [
+        {
+          "name": "daysInMonth",
+          "startLine": 6,
+          "endLine": 8,
+          "params": [
+            "year",
+            "month"
+          ]
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "daysInMonth",
+          "callee": "new Date(year, month, 0).getDate",
+          "lineNumber": 7
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 0,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    }
+  ]
+}

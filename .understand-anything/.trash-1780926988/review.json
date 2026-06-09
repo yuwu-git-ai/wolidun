@@ -1,0 +1,39 @@
+{
+  "issues": [],
+  "warnings": [
+    "Orphan: document:REQUIREMENTS.md",
+    "Orphan: file:index.html",
+    "Orphan: config:metadata.json",
+    "Orphan: file:.understand-anything/.understandignore",
+    "Orphan: config:.understand-anything/config.json",
+    "Orphan: file:eslint.config.mjs",
+    "Orphan: file:vite.config.ts",
+    "Orphan: file:vitest.config.ts"
+  ],
+  "stats": {
+    "totalNodes": 118,
+    "totalEdges": 207,
+    "totalLayers": 12,
+    "tourSteps": 12,
+    "nodeTypes": {
+      "file": 40,
+      "function": 65,
+      "service": 2,
+      "pipeline": 1,
+      "config": 6,
+      "document": 3,
+      "class": 1
+    },
+    "edgeTypes": {
+      "imports": 69,
+      "tested_by": 5,
+      "contains": 66,
+      "exports": 52,
+      "deploys": 4,
+      "depends_on": 1,
+      "triggers": 2,
+      "configures": 5,
+      "documents": 3
+    }
+  }
+}

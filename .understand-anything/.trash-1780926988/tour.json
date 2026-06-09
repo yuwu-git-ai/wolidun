@@ -1,0 +1,74 @@
+[
+  {
+    "order": 1,
+    "title": "项目概览",
+    "description": "从 README 开始了解窝里蹲点单系统的定位：宿舍便利店点单 SPA，支持商品浏览、购物车、一键复制订单到微信群，以及管理后台。技术栈为 React 19 + Express + SQLite。",
+    "nodeIds": ["document:README.md"]
+  },
+  {
+    "order": 2,
+    "title": "类型定义 — 数据模型基础",
+    "description": "先看 TypeScript 类型定义文件，了解 Product、CartItem、Order、Post 等核心数据结构的形状。这是理解整个系统数据流的基础。",
+    "nodeIds": ["file:src/types.ts"]
+  },
+  {
+    "order": 3,
+    "title": "工具函数与常量",
+    "description": "了解购物车键生成、价格计算、本地存储读写等通用工具函数，以及默认商品和分类常量。这些是前端各模块共同依赖的基础设施。",
+    "nodeIds": ["file:src/utils.ts", "file:src/constants.ts"]
+  },
+  {
+    "order": 4,
+    "title": "API 客户端 — 前后端桥梁",
+    "description": "查看前端如何通过 api.ts 与后端通信。该模块封装了所有 HTTP 请求，包含指数退避重试、统一错误处理和 localStorage 身份管理。",
+    "nodeIds": ["file:src/api.ts"]
+  },
+  {
+    "order": 5,
+    "title": "状态管理 — 业务逻辑核心",
+    "description": "深入 customerReducer 和 useCustomerApp Hook，理解购物车状态转换、商品筛选、订单确认等核心业务逻辑如何被管理。",
+    "nodeIds": ["file:src/customerReducer.ts", "file:src/hooks/useCustomerApp.ts"]
+  },
+  {
+    "order": 6,
+    "title": "顾客端 UI 组件",
+    "description": "浏览顾客端的主要 UI 组件：App.tsx 作为根组件编排整体布局，ProductCard 展示商品，CartPanel 管理购物车，IdentityForm 处理身份认证。",
+    "nodeIds": ["file:src/App.tsx", "file:src/components/ProductCard.tsx", "file:src/components/CartPanel.tsx", "file:src/components/IdentityForm.tsx"]
+  },
+  {
+    "order": 7,
+    "title": "广场社区功能",
+    "description": "探索 SquarePanel 组件，了解社区发帖、组队、评论和点赞功能的实现。这是项目中较为复杂的交互模块。",
+    "nodeIds": ["file:src/components/SquarePanel.tsx", "file:src/components/OrderHistory.tsx"]
+  },
+  {
+    "order": 8,
+    "title": "后端核心 — Express 应用与数据库",
+    "description": "查看后端入口 server/index.ts 和应用工厂 server/app.ts，了解 Express 中间件注册和路由挂载机制。然后深入 server/db.ts，理解 SQLite 数据库的单例管理、自动迁移和表结构初始化。",
+    "nodeIds": ["file:server/index.ts", "file:server/app.ts", "file:server/db.ts"]
+  },
+  {
+    "order": 9,
+    "title": "API 路由实现",
+    "description": "浏览五个路由模块：products（商品CRUD）、orders（订单管理含库存事务）、auth（用户认证）、posts（社区帖子）、stats（数据统计）。",
+    "nodeIds": ["file:server/routes/products.ts", "file:server/routes/orders.ts", "file:server/routes/auth.ts", "file:server/routes/posts.ts", "file:server/routes/stats.ts"]
+  },
+  {
+    "order": 10,
+    "title": "管理后台 — 运营控制中心",
+    "description": "查看 AdminPanel 和 AdminGate 组件，了解管理员如何通过密钥认证进入后台，管理订单状态流转、商品CRUD，以及实时新订单通知机制。",
+    "nodeIds": ["file:src/components/AdminGate.tsx", "file:src/components/AdminPanel.tsx", "file:src/components/OrderCard.tsx"]
+  },
+  {
+    "order": 11,
+    "title": "测试层",
+    "description": "了解项目的测试覆盖：API 集成测试、组件单元测试和工具函数测试。测试文件与被测代码通过 imports 边关联。",
+    "nodeIds": ["file:server/__tests__/api.test.ts", "file:src/__tests__/utils.test.ts", "file:src/__tests__/IdentityForm.test.tsx", "file:src/__tests__/ErrorBoundary.test.tsx"]
+  },
+  {
+    "order": 12,
+    "title": "部署与运维",
+    "description": "最后了解 Docker 多阶段构建、Docker Compose 服务编排和 GitHub Actions CI/CD 自动部署流程。",
+    "nodeIds": ["service:Dockerfile", "service:docker-compose.yml", "pipeline:.github/workflows/deploy.yml", "config:package.json"]
+  }
+]

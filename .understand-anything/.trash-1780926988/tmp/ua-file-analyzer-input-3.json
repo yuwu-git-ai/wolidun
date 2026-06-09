@@ -1,0 +1,90 @@
+{
+  "projectRoot": "E:/窝里蹲点单系统",
+  "batchFiles": [
+    {
+      "path": "src/__tests__/utils.test.ts",
+      "language": "typescript",
+      "sizeLines": 85,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/components/AdminPanel.tsx",
+      "language": "typescript",
+      "sizeLines": 439,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/components/OrderCard.tsx",
+      "language": "typescript",
+      "sizeLines": 66,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/constants.ts",
+      "language": "typescript",
+      "sizeLines": 67,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/customerReducer.ts",
+      "language": "typescript",
+      "sizeLines": 180,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/hooks/useCustomerApp.ts",
+      "language": "typescript",
+      "sizeLines": 288,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/types.ts",
+      "language": "typescript",
+      "sizeLines": 35,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/utils.ts",
+      "language": "typescript",
+      "sizeLines": 59,
+      "fileCategory": "code"
+    }
+  ],
+  "batchImportData": {
+    "src/__tests__/utils.test.ts": [
+      "src/utils.ts"
+    ],
+    "src/components/AdminPanel.tsx": [
+      "src/api.ts",
+      "src/components/AnalyticsPanel.tsx",
+      "src/components/OrderCard.tsx",
+      "src/constants.ts",
+      "src/types.ts",
+      "src/utils.ts"
+    ],
+    "src/components/OrderCard.tsx": [
+      "src/types.ts",
+      "src/utils.ts"
+    ],
+    "src/constants.ts": [
+      "src/types.ts"
+    ],
+    "src/customerReducer.ts": [
+      "src/api.ts",
+      "src/types.ts",
+      "src/utils.ts"
+    ],
+    "src/hooks/useCustomerApp.ts": [
+      "src/api.ts",
+      "src/constants.ts",
+      "src/customerReducer.ts",
+      "src/types.ts",
+      "src/utils.ts"
+    ],
+    "src/types.ts": [],
+    "src/utils.ts": [
+      "src/api.ts",
+      "src/types.ts"
+    ]
+  }
+}

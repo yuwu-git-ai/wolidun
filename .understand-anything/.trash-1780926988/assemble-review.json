@@ -1,0 +1,37 @@
+{
+  "issues": [],
+  "warnings": [
+    "Node \"document:REQUIREMENTS.md\" has no edges (orphan)",
+    "Node \"file:index.html\" has no edges (orphan)",
+    "Node \"config:metadata.json\" has no edges (orphan)",
+    "Node \"file:.understand-anything/.understandignore\" has no edges (orphan)",
+    "Node \"config:.understand-anything/config.json\" has no edges (orphan)",
+    "Node \"file:eslint.config.mjs\" has no edges (orphan)",
+    "Node \"file:vite.config.ts\" has no edges (orphan)",
+    "Node \"file:vitest.config.ts\" has no edges (orphan)"
+  ],
+  "stats": {
+    "totalNodes": 118,
+    "totalEdges": 207,
+    "nodeTypes": {
+      "file": 40,
+      "function": 65,
+      "service": 2,
+      "pipeline": 1,
+      "config": 6,
+      "document": 3,
+      "class": 1
+    },
+    "edgeTypes": {
+      "imports": 69,
+      "tested_by": 5,
+      "contains": 66,
+      "exports": 52,
+      "deploys": 4,
+      "depends_on": 1,
+      "triggers": 2,
+      "configures": 5,
+      "documents": 3
+    }
+  }
+}

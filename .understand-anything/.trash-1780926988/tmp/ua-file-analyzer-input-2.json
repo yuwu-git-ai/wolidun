@@ -1,0 +1,125 @@
+{
+  "projectRoot": "E:/窝里蹲点单系统",
+  "batchFiles": [
+    {
+      "path": "src/App.tsx",
+      "language": "typescript",
+      "sizeLines": 338,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/__tests__/IdentityForm.test.tsx",
+      "language": "typescript",
+      "sizeLines": 84,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/api.ts",
+      "language": "typescript",
+      "sizeLines": 316,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/components/AdminGate.tsx",
+      "language": "typescript",
+      "sizeLines": 67,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/components/CartPanel.tsx",
+      "language": "typescript",
+      "sizeLines": 119,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/components/IdentityForm.tsx",
+      "language": "typescript",
+      "sizeLines": 120,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/components/OrderHistory.tsx",
+      "language": "typescript",
+      "sizeLines": 196,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/components/ProductCard.tsx",
+      "language": "typescript",
+      "sizeLines": 76,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/components/ProfileForm.tsx",
+      "language": "typescript",
+      "sizeLines": 109,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/components/SquarePanel.tsx",
+      "language": "typescript",
+      "sizeLines": 372,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/main.tsx",
+      "language": "typescript",
+      "sizeLines": 13,
+      "fileCategory": "code"
+    }
+  ],
+  "batchImportData": {
+    "src/App.tsx": [
+      "src/components/AdminGate.tsx",
+      "src/components/CartPanel.tsx",
+      "src/components/ErrorBoundary.tsx",
+      "src/components/IdentityForm.tsx",
+      "src/components/OrderHistory.tsx",
+      "src/components/ProductCard.tsx",
+      "src/components/ProfileForm.tsx",
+      "src/components/SquarePanel.tsx",
+      "src/constants.ts",
+      "src/hooks/useCustomerApp.ts",
+      "src/utils.ts"
+    ],
+    "src/__tests__/IdentityForm.test.tsx": [
+      "src/api.ts",
+      "src/components/IdentityForm.tsx"
+    ],
+    "src/api.ts": [
+      "src/types.ts"
+    ],
+    "src/components/AdminGate.tsx": [
+      "src/api.ts",
+      "src/components/AdminPanel.tsx"
+    ],
+    "src/components/CartPanel.tsx": [
+      "src/types.ts",
+      "src/utils.ts"
+    ],
+    "src/components/IdentityForm.tsx": [
+      "src/api.ts",
+      "src/utils.ts"
+    ],
+    "src/components/OrderHistory.tsx": [
+      "src/api.ts",
+      "src/types.ts",
+      "src/utils.ts"
+    ],
+    "src/components/ProductCard.tsx": [
+      "src/types.ts"
+    ],
+    "src/components/ProfileForm.tsx": [
+      "src/api.ts",
+      "src/utils.ts"
+    ],
+    "src/components/SquarePanel.tsx": [
+      "src/api.ts",
+      "src/utils.ts"
+    ],
+    "src/main.tsx": [
+      "src/App.tsx",
+      "src/index.css"
+    ]
+  }
+}

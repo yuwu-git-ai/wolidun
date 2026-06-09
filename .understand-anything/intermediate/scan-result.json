@@ -1,0 +1,516 @@
+{
+  "name": "窝里蹲点单系统",
+  "description": "宿舍便利商店点单小程序，支持商品浏览、购物车管理、一键复制订单分享到微信群，以及管理后台订单处理与商品CRUD。基于 React + Express + SQLite 的全栈单页应用。",
+  "languages": [
+    "css",
+    "dockerfile",
+    "html",
+    "javascript",
+    "json",
+    "markdown",
+    "typescript",
+    "yaml"
+  ],
+  "frameworks": [
+    "React",
+    "Vite",
+    "Tailwind CSS",
+    "Express",
+    "Vitest",
+    "Docker",
+    "Docker Compose",
+    "GitHub Actions",
+    "better-sqlite3",
+    "motion",
+    "react-router-dom"
+  ],
+  "files": [
+    {
+      "path": ".env.example",
+      "language": "config",
+      "sizeLines": 8,
+      "fileCategory": "config"
+    },
+    {
+      "path": ".github/workflows/deploy.yml",
+      "language": "yaml",
+      "sizeLines": 22,
+      "fileCategory": "infra"
+    },
+    {
+      "path": "CLAUDE.md",
+      "language": "markdown",
+      "sizeLines": 124,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "docker-compose.yml",
+      "language": "yaml",
+      "sizeLines": 11,
+      "fileCategory": "infra"
+    },
+    {
+      "path": "Dockerfile",
+      "language": "dockerfile",
+      "sizeLines": 25,
+      "fileCategory": "infra"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-06-09-combo-plan.md",
+      "language": "markdown",
+      "sizeLines": 1139,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-06-09-combo-design.md",
+      "language": "markdown",
+      "sizeLines": 206,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "eslint.config.mjs",
+      "language": "javascript",
+      "sizeLines": 27,
+      "fileCategory": "code"
+    },
+    {
+      "path": "index.html",
+      "language": "html",
+      "sizeLines": 17,
+      "fileCategory": "markup"
+    },
+    {
+      "path": "metadata.json",
+      "language": "json",
+      "sizeLines": 5,
+      "fileCategory": "config"
+    },
+    {
+      "path": "package.json",
+      "language": "json",
+      "sizeLines": 61,
+      "fileCategory": "config"
+    },
+    {
+      "path": "README.md",
+      "language": "markdown",
+      "sizeLines": 39,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "REQUIREMENTS.md",
+      "language": "markdown",
+      "sizeLines": 169,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "server/__tests__/api.test.ts",
+      "language": "typescript",
+      "sizeLines": 114,
+      "fileCategory": "code"
+    },
+    {
+      "path": "server/app.ts",
+      "language": "typescript",
+      "sizeLines": 46,
+      "fileCategory": "code"
+    },
+    {
+      "path": "server/db.ts",
+      "language": "typescript",
+      "sizeLines": 300,
+      "fileCategory": "code"
+    },
+    {
+      "path": "server/index.ts",
+      "language": "typescript",
+      "sizeLines": 29,
+      "fileCategory": "code"
+    },
+    {
+      "path": "server/middleware/auth.ts",
+      "language": "typescript",
+      "sizeLines": 12,
+      "fileCategory": "code"
+    },
+    {
+      "path": "server/middleware/rateLimit.ts",
+      "language": "typescript",
+      "sizeLines": 49,
+      "fileCategory": "code"
+    },
+    {
+      "path": "server/routes/auth.ts",
+      "language": "typescript",
+      "sizeLines": 97,
+      "fileCategory": "code"
+    },
+    {
+      "path": "server/routes/combos.ts",
+      "language": "typescript",
+      "sizeLines": 134,
+      "fileCategory": "code"
+    },
+    {
+      "path": "server/routes/orders.ts",
+      "language": "typescript",
+      "sizeLines": 207,
+      "fileCategory": "code"
+    },
+    {
+      "path": "server/routes/posts.ts",
+      "language": "typescript",
+      "sizeLines": 214,
+      "fileCategory": "code"
+    },
+    {
+      "path": "server/routes/products.ts",
+      "language": "typescript",
+      "sizeLines": 142,
+      "fileCategory": "code"
+    },
+    {
+      "path": "server/routes/stats.ts",
+      "language": "typescript",
+      "sizeLines": 150,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/__tests__/ErrorBoundary.test.tsx",
+      "language": "typescript",
+      "sizeLines": 41,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/__tests__/IdentityForm.test.tsx",
+      "language": "typescript",
+      "sizeLines": 84,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/__tests__/utils.test.ts",
+      "language": "typescript",
+      "sizeLines": 148,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/App.tsx",
+      "language": "typescript",
+      "sizeLines": 438,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/features/admin/components/AdminGate.tsx",
+      "language": "typescript",
+      "sizeLines": 67,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/features/admin/components/AdminPanel.tsx",
+      "language": "typescript",
+      "sizeLines": 691,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/features/admin/components/AnalyticsPanel.tsx",
+      "language": "typescript",
+      "sizeLines": 128,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/features/admin/components/BarChart.tsx",
+      "language": "typescript",
+      "sizeLines": 89,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/features/admin/components/OrderCard.tsx",
+      "language": "typescript",
+      "sizeLines": 66,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/features/ordering/components/CartPanel.tsx",
+      "language": "typescript",
+      "sizeLines": 162,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/features/ordering/components/ComboCard.tsx",
+      "language": "typescript",
+      "sizeLines": 106,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/features/ordering/components/IdentityForm.tsx",
+      "language": "typescript",
+      "sizeLines": 120,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/features/ordering/components/OrderHistory.tsx",
+      "language": "typescript",
+      "sizeLines": 196,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/features/ordering/components/ProductCard.tsx",
+      "language": "typescript",
+      "sizeLines": 130,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/features/ordering/components/ProfileForm.tsx",
+      "language": "typescript",
+      "sizeLines": 109,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/features/ordering/customerReducer.ts",
+      "language": "typescript",
+      "sizeLines": 227,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/features/ordering/hooks/useCustomerApp.ts",
+      "language": "typescript",
+      "sizeLines": 320,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/features/square/components/SquarePanel.tsx",
+      "language": "typescript",
+      "sizeLines": 423,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/index.css",
+      "language": "css",
+      "sizeLines": 51,
+      "fileCategory": "markup"
+    },
+    {
+      "path": "src/main.tsx",
+      "language": "typescript",
+      "sizeLines": 13,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/shared/api.ts",
+      "language": "typescript",
+      "sizeLines": 345,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/shared/components/ErrorBoundary.tsx",
+      "language": "typescript",
+      "sizeLines": 66,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/shared/constants.ts",
+      "language": "typescript",
+      "sizeLines": 68,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/shared/types.ts",
+      "language": "typescript",
+      "sizeLines": 69,
+      "fileCategory": "code"
+    },
+    {
+      "path": "src/shared/utils.ts",
+      "language": "typescript",
+      "sizeLines": 170,
+      "fileCategory": "code"
+    },
+    {
+      "path": "tsconfig.json",
+      "language": "json",
+      "sizeLines": 27,
+      "fileCategory": "config"
+    },
+    {
+      "path": "tsconfig.server.json",
+      "language": "json",
+      "sizeLines": 16,
+      "fileCategory": "config"
+    },
+    {
+      "path": "vite.config.ts",
+      "language": "typescript",
+      "sizeLines": 29,
+      "fileCategory": "code"
+    },
+    {
+      "path": "vitest.config.ts",
+      "language": "typescript",
+      "sizeLines": 23,
+      "fileCategory": "code"
+    }
+  ],
+  "totalFiles": 54,
+  "filteredByIgnore": 0,
+  "estimatedComplexity": "moderate",
+  "importMap": {
+    ".env.example": [],
+    ".github/workflows/deploy.yml": [],
+    "CLAUDE.md": [],
+    "docker-compose.yml": [],
+    "Dockerfile": [],
+    "docs/superpowers/plans/2026-06-09-combo-plan.md": [],
+    "docs/superpowers/specs/2026-06-09-combo-design.md": [],
+    "eslint.config.mjs": [],
+    "index.html": [],
+    "metadata.json": [],
+    "package.json": [],
+    "README.md": [],
+    "REQUIREMENTS.md": [],
+    "server/__tests__/api.test.ts": [
+      "server/app.ts"
+    ],
+    "server/app.ts": [
+      "server/db.ts",
+      "server/middleware/rateLimit.ts",
+      "server/routes/auth.ts",
+      "server/routes/combos.ts",
+      "server/routes/orders.ts",
+      "server/routes/posts.ts",
+      "server/routes/products.ts",
+      "server/routes/stats.ts"
+    ],
+    "server/db.ts": [],
+    "server/index.ts": [
+      "server/app.ts"
+    ],
+    "server/middleware/auth.ts": [],
+    "server/middleware/rateLimit.ts": [],
+    "server/routes/auth.ts": [
+      "server/db.ts"
+    ],
+    "server/routes/combos.ts": [
+      "server/db.ts",
+      "server/middleware/auth.ts"
+    ],
+    "server/routes/orders.ts": [
+      "server/db.ts",
+      "server/middleware/auth.ts"
+    ],
+    "server/routes/posts.ts": [
+      "server/db.ts"
+    ],
+    "server/routes/products.ts": [
+      "server/db.ts",
+      "server/middleware/auth.ts"
+    ],
+    "server/routes/stats.ts": [
+      "server/db.ts"
+    ],
+    "src/__tests__/ErrorBoundary.test.tsx": [
+      "src/shared/components/ErrorBoundary.tsx"
+    ],
+    "src/__tests__/IdentityForm.test.tsx": [
+      "src/features/ordering/components/IdentityForm.tsx",
+      "src/shared/api.ts"
+    ],
+    "src/__tests__/utils.test.ts": [
+      "src/shared/types.ts",
+      "src/shared/utils.ts"
+    ],
+    "src/App.tsx": [
+      "src/features/ordering/components/CartPanel.tsx",
+      "src/features/ordering/components/ComboCard.tsx",
+      "src/features/ordering/components/IdentityForm.tsx",
+      "src/features/ordering/components/OrderHistory.tsx",
+      "src/features/ordering/components/ProductCard.tsx",
+      "src/features/ordering/components/ProfileForm.tsx",
+      "src/features/ordering/hooks/useCustomerApp.ts",
+      "src/shared/api.ts",
+      "src/shared/components/ErrorBoundary.tsx",
+      "src/shared/constants.ts",
+      "src/shared/utils.ts"
+    ],
+    "src/features/admin/components/AdminGate.tsx": [
+      "src/features/admin/components/AdminPanel.tsx",
+      "src/shared/api.ts"
+    ],
+    "src/features/admin/components/AdminPanel.tsx": [
+      "src/features/admin/components/AnalyticsPanel.tsx",
+      "src/features/admin/components/OrderCard.tsx",
+      "src/shared/api.ts",
+      "src/shared/constants.ts",
+      "src/shared/types.ts",
+      "src/shared/utils.ts"
+    ],
+    "src/features/admin/components/AnalyticsPanel.tsx": [
+      "src/features/admin/components/BarChart.tsx",
+      "src/shared/api.ts"
+    ],
+    "src/features/admin/components/BarChart.tsx": [],
+    "src/features/admin/components/OrderCard.tsx": [
+      "src/shared/types.ts",
+      "src/shared/utils.ts"
+    ],
+    "src/features/ordering/components/CartPanel.tsx": [
+      "src/shared/types.ts",
+      "src/shared/utils.ts"
+    ],
+    "src/features/ordering/components/ComboCard.tsx": [
+      "src/shared/types.ts"
+    ],
+    "src/features/ordering/components/IdentityForm.tsx": [
+      "src/shared/api.ts",
+      "src/shared/utils.ts"
+    ],
+    "src/features/ordering/components/OrderHistory.tsx": [
+      "src/shared/api.ts",
+      "src/shared/types.ts",
+      "src/shared/utils.ts"
+    ],
+    "src/features/ordering/components/ProductCard.tsx": [
+      "src/shared/types.ts"
+    ],
+    "src/features/ordering/components/ProfileForm.tsx": [
+      "src/shared/api.ts",
+      "src/shared/utils.ts"
+    ],
+    "src/features/ordering/customerReducer.ts": [
+      "src/shared/api.ts",
+      "src/shared/types.ts",
+      "src/shared/utils.ts"
+    ],
+    "src/features/ordering/hooks/useCustomerApp.ts": [
+      "src/features/ordering/customerReducer.ts",
+      "src/shared/api.ts",
+      "src/shared/constants.ts",
+      "src/shared/types.ts",
+      "src/shared/utils.ts"
+    ],
+    "src/features/square/components/SquarePanel.tsx": [
+      "src/shared/api.ts",
+      "src/shared/utils.ts"
+    ],
+    "src/index.css": [],
+    "src/main.tsx": [
+      "src/App.tsx",
+      "src/index.css"
+    ],
+    "src/shared/api.ts": [
+      "src/shared/types.ts"
+    ],
+    "src/shared/components/ErrorBoundary.tsx": [],
+    "src/shared/constants.ts": [
+      "src/shared/types.ts"
+    ],
+    "src/shared/types.ts": [],
+    "src/shared/utils.ts": [
+      "src/shared/api.ts",
+      "src/shared/types.ts"
+    ],
+    "tsconfig.json": [],
+    "tsconfig.server.json": [],
+    "vite.config.ts": [],
+    "vitest.config.ts": []
+  }
+}

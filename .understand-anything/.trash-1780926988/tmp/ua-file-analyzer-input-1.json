@@ -1,0 +1,108 @@
+{
+  "projectRoot": "E:/窝里蹲点单系统",
+  "batchFiles": [
+    {
+      "path": "server/__tests__/api.test.ts",
+      "language": "typescript",
+      "sizeLines": 114,
+      "fileCategory": "code"
+    },
+    {
+      "path": "server/app.ts",
+      "language": "typescript",
+      "sizeLines": 44,
+      "fileCategory": "code"
+    },
+    {
+      "path": "server/db.ts",
+      "language": "typescript",
+      "sizeLines": 269,
+      "fileCategory": "code"
+    },
+    {
+      "path": "server/index.ts",
+      "language": "typescript",
+      "sizeLines": 29,
+      "fileCategory": "code"
+    },
+    {
+      "path": "server/middleware/auth.ts",
+      "language": "typescript",
+      "sizeLines": 12,
+      "fileCategory": "code"
+    },
+    {
+      "path": "server/middleware/rateLimit.ts",
+      "language": "typescript",
+      "sizeLines": 49,
+      "fileCategory": "code"
+    },
+    {
+      "path": "server/routes/auth.ts",
+      "language": "typescript",
+      "sizeLines": 97,
+      "fileCategory": "code"
+    },
+    {
+      "path": "server/routes/orders.ts",
+      "language": "typescript",
+      "sizeLines": 136,
+      "fileCategory": "code"
+    },
+    {
+      "path": "server/routes/posts.ts",
+      "language": "typescript",
+      "sizeLines": 210,
+      "fileCategory": "code"
+    },
+    {
+      "path": "server/routes/products.ts",
+      "language": "typescript",
+      "sizeLines": 105,
+      "fileCategory": "code"
+    },
+    {
+      "path": "server/routes/stats.ts",
+      "language": "typescript",
+      "sizeLines": 150,
+      "fileCategory": "code"
+    }
+  ],
+  "batchImportData": {
+    "server/__tests__/api.test.ts": [
+      "server/app.ts"
+    ],
+    "server/app.ts": [
+      "server/db.ts",
+      "server/middleware/rateLimit.ts",
+      "server/routes/auth.ts",
+      "server/routes/orders.ts",
+      "server/routes/posts.ts",
+      "server/routes/products.ts",
+      "server/routes/stats.ts"
+    ],
+    "server/db.ts": [],
+    "server/index.ts": [
+      "server/app.ts"
+    ],
+    "server/middleware/auth.ts": [],
+    "server/middleware/rateLimit.ts": [],
+    "server/routes/auth.ts": [
+      "server/db.ts"
+    ],
+    "server/routes/orders.ts": [
+      "server/db.ts",
+      "server/middleware/auth.ts"
+    ],
+    "server/routes/posts.ts": [
+      "server/db.ts"
+    ],
+    "server/routes/products.ts": [
+      "server/db.ts",
+      "server/middleware/auth.ts"
+    ],
+    "server/routes/stats.ts": [
+      "server/db.ts"
+    ]
+  }
+}

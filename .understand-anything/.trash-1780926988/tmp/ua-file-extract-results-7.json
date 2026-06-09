@@ -1,0 +1,543 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 10,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": ".understand-anything/.understandignore",
+      "language": "unknown",
+      "fileCategory": "code",
+      "totalLines": 26,
+      "nonEmptyLines": 23,
+      "metrics": {}
+    },
+    {
+      "path": ".understand-anything/config.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 1,
+      "nonEmptyLines": 1,
+      "sections": [
+        {
+          "heading": "outputLanguage",
+          "level": 1,
+          "line": 1
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 1
+      }
+    },
+    {
+      "path": "eslint.config.mjs",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 27,
+      "nonEmptyLines": 26,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/__tests__/ErrorBoundary.test.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 41,
+      "nonEmptyLines": 36,
+      "functions": [
+        {
+          "name": "BrokenComponent",
+          "startLine": 7,
+          "endLine": 12,
+          "params": [
+            "{ shouldThrow }"
+          ]
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 0,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/components/AnalyticsPanel.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 128,
+      "nonEmptyLines": 116,
+      "functions": [
+        {
+          "name": "AnalyticsPanel",
+          "startLine": 8,
+          "endLine": 128,
+          "params": [
+            "_props"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "AnalyticsPanel",
+          "line": 8,
+          "isDefault": true
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "AnalyticsPanel",
+          "callee": "useState",
+          "lineNumber": 10
+        },
+        {
+          "caller": "AnalyticsPanel",
+          "callee": "useState",
+          "lineNumber": 11
+        },
+        {
+          "caller": "AnalyticsPanel",
+          "callee": "now.getFullYear",
+          "lineNumber": 11
+        },
+        {
+          "caller": "AnalyticsPanel",
+          "callee": "useState",
+          "lineNumber": 12
+        },
+        {
+          "caller": "AnalyticsPanel",
+          "callee": "now.getMonth",
+          "lineNumber": 12
+        },
+        {
+          "caller": "AnalyticsPanel",
+          "callee": "useState",
+          "lineNumber": 13
+        },
+        {
+          "caller": "AnalyticsPanel",
+          "callee": "useState",
+          "lineNumber": 14
+        },
+        {
+          "caller": "AnalyticsPanel",
+          "callee": "useCallback",
+          "lineNumber": 16
+        },
+        {
+          "caller": "AnalyticsPanel",
+          "callee": "setLoading",
+          "lineNumber": 17
+        },
+        {
+          "caller": "AnalyticsPanel",
+          "callee": "fetchStats(params).then(s => {\n      if (mode === 'monthly') {\n        setChartData(s.daily.map(d => ({ label: d.label, orders: d.orders, revenue: d.revenue })));\n      } else {\n        setChartData(s.monthly.map(m => ({ label: m.label, orders: m.orders, revenue: m.revenue })));\n      }\n    }).catch(err => console.warn('Failed to load stats:', err)).finally",
+          "lineNumber": 21
+        },
+        {
+          "caller": "AnalyticsPanel",
+          "callee": "fetchStats(params).then(s => {\n      if (mode === 'monthly') {\n        setChartData(s.daily.map(d => ({ label: d.label, orders: d.orders, revenue: d.revenue })));\n      } else {\n        setChartData(s.monthly.map(m => ({ label: m.label, orders: m.orders, revenue: m.revenue })));\n      }\n    }).catch",
+          "lineNumber": 21
+        },
+        {
+          "caller": "AnalyticsPanel",
+          "callee": "fetchStats(params).then",
+          "lineNumber": 21
+        },
+        {
+          "caller": "AnalyticsPanel",
+          "callee": "fetchStats",
+          "lineNumber": 21
+        },
+        {
+          "caller": "AnalyticsPanel",
+          "callee": "setChartData",
+          "lineNumber": 23
+        },
+        {
+          "caller": "AnalyticsPanel",
+          "callee": "s.daily.map",
+          "lineNumber": 23
+        },
+        {
+          "caller": "AnalyticsPanel",
+          "callee": "setChartData",
+          "lineNumber": 25
+        },
+        {
+          "caller": "AnalyticsPanel",
+          "callee": "s.monthly.map",
+          "lineNumber": 25
+        },
+        {
+          "caller": "AnalyticsPanel",
+          "callee": "console.warn",
+          "lineNumber": 27
+        },
+        {
+          "caller": "AnalyticsPanel",
+          "callee": "setLoading",
+          "lineNumber": 27
+        },
+        {
+          "caller": "AnalyticsPanel",
+          "callee": "useEffect",
+          "lineNumber": 30
+        },
+        {
+          "caller": "AnalyticsPanel",
+          "callee": "load",
+          "lineNumber": 30
+        },
+        {
+          "caller": "AnalyticsPanel",
+          "callee": "useEffect",
+          "lineNumber": 31
+        },
+        {
+          "caller": "AnalyticsPanel",
+          "callee": "setInterval",
+          "lineNumber": 31
+        },
+        {
+          "caller": "AnalyticsPanel",
+          "callee": "clearInterval",
+          "lineNumber": 31
+        },
+        {
+          "caller": "AnalyticsPanel",
+          "callee": "Array.from",
+          "lineNumber": 34
+        },
+        {
+          "caller": "AnalyticsPanel",
+          "callee": "now.getFullYear",
+          "lineNumber": 34
+        },
+        {
+          "caller": "AnalyticsPanel",
+          "callee": "chartData.reduce",
+          "lineNumber": 36
+        },
+        {
+          "caller": "AnalyticsPanel",
+          "callee": "chartData.reduce",
+          "lineNumber": 37
+        },
+        {
+          "caller": "AnalyticsPanel",
+          "callee": "totalRevenue.toFixed",
+          "lineNumber": 49
+        },
+        {
+          "caller": "AnalyticsPanel",
+          "callee": "setMode",
+          "lineNumber": 57
+        },
+        {
+          "caller": "AnalyticsPanel",
+          "callee": "setMode",
+          "lineNumber": 59
+        },
+        {
+          "caller": "AnalyticsPanel",
+          "callee": "setYear",
+          "lineNumber": 66
+        },
+        {
+          "caller": "AnalyticsPanel",
+          "callee": "setYear",
+          "lineNumber": 70
+        },
+        {
+          "caller": "AnalyticsPanel",
+          "callee": "parseInt",
+          "lineNumber": 70
+        },
+        {
+          "caller": "AnalyticsPanel",
+          "callee": "availableYears.map",
+          "lineNumber": 72
+        },
+        {
+          "caller": "AnalyticsPanel",
+          "callee": "setYear",
+          "lineNumber": 74
+        },
+        {
+          "caller": "AnalyticsPanel",
+          "callee": "now.getFullYear",
+          "lineNumber": 74
+        },
+        {
+          "caller": "AnalyticsPanel",
+          "callee": "setMonth",
+          "lineNumber": 82
+        },
+        {
+          "caller": "AnalyticsPanel",
+          "callee": "setMonth",
+          "lineNumber": 86
+        },
+        {
+          "caller": "AnalyticsPanel",
+          "callee": "parseInt",
+          "lineNumber": 86
+        },
+        {
+          "caller": "AnalyticsPanel",
+          "callee": "Array.from({ length: 12 }, (_, i) => i + 1).map",
+          "lineNumber": 88
+        },
+        {
+          "caller": "AnalyticsPanel",
+          "callee": "Array.from",
+          "lineNumber": 88
+        },
+        {
+          "caller": "AnalyticsPanel",
+          "callee": "setMonth",
+          "lineNumber": 90
+        },
+        {
+          "caller": "AnalyticsPanel",
+          "callee": "chartData.map",
+          "lineNumber": 115
+        },
+        {
+          "caller": "AnalyticsPanel",
+          "callee": "d.revenue.toFixed",
+          "lineNumber": 119
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/components/BarChart.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 89,
+      "nonEmptyLines": 78,
+      "functions": [
+        {
+          "name": "BarChart",
+          "startLine": 7,
+          "endLine": 89,
+          "params": [
+            "{ data }"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "BarChart",
+          "line": 7,
+          "isDefault": true
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "BarChart",
+          "callee": "Math.max",
+          "lineNumber": 10
+        },
+        {
+          "caller": "BarChart",
+          "callee": "Math.max",
+          "lineNumber": 16
+        },
+        {
+          "caller": "BarChart",
+          "callee": "data.map",
+          "lineNumber": 16
+        },
+        {
+          "caller": "BarChart",
+          "callee": "Math.max",
+          "lineNumber": 17
+        },
+        {
+          "caller": "BarChart",
+          "callee": "data.map",
+          "lineNumber": 17
+        },
+        {
+          "caller": "BarChart",
+          "callee": "Math.ceil",
+          "lineNumber": 18
+        },
+        {
+          "caller": "BarChart",
+          "callee": "Math.ceil",
+          "lineNumber": 19
+        },
+        {
+          "caller": "BarChart",
+          "callee": "Array.from",
+          "lineNumber": 32
+        },
+        {
+          "caller": "BarChart",
+          "callee": "data.map",
+          "lineNumber": 42
+        },
+        {
+          "caller": "BarChart",
+          "callee": "Math.max",
+          "lineNumber": 46
+        },
+        {
+          "caller": "BarChart",
+          "callee": "Math.max",
+          "lineNumber": 47
+        },
+        {
+          "caller": "BarChart",
+          "callee": "d.revenue.toFixed",
+          "lineNumber": 54
+        },
+        {
+          "caller": "BarChart",
+          "callee": "data.map",
+          "lineNumber": 61
+        },
+        {
+          "caller": "BarChart",
+          "callee": "Math.ceil",
+          "lineNumber": 62
+        },
+        {
+          "caller": "BarChart",
+          "callee": "Array.from",
+          "lineNumber": 70
+        },
+        {
+          "caller": "BarChart",
+          "callee": "Math.round",
+          "lineNumber": 71
+        },
+        {
+          "caller": "BarChart",
+          "callee": "scaleYOrders",
+          "lineNumber": 72
+        },
+        {
+          "caller": "BarChart",
+          "callee": "Array.from",
+          "lineNumber": 75
+        },
+        {
+          "caller": "BarChart",
+          "callee": "Math.round",
+          "lineNumber": 76
+        },
+        {
+          "caller": "BarChart",
+          "callee": "scaleYRevenue",
+          "lineNumber": 77
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/components/ErrorBoundary.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 66,
+      "nonEmptyLines": 58,
+      "classes": [
+        {
+          "name": "ErrorBoundary",
+          "startLine": 14,
+          "endLine": 66,
+          "methods": [
+            "constructor",
+            "getDerivedStateFromError",
+            "componentDidCatch",
+            "render"
+          ],
+          "properties": [
+            "handleRetry"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "default",
+          "line": 14,
+          "isDefault": true
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "constructor",
+          "callee": "super",
+          "lineNumber": 16
+        },
+        {
+          "caller": "componentDidCatch",
+          "callee": "console.error",
+          "lineNumber": 25
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 0,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "src/index.css",
+      "language": "css",
+      "fileCategory": "markup",
+      "totalLines": 51,
+      "nonEmptyLines": 42,
+      "metrics": {}
+    },
+    {
+      "path": "vite.config.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 29,
+      "nonEmptyLines": 28,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "vitest.config.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 23,
+      "nonEmptyLines": 22,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    }
+  ]
+}

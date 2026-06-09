@@ -1,0 +1,559 @@
+{
+  "nodes": [
+    {
+      "id": "file:server/__tests__/api.test.ts",
+      "type": "file",
+      "name": "api.test.ts",
+      "filePath": "server/__tests__/api.test.ts",
+      "summary": "后端 API 集成测试，验证 Express 应用路由和中间件的正确性。",
+      "tags": [
+        "test",
+        "api-test",
+        "integration-test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:server/app.ts",
+      "type": "file",
+      "name": "app.ts",
+      "filePath": "server/app.ts",
+      "summary": "Express 应用工厂函数，组装路由、中间件、限流和全局错误处理。",
+      "tags": [
+        "entry-point",
+        "express",
+        "middleware",
+        "api-handler"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:server/app.ts:createApp",
+      "type": "function",
+      "name": "createApp",
+      "filePath": "server/app.ts",
+      "lineRange": [
+        10,
+        44
+      ],
+      "summary": "创建并配置 Express 应用实例，注册路由、中间件和全局错误处理。",
+      "tags": [
+        "factory",
+        "express",
+        "middleware"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:server/db.ts",
+      "type": "file",
+      "name": "db.ts",
+      "filePath": "server/db.ts",
+      "summary": "SQLite 数据库初始化模块，管理连接、自动迁移、表创建和默认数据填充。",
+      "tags": [
+        "database",
+        "sqlite",
+        "migration",
+        "singleton"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:server/db.ts:getDb",
+      "type": "function",
+      "name": "getDb",
+      "filePath": "server/db.ts",
+      "lineRange": [
+        7,
+        25
+      ],
+      "summary": "获取 SQLite 数据库单例，首次调用时初始化连接、迁移和默认数据。",
+      "tags": [
+        "singleton",
+        "database",
+        "initialization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:server/db.ts:runMigrations",
+      "type": "function",
+      "name": "runMigrations",
+      "filePath": "server/db.ts",
+      "lineRange": [
+        27,
+        167
+      ],
+      "summary": "执行数据库版本迁移，从 v1 到 v5 逐步升级表结构。",
+      "tags": [
+        "migration",
+        "database",
+        "schema"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:server/db.ts:initTables",
+      "type": "function",
+      "name": "initTables",
+      "filePath": "server/db.ts",
+      "lineRange": [
+        169,
+        195
+      ],
+      "summary": "创建数据库核心表结构（products、orders、posts 等）。",
+      "tags": [
+        "database",
+        "schema",
+        "ddl"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:server/db.ts:seedDefaults",
+      "type": "function",
+      "name": "seedDefaults",
+      "filePath": "server/db.ts",
+      "lineRange": [
+        255,
+        269
+      ],
+      "summary": "首次运行时插入默认商品数据。",
+      "tags": [
+        "database",
+        "seed",
+        "initialization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:server/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "server/index.ts",
+      "summary": "服务入口文件，加载环境变量、创建 Express 应用并启动 HTTP 服务器。",
+      "tags": [
+        "entry-point",
+        "server",
+        "startup"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:server/middleware/auth.ts",
+      "type": "file",
+      "name": "auth.ts",
+      "filePath": "server/middleware/auth.ts",
+      "summary": "管理员认证中间件，通过 X-Admin-Key 请求头验证管理员身份。",
+      "tags": [
+        "middleware",
+        "authentication",
+        "admin"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:server/middleware/auth.ts:requireAdmin",
+      "type": "function",
+      "name": "requireAdmin",
+      "filePath": "server/middleware/auth.ts",
+      "lineRange": [
+        3,
+        12
+      ],
+      "summary": "验证请求头中的管理员密钥，不匹配则返回 403。",
+      "tags": [
+        "middleware",
+        "authentication",
+        "guard"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:server/middleware/rateLimit.ts",
+      "type": "file",
+      "name": "rateLimit.ts",
+      "filePath": "server/middleware/rateLimit.ts",
+      "summary": "基于内存存储的 API 限流中间件，支持按方法和时间窗口限制请求频率。",
+      "tags": [
+        "middleware",
+        "rate-limiting",
+        "security"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:server/middleware/rateLimit.ts:rateLimit",
+      "type": "function",
+      "name": "rateLimit",
+      "filePath": "server/middleware/rateLimit.ts",
+      "lineRange": [
+        18,
+        49
+      ],
+      "summary": "创建限流中间件工厂函数，按 IP + 方法限制请求频率。",
+      "tags": [
+        "middleware",
+        "rate-limiting",
+        "factory"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:server/routes/auth.ts",
+      "type": "file",
+      "name": "auth.ts",
+      "filePath": "server/routes/auth.ts",
+      "summary": "用户认证路由，处理注册、登录、个人信息更新和密码修改。",
+      "tags": [
+        "api-handler",
+        "authentication",
+        "user-management"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:server/routes/auth.ts:hashPassword",
+      "type": "function",
+      "name": "hashPassword",
+      "filePath": "server/routes/auth.ts",
+      "lineRange": [
+        7,
+        9
+      ],
+      "summary": "使用 SHA-256 对密码进行哈希加密。",
+      "tags": [
+        "utility",
+        "security",
+        "hashing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:server/routes/orders.ts",
+      "type": "file",
+      "name": "orders.ts",
+      "filePath": "server/routes/orders.ts",
+      "summary": "订单管理路由，处理订单创建（含库存事务）、查询和状态更新。",
+      "tags": [
+        "api-handler",
+        "orders",
+        "transaction"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:server/routes/orders.ts:serializeOrder",
+      "type": "function",
+      "name": "serializeOrder",
+      "filePath": "server/routes/orders.ts",
+      "lineRange": [
+        8,
+        19
+      ],
+      "summary": "将数据库订单记录转换为 API 响应格式，解析 JSON 字段。",
+      "tags": [
+        "serialization",
+        "transformation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:server/routes/posts.ts",
+      "type": "file",
+      "name": "posts.ts",
+      "filePath": "server/routes/posts.ts",
+      "summary": "广场帖子路由，处理帖子的创建、查询、认领、完成和评论功能。",
+      "tags": [
+        "api-handler",
+        "social",
+        "posts"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:server/routes/products.ts",
+      "type": "file",
+      "name": "products.ts",
+      "filePath": "server/routes/products.ts",
+      "summary": "商品管理路由，处理商品的增删改查和管理员密钥验证。",
+      "tags": [
+        "api-handler",
+        "products",
+        "crud"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:server/routes/products.ts:serializeProduct",
+      "type": "function",
+      "name": "serializeProduct",
+      "filePath": "server/routes/products.ts",
+      "lineRange": [
+        19,
+        31
+      ],
+      "summary": "将数据库商品记录转换为 API 响应格式，转换布尔字段。",
+      "tags": [
+        "serialization",
+        "transformation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:server/routes/stats.ts",
+      "type": "file",
+      "name": "stats.ts",
+      "filePath": "server/routes/stats.ts",
+      "summary": "统计数据路由，提供日/周/月维度的订单统计、热销排行和收入分析。",
+      "tags": [
+        "api-handler",
+        "statistics",
+        "analytics"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:server/routes/stats.ts:daysInMonth",
+      "type": "function",
+      "name": "daysInMonth",
+      "filePath": "server/routes/stats.ts",
+      "lineRange": [
+        6,
+        8
+      ],
+      "summary": "计算指定年月的天数。",
+      "tags": [
+        "utility",
+        "date"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:server/__tests__/api.test.ts",
+      "target": "file:server/app.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:server/app.ts",
+      "target": "file:server/__tests__/api.test.ts",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:server/app.ts",
+      "target": "function:server/app.ts:createApp",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:server/app.ts",
+      "target": "function:server/app.ts:createApp",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:server/app.ts",
+      "target": "file:server/db.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:server/app.ts",
+      "target": "file:server/middleware/rateLimit.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:server/app.ts",
+      "target": "file:server/routes/auth.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:server/app.ts",
+      "target": "file:server/routes/orders.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:server/app.ts",
+      "target": "file:server/routes/posts.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:server/app.ts",
+      "target": "file:server/routes/products.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:server/app.ts",
+      "target": "file:server/routes/stats.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:server/db.ts",
+      "target": "function:server/db.ts:getDb",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:server/db.ts",
+      "target": "function:server/db.ts:getDb",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:server/db.ts",
+      "target": "function:server/db.ts:runMigrations",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:server/db.ts",
+      "target": "function:server/db.ts:initTables",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:server/db.ts",
+      "target": "function:server/db.ts:seedDefaults",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:server/index.ts",
+      "target": "file:server/app.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:server/middleware/auth.ts",
+      "target": "function:server/middleware/auth.ts:requireAdmin",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:server/middleware/auth.ts",
+      "target": "function:server/middleware/auth.ts:requireAdmin",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:server/middleware/rateLimit.ts",
+      "target": "function:server/middleware/rateLimit.ts:rateLimit",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:server/middleware/rateLimit.ts",
+      "target": "function:server/middleware/rateLimit.ts:rateLimit",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:server/routes/auth.ts",
+      "target": "function:server/routes/auth.ts:hashPassword",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:server/routes/auth.ts",
+      "target": "file:server/db.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:server/routes/orders.ts",
+      "target": "function:server/routes/orders.ts:serializeOrder",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:server/routes/orders.ts",
+      "target": "file:server/db.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:server/routes/orders.ts",
+      "target": "file:server/middleware/auth.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:server/routes/posts.ts",
+      "target": "file:server/db.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:server/routes/products.ts",
+      "target": "function:server/routes/products.ts:serializeProduct",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:server/routes/products.ts",
+      "target": "file:server/db.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:server/routes/products.ts",
+      "target": "file:server/middleware/auth.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:server/routes/stats.ts",
+      "target": "function:server/routes/stats.ts:daysInMonth",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:server/routes/stats.ts",
+      "target": "file:server/db.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    }
+  ]
+}

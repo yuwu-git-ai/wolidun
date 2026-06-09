@@ -1,0 +1,138 @@
+[
+  {
+    "id": "layer:application-entry",
+    "name": "应用入口",
+    "description": "应用启动和根组件挂载的入口文件，负责初始化 React 应用和 Express 服务器。",
+    "nodeIds": [
+      "file:src/main.tsx",
+      "file:src/App.tsx",
+      "file:server/index.ts",
+      "file:index.html"
+    ]
+  },
+  {
+    "id": "layer:api-client",
+    "name": "API 客户端层",
+    "description": "封装所有后端 HTTP 请求的前端 API 模块，提供统一的认证、重试和错误处理机制。",
+    "nodeIds": [
+      "file:src/api.ts"
+    ]
+  },
+  {
+    "id": "layer:backend-core",
+    "name": "后端核心",
+    "description": "Express 应用组装、数据库管理和中间件注册的核心模块。",
+    "nodeIds": [
+      "file:server/app.ts",
+      "file:server/db.ts",
+      "file:server/middleware/auth.ts",
+      "file:server/middleware/rateLimit.ts"
+    ]
+  },
+  {
+    "id": "layer:api-routes",
+    "name": "API 路由层",
+    "description": "Express 路由处理器，实现认证、订单、商品、帖子和统计等 REST API 端点。",
+    "nodeIds": [
+      "file:server/routes/auth.ts",
+      "file:server/routes/orders.ts",
+      "file:server/routes/posts.ts",
+      "file:server/routes/products.ts",
+      "file:server/routes/stats.ts"
+    ]
+  },
+  {
+    "id": "layer:state-management",
+    "name": "状态管理层",
+    "description": "React 状态管理，包括 reducer、自定义 hook 和本地存储持久化逻辑。",
+    "nodeIds": [
+      "file:src/customerReducer.ts",
+      "file:src/hooks/useCustomerApp.ts",
+      "file:src/types.ts",
+      "file:src/constants.ts",
+      "file:src/utils.ts"
+    ]
+  },
+  {
+    "id": "layer:ui-components-customer",
+    "name": "顾客端 UI 组件",
+    "description": "面向顾客的 React UI 组件，包括商品浏览、购物车、身份认证、订单历史和广场社区功能。",
+    "nodeIds": [
+      "file:src/components/CartPanel.tsx",
+      "file:src/components/IdentityForm.tsx",
+      "file:src/components/OrderHistory.tsx",
+      "file:src/components/ProductCard.tsx",
+      "file:src/components/ProfileForm.tsx",
+      "file:src/components/SquarePanel.tsx",
+      "file:src/components/ErrorBoundary.tsx"
+    ]
+  },
+  {
+    "id": "layer:ui-components-admin",
+    "name": "管理后台 UI 组件",
+    "description": "面向管理员的 React UI 组件，包括订单管理、商品 CRUD、数据分析和图表可视化。",
+    "nodeIds": [
+      "file:src/components/AdminGate.tsx",
+      "file:src/components/AdminPanel.tsx",
+      "file:src/components/OrderCard.tsx",
+      "file:src/components/AnalyticsPanel.tsx",
+      "file:src/components/BarChart.tsx"
+    ]
+  },
+  {
+    "id": "layer:styles",
+    "name": "样式层",
+    "description": "全局 CSS 样式文件，引入 Tailwind CSS 框架和自定义工具类。",
+    "nodeIds": [
+      "file:src/index.css"
+    ]
+  },
+  {
+    "id": "layer:testing",
+    "name": "测试层",
+    "description": "单元测试和集成测试文件，覆盖 API、组件和工具函数。",
+    "nodeIds": [
+      "file:server/__tests__/api.test.ts",
+      "file:src/__tests__/IdentityForm.test.tsx",
+      "file:src/__tests__/utils.test.ts",
+      "file:src/__tests__/ErrorBoundary.test.tsx"
+    ]
+  },
+  {
+    "id": "layer:infrastructure",
+    "name": "基础设施层",
+    "description": "Docker 容器化、CI/CD 工作流和部署配置文件。",
+    "nodeIds": [
+      "service:Dockerfile",
+      "service:docker-compose.yml",
+      "pipeline:.github/workflows/deploy.yml"
+    ]
+  },
+  {
+    "id": "layer:configuration",
+    "name": "配置层",
+    "description": "项目配置文件，包括 TypeScript、ESLint、Vite、Vitest 和环境变量配置。",
+    "nodeIds": [
+      "config:.env.example",
+      "config:package.json",
+      "config:tsconfig.json",
+      "config:tsconfig.server.json",
+      "config:metadata.json",
+      "file:vite.config.ts",
+      "file:vitest.config.ts",
+      "file:eslint.config.mjs",
+      "config:.understand-anything/config.json",
+      "file:.understand-anything/.understandignore"
+    ]
+  },
+  {
+    "id": "layer:documentation",
+    "name": "文档层",
+    "description": "项目文档，包括 README、开发指南和需求规格说明。",
+    "nodeIds": [
+      "document:README.md",
+      "document:CLAUDE.md",
+      "document:REQUIREMENTS.md"
+    ]
+  }
+]

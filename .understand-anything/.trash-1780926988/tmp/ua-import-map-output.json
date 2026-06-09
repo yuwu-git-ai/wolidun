@@ -1,0 +1,159 @@
+{
+  "scriptCompleted": true,
+  "stats": {
+    "filesScanned": 52,
+    "filesWithImports": 28,
+    "totalEdges": 69
+  },
+  "importMap": {
+    ".env.example": [],
+    ".github/workflows/deploy.yml": [],
+    ".understand-anything/.understandignore": [],
+    ".understand-anything/config.json": [],
+    "CLAUDE.md": [],
+    "docker-compose.yml": [],
+    "Dockerfile": [],
+    "eslint.config.mjs": [],
+    "index.html": [],
+    "metadata.json": [],
+    "package.json": [],
+    "README.md": [],
+    "REQUIREMENTS.md": [],
+    "server/__tests__/api.test.ts": [
+      "server/app.ts"
+    ],
+    "server/app.ts": [
+      "server/db.ts",
+      "server/middleware/rateLimit.ts",
+      "server/routes/auth.ts",
+      "server/routes/orders.ts",
+      "server/routes/posts.ts",
+      "server/routes/products.ts",
+      "server/routes/stats.ts"
+    ],
+    "server/db.ts": [],
+    "server/index.ts": [
+      "server/app.ts"
+    ],
+    "server/middleware/auth.ts": [],
+    "server/middleware/rateLimit.ts": [],
+    "server/routes/auth.ts": [
+      "server/db.ts"
+    ],
+    "server/routes/orders.ts": [
+      "server/db.ts",
+      "server/middleware/auth.ts"
+    ],
+    "server/routes/posts.ts": [
+      "server/db.ts"
+    ],
+    "server/routes/products.ts": [
+      "server/db.ts",
+      "server/middleware/auth.ts"
+    ],
+    "server/routes/stats.ts": [
+      "server/db.ts"
+    ],
+    "src/__tests__/ErrorBoundary.test.tsx": [
+      "src/components/ErrorBoundary.tsx"
+    ],
+    "src/__tests__/IdentityForm.test.tsx": [
+      "src/api.ts",
+      "src/components/IdentityForm.tsx"
+    ],
+    "src/__tests__/utils.test.ts": [
+      "src/utils.ts"
+    ],
+    "src/api.ts": [
+      "src/types.ts"
+    ],
+    "src/App.tsx": [
+      "src/components/AdminGate.tsx",
+      "src/components/CartPanel.tsx",
+      "src/components/ErrorBoundary.tsx",
+      "src/components/IdentityForm.tsx",
+      "src/components/OrderHistory.tsx",
+      "src/components/ProductCard.tsx",
+      "src/components/ProfileForm.tsx",
+      "src/components/SquarePanel.tsx",
+      "src/constants.ts",
+      "src/hooks/useCustomerApp.ts",
+      "src/utils.ts"
+    ],
+    "src/components/AdminGate.tsx": [
+      "src/api.ts",
+      "src/components/AdminPanel.tsx"
+    ],
+    "src/components/AdminPanel.tsx": [
+      "src/api.ts",
+      "src/components/AnalyticsPanel.tsx",
+      "src/components/OrderCard.tsx",
+      "src/constants.ts",
+      "src/types.ts",
+      "src/utils.ts"
+    ],
+    "src/components/AnalyticsPanel.tsx": [
+      "src/api.ts",
+      "src/components/BarChart.tsx"
+    ],
+    "src/components/BarChart.tsx": [],
+    "src/components/CartPanel.tsx": [
+      "src/types.ts",
+      "src/utils.ts"
+    ],
+    "src/components/ErrorBoundary.tsx": [],
+    "src/components/IdentityForm.tsx": [
+      "src/api.ts",
+      "src/utils.ts"
+    ],
+    "src/components/OrderCard.tsx": [
+      "src/types.ts",
+      "src/utils.ts"
+    ],
+    "src/components/OrderHistory.tsx": [
+      "src/api.ts",
+      "src/types.ts",
+      "src/utils.ts"
+    ],
+    "src/components/ProductCard.tsx": [
+      "src/types.ts"
+    ],
+    "src/components/ProfileForm.tsx": [
+      "src/api.ts",
+      "src/utils.ts"
+    ],
+    "src/components/SquarePanel.tsx": [
+      "src/api.ts",
+      "src/utils.ts"
+    ],
+    "src/constants.ts": [
+      "src/types.ts"
+    ],
+    "src/customerReducer.ts": [
+      "src/api.ts",
+      "src/types.ts",
+      "src/utils.ts"
+    ],
+    "src/hooks/useCustomerApp.ts": [
+      "src/api.ts",
+      "src/constants.ts",
+      "src/customerReducer.ts",
+      "src/types.ts",
+      "src/utils.ts"
+    ],
+    "src/index.css": [],
+    "src/main.tsx": [
+      "src/App.tsx",
+      "src/index.css"
+    ],
+    "src/types.ts": [],
+    "src/utils.ts": [
+      "src/api.ts",
+      "src/types.ts"
+    ],
+    "tsconfig.json": [],
+    "tsconfig.server.json": [],
+    "vite.config.ts": [],
+    "vitest.config.ts": []
+  }
+}

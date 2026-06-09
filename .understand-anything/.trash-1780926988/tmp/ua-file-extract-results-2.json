@@ -1,0 +1,2921 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 11,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "src/App.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 338,
+      "nonEmptyLines": 315,
+      "functions": [
+        {
+          "name": "CustomerApp",
+          "startLine": 23,
+          "endLine": 325,
+          "params": []
+        },
+        {
+          "name": "App",
+          "startLine": 329,
+          "endLine": 338,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "App",
+          "line": 329,
+          "isDefault": true
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "CustomerApp",
+          "callee": "useCustomerApp",
+          "lineNumber": 24
+        },
+        {
+          "caller": "CustomerApp",
+          "callee": "actions.setShowProfileForm",
+          "lineNumber": 32
+        },
+        {
+          "caller": "CustomerApp",
+          "callee": "actions.setShowOrderHistory",
+          "lineNumber": 39
+        },
+        {
+          "caller": "CustomerApp",
+          "callee": "actions.setShowIdentityForm",
+          "lineNumber": 49
+        },
+        {
+          "caller": "CustomerApp",
+          "callee": "actions.setMainTab",
+          "lineNumber": 62
+        },
+        {
+          "caller": "CustomerApp",
+          "callee": "actions.setShowOrderHistory",
+          "lineNumber": 77
+        },
+        {
+          "caller": "CustomerApp",
+          "callee": "actions.setShowProfileForm",
+          "lineNumber": 82
+        },
+        {
+          "caller": "CustomerApp",
+          "callee": "actions.setShowIdentityForm",
+          "lineNumber": 93
+        },
+        {
+          "caller": "CustomerApp",
+          "callee": "DEFAULT_CATEGORIES.map",
+          "lineNumber": 112
+        },
+        {
+          "caller": "CustomerApp",
+          "callee": "actions.setActiveCategory",
+          "lineNumber": 116
+        },
+        {
+          "caller": "CustomerApp",
+          "callee": "DEFAULT_CATEGORIES.map",
+          "lineNumber": 128
+        },
+        {
+          "caller": "CustomerApp",
+          "callee": "actions.setActiveCategory",
+          "lineNumber": 132
+        },
+        {
+          "caller": "CustomerApp",
+          "callee": "actions.setSearchQuery",
+          "lineNumber": 152
+        },
+        {
+          "caller": "CustomerApp",
+          "callee": "actions.setActiveCategory",
+          "lineNumber": 152
+        },
+        {
+          "caller": "CustomerApp",
+          "callee": "actions.setSearchQuery",
+          "lineNumber": 165
+        },
+        {
+          "caller": "CustomerApp",
+          "callee": "DEFAULT_CATEGORIES.find",
+          "lineNumber": 170
+        },
+        {
+          "caller": "CustomerApp",
+          "callee": "state.filteredProducts.map",
+          "lineNumber": 180
+        },
+        {
+          "caller": "CustomerApp",
+          "callee": "state.cart.filter(item => item.id === product.id).reduce",
+          "lineNumber": 181
+        },
+        {
+          "caller": "CustomerApp",
+          "callee": "state.cart.filter",
+          "lineNumber": 181
+        },
+        {
+          "caller": "CustomerApp",
+          "callee": "state.popularIds.has",
+          "lineNumber": 184
+        },
+        {
+          "caller": "CustomerApp",
+          "callee": "actions.addToCart",
+          "lineNumber": 210
+        },
+        {
+          "caller": "CustomerApp",
+          "callee": "actions.setShowConfirm",
+          "lineNumber": 211
+        },
+        {
+          "caller": "CustomerApp",
+          "callee": "actions.setIsMobileCartOpen",
+          "lineNumber": 229
+        },
+        {
+          "caller": "CustomerApp",
+          "callee": "state.totalPrice.toFixed",
+          "lineNumber": 236
+        },
+        {
+          "caller": "CustomerApp",
+          "callee": "actions.setIsMobileCartOpen",
+          "lineNumber": 247
+        },
+        {
+          "caller": "CustomerApp",
+          "callee": "actions.setIsMobileCartOpen",
+          "lineNumber": 252
+        },
+        {
+          "caller": "CustomerApp",
+          "callee": "actions.addToCart",
+          "lineNumber": 259
+        },
+        {
+          "caller": "CustomerApp",
+          "callee": "actions.setIsMobileCartOpen",
+          "lineNumber": 260
+        },
+        {
+          "caller": "CustomerApp",
+          "callee": "actions.setShowConfirm",
+          "lineNumber": 260
+        },
+        {
+          "caller": "CustomerApp",
+          "callee": "actions.setShowConfirm",
+          "lineNumber": 275
+        },
+        {
+          "caller": "CustomerApp",
+          "callee": "state.sortedCart.map",
+          "lineNumber": 280
+        },
+        {
+          "caller": "CustomerApp",
+          "callee": "getItemUnitPrice",
+          "lineNumber": 281
+        },
+        {
+          "caller": "CustomerApp",
+          "callee": "(up * item.quantity).toFixed",
+          "lineNumber": 285
+        },
+        {
+          "caller": "CustomerApp",
+          "callee": "state.itemsTotal.toFixed",
+          "lineNumber": 291
+        },
+        {
+          "caller": "CustomerApp",
+          "callee": "state.deliveryFee.toFixed",
+          "lineNumber": 292
+        },
+        {
+          "caller": "CustomerApp",
+          "callee": "state.totalPrice.toFixed",
+          "lineNumber": 293
+        },
+        {
+          "caller": "CustomerApp",
+          "callee": "actions.setIsDelivery",
+          "lineNumber": 296
+        },
+        {
+          "caller": "CustomerApp",
+          "callee": "actions.setShowConfirm",
+          "lineNumber": 301
+        }
+      ],
+      "metrics": {
+        "importCount": 11,
+        "exportCount": 1,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/__tests__/IdentityForm.test.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 84,
+      "nonEmptyLines": 71,
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/api.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 316,
+      "nonEmptyLines": 272,
+      "functions": [
+        {
+          "name": "register",
+          "startLine": 6,
+          "endLine": 11,
+          "params": [
+            "nickname",
+            "dorm",
+            "password"
+          ]
+        },
+        {
+          "name": "login",
+          "startLine": 13,
+          "endLine": 18,
+          "params": [
+            "nickname",
+            "password"
+          ]
+        },
+        {
+          "name": "updateProfile",
+          "startLine": 20,
+          "endLine": 25,
+          "params": [
+            "nickname",
+            "dorm",
+            "password"
+          ]
+        },
+        {
+          "name": "changePassword",
+          "startLine": 27,
+          "endLine": 32,
+          "params": [
+            "nickname",
+            "oldPassword",
+            "newPassword"
+          ]
+        },
+        {
+          "name": "getIdentity",
+          "startLine": 42,
+          "endLine": 46,
+          "params": []
+        },
+        {
+          "name": "setIdentity",
+          "startLine": 48,
+          "endLine": 50,
+          "params": [
+            "nickname",
+            "dorm"
+          ]
+        },
+        {
+          "name": "clearIdentity",
+          "startLine": 52,
+          "endLine": 54,
+          "params": []
+        },
+        {
+          "name": "getAdminKey",
+          "startLine": 59,
+          "endLine": 61,
+          "params": []
+        },
+        {
+          "name": "setAdminKey",
+          "startLine": 63,
+          "endLine": 65,
+          "params": [
+            "key"
+          ]
+        },
+        {
+          "name": "isRetryableError",
+          "startLine": 69,
+          "endLine": 81,
+          "params": [
+            "err"
+          ]
+        },
+        {
+          "name": "delay",
+          "startLine": 83,
+          "endLine": 85,
+          "params": [
+            "ms"
+          ]
+        },
+        {
+          "name": "request",
+          "startLine": 87,
+          "endLine": 124,
+          "params": [
+            "url",
+            "options",
+            "retries"
+          ]
+        },
+        {
+          "name": "getErrorMessage",
+          "startLine": 126,
+          "endLine": 130,
+          "params": [
+            "err"
+          ]
+        },
+        {
+          "name": "verifyAdmin",
+          "startLine": 133,
+          "endLine": 138,
+          "params": [
+            "adminKey"
+          ]
+        },
+        {
+          "name": "fetchProducts",
+          "startLine": 141,
+          "endLine": 143,
+          "params": []
+        },
+        {
+          "name": "createProduct",
+          "startLine": 145,
+          "endLine": 151,
+          "params": [
+            "product",
+            "adminKey"
+          ]
+        },
+        {
+          "name": "updateProduct",
+          "startLine": 153,
+          "endLine": 159,
+          "params": [
+            "id",
+            "product",
+            "adminKey"
+          ]
+        },
+        {
+          "name": "deleteProduct",
+          "startLine": 161,
+          "endLine": 166,
+          "params": [
+            "id",
+            "adminKey"
+          ]
+        },
+        {
+          "name": "createOrder",
+          "startLine": 169,
+          "endLine": 179,
+          "params": [
+            "params"
+          ]
+        },
+        {
+          "name": "fetchOrders",
+          "startLine": 181,
+          "endLine": 188,
+          "params": [
+            "params"
+          ]
+        },
+        {
+          "name": "fetchOrderById",
+          "startLine": 190,
+          "endLine": 192,
+          "params": [
+            "id"
+          ]
+        },
+        {
+          "name": "fetchStats",
+          "startLine": 195,
+          "endLine": 207,
+          "params": [
+            "params"
+          ]
+        },
+        {
+          "name": "updateOrderStatus",
+          "startLine": 209,
+          "endLine": 215,
+          "params": [
+            "orderId",
+            "status",
+            "adminKey"
+          ]
+        },
+        {
+          "name": "fetchPosts",
+          "startLine": 248,
+          "endLine": 261,
+          "params": [
+            "params"
+          ]
+        },
+        {
+          "name": "fetchPostById",
+          "startLine": 263,
+          "endLine": 266,
+          "params": [
+            "id",
+            "userId"
+          ]
+        },
+        {
+          "name": "createPost",
+          "startLine": 268,
+          "endLine": 283,
+          "params": [
+            "data"
+          ]
+        },
+        {
+          "name": "updatePost",
+          "startLine": 285,
+          "endLine": 290,
+          "params": [
+            "id",
+            "data"
+          ]
+        },
+        {
+          "name": "addComment",
+          "startLine": 292,
+          "endLine": 297,
+          "params": [
+            "postId",
+            "data"
+          ]
+        },
+        {
+          "name": "toggleLike",
+          "startLine": 299,
+          "endLine": 304,
+          "params": [
+            "postId",
+            "userId"
+          ]
+        },
+        {
+          "name": "fetchJoinedPostIds",
+          "startLine": 306,
+          "endLine": 309,
+          "params": [
+            "userId"
+          ]
+        },
+        {
+          "name": "joinPost",
+          "startLine": 311,
+          "endLine": 316,
+          "params": [
+            "postId",
+            "userId"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "register",
+          "line": 6,
+          "isDefault": false
+        },
+        {
+          "name": "login",
+          "line": 13,
+          "isDefault": false
+        },
+        {
+          "name": "updateProfile",
+          "line": 20,
+          "isDefault": false
+        },
+        {
+          "name": "changePassword",
+          "line": 27,
+          "isDefault": false
+        },
+        {
+          "name": "getIdentity",
+          "line": 42,
+          "isDefault": false
+        },
+        {
+          "name": "setIdentity",
+          "line": 48,
+          "isDefault": false
+        },
+        {
+          "name": "clearIdentity",
+          "line": 52,
+          "isDefault": false
+        },
+        {
+          "name": "getAdminKey",
+          "line": 59,
+          "isDefault": false
+        },
+        {
+          "name": "setAdminKey",
+          "line": 63,
+          "isDefault": false
+        },
+        {
+          "name": "verifyAdmin",
+          "line": 133,
+          "isDefault": false
+        },
+        {
+          "name": "fetchProducts",
+          "line": 141,
+          "isDefault": false
+        },
+        {
+          "name": "createProduct",
+          "line": 145,
+          "isDefault": false
+        },
+        {
+          "name": "updateProduct",
+          "line": 153,
+          "isDefault": false
+        },
+        {
+          "name": "deleteProduct",
+          "line": 161,
+          "isDefault": false
+        },
+        {
+          "name": "createOrder",
+          "line": 169,
+          "isDefault": false
+        },
+        {
+          "name": "fetchOrders",
+          "line": 181,
+          "isDefault": false
+        },
+        {
+          "name": "fetchOrderById",
+          "line": 190,
+          "isDefault": false
+        },
+        {
+          "name": "fetchStats",
+          "line": 195,
+          "isDefault": false
+        },
+        {
+          "name": "updateOrderStatus",
+          "line": 209,
+          "isDefault": false
+        },
+        {
+          "name": "fetchPosts",
+          "line": 248,
+          "isDefault": false
+        },
+        {
+          "name": "fetchPostById",
+          "line": 263,
+          "isDefault": false
+        },
+        {
+          "name": "createPost",
+          "line": 268,
+          "isDefault": false
+        },
+        {
+          "name": "updatePost",
+          "line": 285,
+          "isDefault": false
+        },
+        {
+          "name": "addComment",
+          "line": 292,
+          "isDefault": false
+        },
+        {
+          "name": "toggleLike",
+          "line": 299,
+          "isDefault": false
+        },
+        {
+          "name": "fetchJoinedPostIds",
+          "line": 306,
+          "isDefault": false
+        },
+        {
+          "name": "joinPost",
+          "line": 311,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "register",
+          "callee": "request",
+          "lineNumber": 7
+        },
+        {
+          "caller": "register",
+          "callee": "JSON.stringify",
+          "lineNumber": 9
+        },
+        {
+          "caller": "login",
+          "callee": "request",
+          "lineNumber": 14
+        },
+        {
+          "caller": "login",
+          "callee": "JSON.stringify",
+          "lineNumber": 16
+        },
+        {
+          "caller": "updateProfile",
+          "callee": "request",
+          "lineNumber": 21
+        },
+        {
+          "caller": "updateProfile",
+          "callee": "JSON.stringify",
+          "lineNumber": 23
+        },
+        {
+          "caller": "changePassword",
+          "callee": "request",
+          "lineNumber": 28
+        },
+        {
+          "caller": "changePassword",
+          "callee": "JSON.stringify",
+          "lineNumber": 30
+        },
+        {
+          "caller": "getIdentity",
+          "callee": "localStorage.getItem",
+          "lineNumber": 43
+        },
+        {
+          "caller": "getIdentity",
+          "callee": "JSON.parse",
+          "lineNumber": 45
+        },
+        {
+          "caller": "setIdentity",
+          "callee": "localStorage.setItem",
+          "lineNumber": 49
+        },
+        {
+          "caller": "setIdentity",
+          "callee": "JSON.stringify",
+          "lineNumber": 49
+        },
+        {
+          "caller": "clearIdentity",
+          "callee": "localStorage.removeItem",
+          "lineNumber": 53
+        },
+        {
+          "caller": "getAdminKey",
+          "callee": "localStorage.getItem",
+          "lineNumber": 60
+        },
+        {
+          "caller": "setAdminKey",
+          "callee": "localStorage.setItem",
+          "lineNumber": 64
+        },
+        {
+          "caller": "isRetryableError",
+          "callee": "err.message.match",
+          "lineNumber": 74
+        },
+        {
+          "caller": "isRetryableError",
+          "callee": "parseInt",
+          "lineNumber": 76
+        },
+        {
+          "caller": "delay",
+          "callee": "setTimeout",
+          "lineNumber": 84
+        },
+        {
+          "caller": "request",
+          "callee": "fetch",
+          "lineNumber": 98
+        },
+        {
+          "caller": "request",
+          "callee": "res.json().catch",
+          "lineNumber": 101
+        },
+        {
+          "caller": "request",
+          "callee": "res.json",
+          "lineNumber": 101
+        },
+        {
+          "caller": "request",
+          "callee": "console.warn",
+          "lineNumber": 105
+        },
+        {
+          "caller": "request",
+          "callee": "Math.pow",
+          "lineNumber": 105
+        },
+        {
+          "caller": "request",
+          "callee": "delay",
+          "lineNumber": 106
+        },
+        {
+          "caller": "request",
+          "callee": "Math.pow",
+          "lineNumber": 106
+        },
+        {
+          "caller": "request",
+          "callee": "res.json",
+          "lineNumber": 112
+        },
+        {
+          "caller": "request",
+          "callee": "isRetryableError",
+          "lineNumber": 114
+        },
+        {
+          "caller": "request",
+          "callee": "console.warn",
+          "lineNumber": 115
+        },
+        {
+          "caller": "request",
+          "callee": "Math.pow",
+          "lineNumber": 115
+        },
+        {
+          "caller": "request",
+          "callee": "getErrorMessage",
+          "lineNumber": 115
+        },
+        {
+          "caller": "request",
+          "callee": "delay",
+          "lineNumber": 116
+        },
+        {
+          "caller": "request",
+          "callee": "Math.pow",
+          "lineNumber": 116
+        },
+        {
+          "caller": "verifyAdmin",
+          "callee": "request",
+          "lineNumber": 134
+        },
+        {
+          "caller": "fetchProducts",
+          "callee": "request",
+          "lineNumber": 142
+        },
+        {
+          "caller": "createProduct",
+          "callee": "request",
+          "lineNumber": 146
+        },
+        {
+          "caller": "createProduct",
+          "callee": "JSON.stringify",
+          "lineNumber": 149
+        },
+        {
+          "caller": "updateProduct",
+          "callee": "request",
+          "lineNumber": 154
+        },
+        {
+          "caller": "updateProduct",
+          "callee": "JSON.stringify",
+          "lineNumber": 157
+        },
+        {
+          "caller": "deleteProduct",
+          "callee": "request",
+          "lineNumber": 162
+        },
+        {
+          "caller": "createOrder",
+          "callee": "request",
+          "lineNumber": 175
+        },
+        {
+          "caller": "createOrder",
+          "callee": "JSON.stringify",
+          "lineNumber": 177
+        },
+        {
+          "caller": "fetchOrders",
+          "callee": "qs.set",
+          "lineNumber": 183
+        },
+        {
+          "caller": "fetchOrders",
+          "callee": "qs.set",
+          "lineNumber": 184
+        },
+        {
+          "caller": "fetchOrders",
+          "callee": "qs.set",
+          "lineNumber": 185
+        },
+        {
+          "caller": "fetchOrders",
+          "callee": "qs.toString",
+          "lineNumber": 186
+        },
+        {
+          "caller": "fetchOrders",
+          "callee": "request",
+          "lineNumber": 187
+        },
+        {
+          "caller": "fetchOrderById",
+          "callee": "request",
+          "lineNumber": 191
+        },
+        {
+          "caller": "fetchStats",
+          "callee": "qs.set",
+          "lineNumber": 202
+        },
+        {
+          "caller": "fetchStats",
+          "callee": "qs.set",
+          "lineNumber": 203
+        },
+        {
+          "caller": "fetchStats",
+          "callee": "String",
+          "lineNumber": 203
+        },
+        {
+          "caller": "fetchStats",
+          "callee": "qs.set",
+          "lineNumber": 204
+        },
+        {
+          "caller": "fetchStats",
+          "callee": "String",
+          "lineNumber": 204
+        },
+        {
+          "caller": "fetchStats",
+          "callee": "qs.toString",
+          "lineNumber": 205
+        },
+        {
+          "caller": "fetchStats",
+          "callee": "request",
+          "lineNumber": 206
+        },
+        {
+          "caller": "updateOrderStatus",
+          "callee": "request",
+          "lineNumber": 210
+        },
+        {
+          "caller": "updateOrderStatus",
+          "callee": "JSON.stringify",
+          "lineNumber": 213
+        },
+        {
+          "caller": "fetchPosts",
+          "callee": "qs.set",
+          "lineNumber": 255
+        },
+        {
+          "caller": "fetchPosts",
+          "callee": "qs.set",
+          "lineNumber": 256
+        },
+        {
+          "caller": "fetchPosts",
+          "callee": "qs.set",
+          "lineNumber": 257
+        },
+        {
+          "caller": "fetchPosts",
+          "callee": "String",
+          "lineNumber": 257
+        },
+        {
+          "caller": "fetchPosts",
+          "callee": "qs.set",
+          "lineNumber": 258
+        },
+        {
+          "caller": "fetchPosts",
+          "callee": "qs.toString",
+          "lineNumber": 259
+        },
+        {
+          "caller": "fetchPosts",
+          "callee": "request",
+          "lineNumber": 260
+        },
+        {
+          "caller": "fetchPostById",
+          "callee": "encodeURIComponent",
+          "lineNumber": 264
+        },
+        {
+          "caller": "fetchPostById",
+          "callee": "request",
+          "lineNumber": 265
+        },
+        {
+          "caller": "createPost",
+          "callee": "request",
+          "lineNumber": 279
+        },
+        {
+          "caller": "createPost",
+          "callee": "JSON.stringify",
+          "lineNumber": 281
+        },
+        {
+          "caller": "updatePost",
+          "callee": "request",
+          "lineNumber": 286
+        },
+        {
+          "caller": "updatePost",
+          "callee": "JSON.stringify",
+          "lineNumber": 288
+        },
+        {
+          "caller": "addComment",
+          "callee": "request",
+          "lineNumber": 293
+        },
+        {
+          "caller": "addComment",
+          "callee": "JSON.stringify",
+          "lineNumber": 295
+        },
+        {
+          "caller": "toggleLike",
+          "callee": "request",
+          "lineNumber": 300
+        },
+        {
+          "caller": "toggleLike",
+          "callee": "JSON.stringify",
+          "lineNumber": 302
+        },
+        {
+          "caller": "fetchJoinedPostIds",
+          "callee": "await request",
+          "lineNumber": 307
+        },
+        {
+          "caller": "fetchJoinedPostIds",
+          "callee": "encodeURIComponent",
+          "lineNumber": 307
+        },
+        {
+          "caller": "joinPost",
+          "callee": "request",
+          "lineNumber": 312
+        },
+        {
+          "caller": "joinPost",
+          "callee": "JSON.stringify",
+          "lineNumber": 314
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 27,
+        "functionCount": 31,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/components/AdminGate.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 67,
+      "nonEmptyLines": 62,
+      "functions": [
+        {
+          "name": "AdminGate",
+          "startLine": 8,
+          "endLine": 67,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "AdminGate",
+          "line": 8,
+          "isDefault": true
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "AdminGate",
+          "callee": "useState",
+          "lineNumber": 9
+        },
+        {
+          "caller": "AdminGate",
+          "callee": "useState",
+          "lineNumber": 10
+        },
+        {
+          "caller": "AdminGate",
+          "callee": "useState",
+          "lineNumber": 11
+        },
+        {
+          "caller": "AdminGate",
+          "callee": "useState",
+          "lineNumber": 12
+        },
+        {
+          "caller": "AdminGate",
+          "callee": "getAdminKey",
+          "lineNumber": 13
+        },
+        {
+          "caller": "AdminGate",
+          "callee": "useEffect",
+          "lineNumber": 15
+        },
+        {
+          "caller": "AdminGate",
+          "callee": "verifyAdmin(saved).then(() => setAuthorized(true)).catch",
+          "lineNumber": 17
+        },
+        {
+          "caller": "AdminGate",
+          "callee": "verifyAdmin(saved).then",
+          "lineNumber": 17
+        },
+        {
+          "caller": "AdminGate",
+          "callee": "verifyAdmin",
+          "lineNumber": 17
+        },
+        {
+          "caller": "AdminGate",
+          "callee": "setAuthorized",
+          "lineNumber": 17
+        },
+        {
+          "caller": "AdminGate",
+          "callee": "console.warn",
+          "lineNumber": 17
+        },
+        {
+          "caller": "handleLogin",
+          "callee": "e.preventDefault",
+          "lineNumber": 22
+        },
+        {
+          "caller": "handleLogin",
+          "callee": "setError",
+          "lineNumber": 23
+        },
+        {
+          "caller": "handleLogin",
+          "callee": "setLoading",
+          "lineNumber": 24
+        },
+        {
+          "caller": "handleLogin",
+          "callee": "verifyAdmin",
+          "lineNumber": 26
+        },
+        {
+          "caller": "handleLogin",
+          "callee": "saveAdminKey",
+          "lineNumber": 27
+        },
+        {
+          "caller": "handleLogin",
+          "callee": "setAuthorized",
+          "lineNumber": 28
+        },
+        {
+          "caller": "handleLogin",
+          "callee": "setError",
+          "lineNumber": 30
+        },
+        {
+          "caller": "handleLogin",
+          "callee": "setLoading",
+          "lineNumber": 32
+        },
+        {
+          "caller": "AdminGate",
+          "callee": "setKey",
+          "lineNumber": 52
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/components/CartPanel.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 119,
+      "nonEmptyLines": 117,
+      "functions": [
+        {
+          "name": "CartPanel",
+          "startLine": 23,
+          "endLine": 119,
+          "params": [
+            "{ cart, products, identity, isDelivery, setIsDelivery, itemsTotal, deliveryFee, totalPrice, onRemove, onAdd, onClear, onConfirm, onUpdateNote, compact }"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "CartPanel",
+          "line": 23,
+          "isDefault": true
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "CartPanel",
+          "callee": "cart.reduce",
+          "lineNumber": 30
+        },
+        {
+          "caller": "CartPanel",
+          "callee": "cart.map",
+          "lineNumber": 48
+        },
+        {
+          "caller": "CartPanel",
+          "callee": "getCartKey",
+          "lineNumber": 49
+        },
+        {
+          "caller": "CartPanel",
+          "callee": "(getItemUnitPrice(item) * item.quantity).toFixed",
+          "lineNumber": 58
+        },
+        {
+          "caller": "CartPanel",
+          "callee": "getItemUnitPrice",
+          "lineNumber": 58
+        },
+        {
+          "caller": "CartPanel",
+          "callee": "onUpdateNote",
+          "lineNumber": 68
+        },
+        {
+          "caller": "CartPanel",
+          "callee": "onRemove",
+          "lineNumber": 75
+        },
+        {
+          "caller": "CartPanel",
+          "callee": "products.find",
+          "lineNumber": 80
+        },
+        {
+          "caller": "CartPanel",
+          "callee": "cart.filter(c => c.id === item.id).reduce",
+          "lineNumber": 81
+        },
+        {
+          "caller": "CartPanel",
+          "callee": "cart.filter",
+          "lineNumber": 81
+        },
+        {
+          "caller": "CartPanel",
+          "callee": "onAdd",
+          "lineNumber": 82
+        },
+        {
+          "caller": "CartPanel",
+          "callee": "(() => {\n                          const p = products.find(p => p.id === item.id);\n                          const totalInCart = cart.filter(c => c.id === item.id).reduce((s, i) => s + i.quantity, 0);\n                          return !p || (p.stock || 0) <= totalInCart;\n                        })",
+          "lineNumber": 85
+        },
+        {
+          "caller": "CartPanel",
+          "callee": "products.find",
+          "lineNumber": 86
+        },
+        {
+          "caller": "CartPanel",
+          "callee": "cart.filter(c => c.id === item.id).reduce",
+          "lineNumber": 87
+        },
+        {
+          "caller": "CartPanel",
+          "callee": "cart.filter",
+          "lineNumber": 87
+        },
+        {
+          "caller": "CartPanel",
+          "callee": "itemsTotal.toFixed",
+          "lineNumber": 102
+        },
+        {
+          "caller": "CartPanel",
+          "callee": "deliveryFee.toFixed",
+          "lineNumber": 103
+        },
+        {
+          "caller": "CartPanel",
+          "callee": "totalPrice.toFixed",
+          "lineNumber": 104
+        },
+        {
+          "caller": "CartPanel",
+          "callee": "setIsDelivery",
+          "lineNumber": 106
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/components/IdentityForm.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 120,
+      "nonEmptyLines": 113,
+      "functions": [
+        {
+          "name": "IdentityForm",
+          "startLine": 11,
+          "endLine": 120,
+          "params": [
+            "{ onSave, onSkip }"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "IdentityForm",
+          "line": 11,
+          "isDefault": true
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "IdentityForm",
+          "callee": "useState",
+          "lineNumber": 12
+        },
+        {
+          "caller": "IdentityForm",
+          "callee": "useState",
+          "lineNumber": 13
+        },
+        {
+          "caller": "IdentityForm",
+          "callee": "useState",
+          "lineNumber": 14
+        },
+        {
+          "caller": "IdentityForm",
+          "callee": "useState",
+          "lineNumber": 15
+        },
+        {
+          "caller": "IdentityForm",
+          "callee": "useState",
+          "lineNumber": 16
+        },
+        {
+          "caller": "IdentityForm",
+          "callee": "useState",
+          "lineNumber": 17
+        },
+        {
+          "caller": "handleSubmit",
+          "callee": "e.preventDefault",
+          "lineNumber": 20
+        },
+        {
+          "caller": "handleSubmit",
+          "callee": "nickname.trim",
+          "lineNumber": 21
+        },
+        {
+          "caller": "handleSubmit",
+          "callee": "dorm.trim",
+          "lineNumber": 22
+        },
+        {
+          "caller": "handleSubmit",
+          "callee": "password.trim",
+          "lineNumber": 23
+        },
+        {
+          "caller": "handleSubmit",
+          "callee": "setError",
+          "lineNumber": 24
+        },
+        {
+          "caller": "handleSubmit",
+          "callee": "setError",
+          "lineNumber": 25
+        },
+        {
+          "caller": "handleSubmit",
+          "callee": "setChecking",
+          "lineNumber": 26
+        },
+        {
+          "caller": "handleSubmit",
+          "callee": "setError",
+          "lineNumber": 27
+        },
+        {
+          "caller": "handleSubmit",
+          "callee": "register",
+          "lineNumber": 30
+        },
+        {
+          "caller": "handleSubmit",
+          "callee": "login",
+          "lineNumber": 32
+        },
+        {
+          "caller": "handleSubmit",
+          "callee": "saveIdentity",
+          "lineNumber": 33
+        },
+        {
+          "caller": "handleSubmit",
+          "callee": "onSave",
+          "lineNumber": 34
+        },
+        {
+          "caller": "handleSubmit",
+          "callee": "setError",
+          "lineNumber": 36
+        },
+        {
+          "caller": "handleSubmit",
+          "callee": "getErrorMessage",
+          "lineNumber": 36
+        },
+        {
+          "caller": "handleSubmit",
+          "callee": "setChecking",
+          "lineNumber": 38
+        },
+        {
+          "caller": "switchMode",
+          "callee": "setMode",
+          "lineNumber": 43
+        },
+        {
+          "caller": "switchMode",
+          "callee": "setError",
+          "lineNumber": 44
+        },
+        {
+          "caller": "switchMode",
+          "callee": "setPassword",
+          "lineNumber": 45
+        },
+        {
+          "caller": "IdentityForm",
+          "callee": "switchMode",
+          "lineNumber": 65
+        },
+        {
+          "caller": "IdentityForm",
+          "callee": "switchMode",
+          "lineNumber": 69
+        },
+        {
+          "caller": "IdentityForm",
+          "callee": "setNickname",
+          "lineNumber": 80
+        },
+        {
+          "caller": "IdentityForm",
+          "callee": "setError",
+          "lineNumber": 80
+        },
+        {
+          "caller": "IdentityForm",
+          "callee": "setDorm",
+          "lineNumber": 91
+        },
+        {
+          "caller": "IdentityForm",
+          "callee": "setPassword",
+          "lineNumber": 102
+        },
+        {
+          "caller": "IdentityForm",
+          "callee": "setError",
+          "lineNumber": 102
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/components/OrderHistory.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 196,
+      "nonEmptyLines": 187,
+      "functions": [
+        {
+          "name": "OrderHistory",
+          "startLine": 13,
+          "endLine": 196,
+          "params": [
+            "{ identity, onClose, onReorder }"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "OrderHistory",
+          "line": 13,
+          "isDefault": true
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "OrderHistory",
+          "callee": "useState",
+          "lineNumber": 14
+        },
+        {
+          "caller": "OrderHistory",
+          "callee": "useState",
+          "lineNumber": 15
+        },
+        {
+          "caller": "OrderHistory",
+          "callee": "useState",
+          "lineNumber": 16
+        },
+        {
+          "caller": "OrderHistory",
+          "callee": "useState",
+          "lineNumber": 17
+        },
+        {
+          "caller": "OrderHistory",
+          "callee": "useState",
+          "lineNumber": 20
+        },
+        {
+          "caller": "OrderHistory",
+          "callee": "useState",
+          "lineNumber": 21
+        },
+        {
+          "caller": "OrderHistory",
+          "callee": "useState",
+          "lineNumber": 22
+        },
+        {
+          "caller": "OrderHistory",
+          "callee": "useState",
+          "lineNumber": 23
+        },
+        {
+          "caller": "OrderHistory",
+          "callee": "useState",
+          "lineNumber": 24
+        },
+        {
+          "caller": "OrderHistory",
+          "callee": "useEffect",
+          "lineNumber": 27
+        },
+        {
+          "caller": "OrderHistory",
+          "callee": "fetchOrders({ nickname: identity.nickname, dorm: identity.dorm })\n      .then(setOrders)\n      .catch(err => console.warn('Failed to load order history:', err))\n      .finally",
+          "lineNumber": 28
+        },
+        {
+          "caller": "OrderHistory",
+          "callee": "fetchOrders({ nickname: identity.nickname, dorm: identity.dorm })\n      .then(setOrders)\n      .catch",
+          "lineNumber": 28
+        },
+        {
+          "caller": "OrderHistory",
+          "callee": "fetchOrders({ nickname: identity.nickname, dorm: identity.dorm })\n      .then",
+          "lineNumber": 28
+        },
+        {
+          "caller": "OrderHistory",
+          "callee": "fetchOrders",
+          "lineNumber": 28
+        },
+        {
+          "caller": "OrderHistory",
+          "callee": "console.warn",
+          "lineNumber": 30
+        },
+        {
+          "caller": "OrderHistory",
+          "callee": "setLoading",
+          "lineNumber": 31
+        },
+        {
+          "caller": "OrderHistory",
+          "callee": "useEffect",
+          "lineNumber": 35
+        },
+        {
+          "caller": "OrderHistory",
+          "callee": "setInterval",
+          "lineNumber": 36
+        },
+        {
+          "caller": "OrderHistory",
+          "callee": "fetchOrders({ nickname: identity.nickname, dorm: identity.dorm })\n        .then(newOrders => {\n          setOrders(prev => {\n            const prevMap = new Map(prev.map(o => [o.id, o.status]));\n            const changed = new Set<string>();\n            for (const o of newOrders) {\n              if (prevMap.has(o.id) && prevMap.get(o.id) !== o.status) {\n                changed.add(o.id);\n              }\n            }\n            if (changed.size > 0) {\n              setChangedIds(changed);\n              setTimeout(() => setChangedIds(new Set()), 5000);\n            }\n            return newOrders;\n          });\n        })\n        .catch",
+          "lineNumber": 37
+        },
+        {
+          "caller": "OrderHistory",
+          "callee": "fetchOrders({ nickname: identity.nickname, dorm: identity.dorm })\n        .then",
+          "lineNumber": 37
+        },
+        {
+          "caller": "OrderHistory",
+          "callee": "fetchOrders",
+          "lineNumber": 37
+        },
+        {
+          "caller": "OrderHistory",
+          "callee": "setOrders",
+          "lineNumber": 39
+        },
+        {
+          "caller": "OrderHistory",
+          "callee": "prev.map",
+          "lineNumber": 40
+        },
+        {
+          "caller": "OrderHistory",
+          "callee": "prevMap.has",
+          "lineNumber": 43
+        },
+        {
+          "caller": "OrderHistory",
+          "callee": "prevMap.get",
+          "lineNumber": 43
+        },
+        {
+          "caller": "OrderHistory",
+          "callee": "changed.add",
+          "lineNumber": 44
+        },
+        {
+          "caller": "OrderHistory",
+          "callee": "setChangedIds",
+          "lineNumber": 48
+        },
+        {
+          "caller": "OrderHistory",
+          "callee": "setTimeout",
+          "lineNumber": 49
+        },
+        {
+          "caller": "OrderHistory",
+          "callee": "setChangedIds",
+          "lineNumber": 49
+        },
+        {
+          "caller": "OrderHistory",
+          "callee": "console.warn",
+          "lineNumber": 54
+        },
+        {
+          "caller": "OrderHistory",
+          "callee": "clearInterval",
+          "lineNumber": 56
+        },
+        {
+          "caller": "handleTrack",
+          "callee": "e.preventDefault",
+          "lineNumber": 60
+        },
+        {
+          "caller": "handleTrack",
+          "callee": "trackId.trim",
+          "lineNumber": 61
+        },
+        {
+          "caller": "handleTrack",
+          "callee": "setTrackLoading",
+          "lineNumber": 63
+        },
+        {
+          "caller": "handleTrack",
+          "callee": "setTrackError",
+          "lineNumber": 64
+        },
+        {
+          "caller": "handleTrack",
+          "callee": "fetchOrderById",
+          "lineNumber": 66
+        },
+        {
+          "caller": "handleTrack",
+          "callee": "setTrackedOrder",
+          "lineNumber": 67
+        },
+        {
+          "caller": "handleTrack",
+          "callee": "setTrackError",
+          "lineNumber": 69
+        },
+        {
+          "caller": "handleTrack",
+          "callee": "getErrorMessage",
+          "lineNumber": 69
+        },
+        {
+          "caller": "handleTrack",
+          "callee": "setTrackedOrder",
+          "lineNumber": 70
+        },
+        {
+          "caller": "handleTrack",
+          "callee": "setTrackLoading",
+          "lineNumber": 72
+        },
+        {
+          "caller": "OrderHistory",
+          "callee": "setShowTracker",
+          "lineNumber": 85
+        },
+        {
+          "caller": "OrderHistory",
+          "callee": "setTrackId",
+          "lineNumber": 99
+        },
+        {
+          "caller": "OrderHistory",
+          "callee": "trackedOrder.id.slice",
+          "lineNumber": 115
+        },
+        {
+          "caller": "OrderHistory",
+          "callee": "trackedOrder.items.map",
+          "lineNumber": 120
+        },
+        {
+          "caller": "OrderHistory",
+          "callee": "(getItemUnitPrice(item) * item.quantity).toFixed",
+          "lineNumber": 123
+        },
+        {
+          "caller": "OrderHistory",
+          "callee": "getItemUnitPrice",
+          "lineNumber": 123
+        },
+        {
+          "caller": "OrderHistory",
+          "callee": "trackedOrder.totalPrice.toFixed",
+          "lineNumber": 128
+        },
+        {
+          "caller": "OrderHistory",
+          "callee": "new Date(trackedOrder.createdAt).toLocaleString",
+          "lineNumber": 131
+        },
+        {
+          "caller": "OrderHistory",
+          "callee": "orders.map",
+          "lineNumber": 150
+        },
+        {
+          "caller": "OrderHistory",
+          "callee": "changedIds.has",
+          "lineNumber": 151
+        },
+        {
+          "caller": "OrderHistory",
+          "callee": "setExpandedId",
+          "lineNumber": 152
+        },
+        {
+          "caller": "OrderHistory",
+          "callee": "order.totalPrice.toFixed",
+          "lineNumber": 160
+        },
+        {
+          "caller": "OrderHistory",
+          "callee": "order.items.map(i => `${i.name}x${i.quantity}`).join",
+          "lineNumber": 163
+        },
+        {
+          "caller": "OrderHistory",
+          "callee": "order.items.map",
+          "lineNumber": 163
+        },
+        {
+          "caller": "OrderHistory",
+          "callee": "new Date(order.createdAt).toLocaleString",
+          "lineNumber": 167
+        },
+        {
+          "caller": "OrderHistory",
+          "callee": "order.items.map",
+          "lineNumber": 173
+        },
+        {
+          "caller": "OrderHistory",
+          "callee": "(getItemUnitPrice(item) * item.quantity).toFixed",
+          "lineNumber": 176
+        },
+        {
+          "caller": "OrderHistory",
+          "callee": "getItemUnitPrice",
+          "lineNumber": 176
+        },
+        {
+          "caller": "OrderHistory",
+          "callee": "order.totalPrice.toFixed",
+          "lineNumber": 181
+        },
+        {
+          "caller": "OrderHistory",
+          "callee": "onReorder",
+          "lineNumber": 184
+        }
+      ],
+      "metrics": {
+        "importCount": 3,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/components/ProductCard.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 76,
+      "nonEmptyLines": 69,
+      "functions": [
+        {
+          "name": "ProductCard",
+          "startLine": 12,
+          "endLine": 76,
+          "params": [
+            "{ product, onAdd, quantityInCart, isPopular }"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "ProductCard",
+          "line": 12,
+          "isDefault": true
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "ProductCard",
+          "callee": "useState",
+          "lineNumber": 13
+        },
+        {
+          "caller": "ProductCard",
+          "callee": "useState",
+          "lineNumber": 14
+        },
+        {
+          "caller": "ProductCard",
+          "callee": "useEffect",
+          "lineNumber": 16
+        },
+        {
+          "caller": "ProductCard",
+          "callee": "setIsBrewing",
+          "lineNumber": 16
+        },
+        {
+          "caller": "ProductCard",
+          "callee": "setIsFreezing",
+          "lineNumber": 16
+        },
+        {
+          "caller": "ProductCard",
+          "callee": "Math.max",
+          "lineNumber": 18
+        },
+        {
+          "caller": "ProductCard",
+          "callee": "setIsBrewing",
+          "lineNumber": 51
+        },
+        {
+          "caller": "ProductCard",
+          "callee": "setIsFreezing",
+          "lineNumber": 58
+        },
+        {
+          "caller": "ProductCard",
+          "callee": "onAdd",
+          "lineNumber": 67
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/components/ProfileForm.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 109,
+      "nonEmptyLines": 103,
+      "functions": [
+        {
+          "name": "ProfileForm",
+          "startLine": 12,
+          "endLine": 109,
+          "params": [
+            "{ identity, onSave, onClose }"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "ProfileForm",
+          "line": 12,
+          "isDefault": true
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "ProfileForm",
+          "callee": "useState",
+          "lineNumber": 13
+        },
+        {
+          "caller": "ProfileForm",
+          "callee": "useState",
+          "lineNumber": 14
+        },
+        {
+          "caller": "ProfileForm",
+          "callee": "useState",
+          "lineNumber": 15
+        },
+        {
+          "caller": "ProfileForm",
+          "callee": "useState",
+          "lineNumber": 16
+        },
+        {
+          "caller": "ProfileForm",
+          "callee": "useState",
+          "lineNumber": 17
+        },
+        {
+          "caller": "ProfileForm",
+          "callee": "useState",
+          "lineNumber": 18
+        },
+        {
+          "caller": "handleSaveInfo",
+          "callee": "e.preventDefault",
+          "lineNumber": 21
+        },
+        {
+          "caller": "handleSaveInfo",
+          "callee": "dorm.trim",
+          "lineNumber": 22
+        },
+        {
+          "caller": "handleSaveInfo",
+          "callee": "setError",
+          "lineNumber": 22
+        },
+        {
+          "caller": "handleSaveInfo",
+          "callee": "setSaving",
+          "lineNumber": 23
+        },
+        {
+          "caller": "handleSaveInfo",
+          "callee": "setError",
+          "lineNumber": 23
+        },
+        {
+          "caller": "handleSaveInfo",
+          "callee": "setSuccess",
+          "lineNumber": 23
+        },
+        {
+          "caller": "handleSaveInfo",
+          "callee": "updateProfile",
+          "lineNumber": 25
+        },
+        {
+          "caller": "handleSaveInfo",
+          "callee": "dorm.trim",
+          "lineNumber": 25
+        },
+        {
+          "caller": "handleSaveInfo",
+          "callee": "saveIdentity",
+          "lineNumber": 26
+        },
+        {
+          "caller": "handleSaveInfo",
+          "callee": "dorm.trim",
+          "lineNumber": 26
+        },
+        {
+          "caller": "handleSaveInfo",
+          "callee": "onSave",
+          "lineNumber": 27
+        },
+        {
+          "caller": "handleSaveInfo",
+          "callee": "dorm.trim",
+          "lineNumber": 27
+        },
+        {
+          "caller": "handleSaveInfo",
+          "callee": "setSuccess",
+          "lineNumber": 28
+        },
+        {
+          "caller": "handleSaveInfo",
+          "callee": "setTimeout",
+          "lineNumber": 29
+        },
+        {
+          "caller": "handleSaveInfo",
+          "callee": "setSuccess",
+          "lineNumber": 29
+        },
+        {
+          "caller": "handleSaveInfo",
+          "callee": "setError",
+          "lineNumber": 31
+        },
+        {
+          "caller": "handleSaveInfo",
+          "callee": "getErrorMessage",
+          "lineNumber": 31
+        },
+        {
+          "caller": "handleSaveInfo",
+          "callee": "setSaving",
+          "lineNumber": 32
+        },
+        {
+          "caller": "handleChangePwd",
+          "callee": "e.preventDefault",
+          "lineNumber": 36
+        },
+        {
+          "caller": "handleChangePwd",
+          "callee": "setError",
+          "lineNumber": 37
+        },
+        {
+          "caller": "handleChangePwd",
+          "callee": "setSaving",
+          "lineNumber": 38
+        },
+        {
+          "caller": "handleChangePwd",
+          "callee": "setError",
+          "lineNumber": 38
+        },
+        {
+          "caller": "handleChangePwd",
+          "callee": "setSuccess",
+          "lineNumber": 38
+        },
+        {
+          "caller": "handleChangePwd",
+          "callee": "changePassword",
+          "lineNumber": 40
+        },
+        {
+          "caller": "handleChangePwd",
+          "callee": "setSuccess",
+          "lineNumber": 41
+        },
+        {
+          "caller": "handleChangePwd",
+          "callee": "setPassword",
+          "lineNumber": 42
+        },
+        {
+          "caller": "handleChangePwd",
+          "callee": "setNewPassword",
+          "lineNumber": 42
+        },
+        {
+          "caller": "handleChangePwd",
+          "callee": "setTimeout",
+          "lineNumber": 43
+        },
+        {
+          "caller": "handleChangePwd",
+          "callee": "setSuccess",
+          "lineNumber": 43
+        },
+        {
+          "caller": "handleChangePwd",
+          "callee": "setError",
+          "lineNumber": 45
+        },
+        {
+          "caller": "handleChangePwd",
+          "callee": "getErrorMessage",
+          "lineNumber": 45
+        },
+        {
+          "caller": "handleChangePwd",
+          "callee": "setSaving",
+          "lineNumber": 46
+        },
+        {
+          "caller": "ProfileForm",
+          "callee": "setDorm",
+          "lineNumber": 69
+        },
+        {
+          "caller": "ProfileForm",
+          "callee": "setPassword",
+          "lineNumber": 74
+        },
+        {
+          "caller": "ProfileForm",
+          "callee": "setPassword",
+          "lineNumber": 92
+        },
+        {
+          "caller": "ProfileForm",
+          "callee": "setNewPassword",
+          "lineNumber": 97
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/components/SquarePanel.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 372,
+      "nonEmptyLines": 344,
+      "functions": [
+        {
+          "name": "SquarePanel",
+          "startLine": 20,
+          "endLine": 372,
+          "params": [
+            "{ identity }"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "SquarePanel",
+          "line": 20,
+          "isDefault": true
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "SquarePanel",
+          "callee": "useState",
+          "lineNumber": 21
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "useState",
+          "lineNumber": 22
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "useState",
+          "lineNumber": 23
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "useRef",
+          "lineNumber": 24
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "useState",
+          "lineNumber": 25
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "useState",
+          "lineNumber": 26
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "useState",
+          "lineNumber": 27
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "useState",
+          "lineNumber": 30
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "useState",
+          "lineNumber": 31
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "useState",
+          "lineNumber": 32
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "useState",
+          "lineNumber": 33
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "useState",
+          "lineNumber": 34
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "useState",
+          "lineNumber": 35
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "useState",
+          "lineNumber": 36
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "useState",
+          "lineNumber": 39
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "useState",
+          "lineNumber": 40
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "useState",
+          "lineNumber": 43
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "useCallback",
+          "lineNumber": 45
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "setLoading",
+          "lineNumber": 46
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "fetchPosts({ type: activeTab, sort }).then(r => setPosts(r.posts as Post[])).catch(err => console.warn('Failed to load posts:', err)).finally",
+          "lineNumber": 47
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "fetchPosts({ type: activeTab, sort }).then(r => setPosts(r.posts as Post[])).catch",
+          "lineNumber": 47
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "fetchPosts({ type: activeTab, sort }).then",
+          "lineNumber": 47
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "fetchPosts",
+          "lineNumber": 47
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "setPosts",
+          "lineNumber": 47
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "console.warn",
+          "lineNumber": 47
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "setLoading",
+          "lineNumber": 48
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "fetchJoinedPostIds(identity.nickname).then(ids => setJoinedPostIds(new Set(ids))).catch",
+          "lineNumber": 52
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "fetchJoinedPostIds(identity.nickname).then",
+          "lineNumber": 52
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "fetchJoinedPostIds",
+          "lineNumber": 52
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "setJoinedPostIds",
+          "lineNumber": 52
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "useEffect",
+          "lineNumber": 55
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "loadPosts",
+          "lineNumber": 55
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "useEffect",
+          "lineNumber": 56
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "setInterval",
+          "lineNumber": 56
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "clearInterval",
+          "lineNumber": 56
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "useEffect",
+          "lineNumber": 59
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "fetchJoinedPostIds(identity.nickname).then(ids => setJoinedPostIds(new Set(ids))).catch",
+          "lineNumber": 60
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "fetchJoinedPostIds(identity.nickname).then",
+          "lineNumber": 60
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "fetchJoinedPostIds",
+          "lineNumber": 60
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "setJoinedPostIds",
+          "lineNumber": 60
+        },
+        {
+          "caller": "handleCreate",
+          "callee": "e.preventDefault",
+          "lineNumber": 64
+        },
+        {
+          "caller": "handleCreate",
+          "callee": "createTitle.trim",
+          "lineNumber": 65
+        },
+        {
+          "caller": "handleCreate",
+          "callee": "setCreateError",
+          "lineNumber": 65
+        },
+        {
+          "caller": "handleCreate",
+          "callee": "createPost",
+          "lineNumber": 67
+        },
+        {
+          "caller": "handleCreate",
+          "callee": "createTitle.trim",
+          "lineNumber": 70
+        },
+        {
+          "caller": "handleCreate",
+          "callee": "createContent.trim",
+          "lineNumber": 71
+        },
+        {
+          "caller": "handleCreate",
+          "callee": "createPrice.trim",
+          "lineNumber": 72
+        },
+        {
+          "caller": "handleCreate",
+          "callee": "parseInt",
+          "lineNumber": 74
+        },
+        {
+          "caller": "handleCreate",
+          "callee": "setShowCreate",
+          "lineNumber": 77
+        },
+        {
+          "caller": "handleCreate",
+          "callee": "setCreateTitle",
+          "lineNumber": 78
+        },
+        {
+          "caller": "handleCreate",
+          "callee": "setCreateContent",
+          "lineNumber": 78
+        },
+        {
+          "caller": "handleCreate",
+          "callee": "setCreatePrice",
+          "lineNumber": 78
+        },
+        {
+          "caller": "handleCreate",
+          "callee": "setCreateMaxPlayers",
+          "lineNumber": 78
+        },
+        {
+          "caller": "handleCreate",
+          "callee": "setCreateAnonymous",
+          "lineNumber": 79
+        },
+        {
+          "caller": "handleCreate",
+          "callee": "setCreateError",
+          "lineNumber": 79
+        },
+        {
+          "caller": "handleCreate",
+          "callee": "loadPosts",
+          "lineNumber": 80
+        },
+        {
+          "caller": "handleCreate",
+          "callee": "setCreateError",
+          "lineNumber": 81
+        },
+        {
+          "caller": "handleCreate",
+          "callee": "getErrorMessage",
+          "lineNumber": 81
+        },
+        {
+          "caller": "handleClaim",
+          "callee": "updatePost",
+          "lineNumber": 86
+        },
+        {
+          "caller": "handleClaim",
+          "callee": "loadPosts",
+          "lineNumber": 87
+        },
+        {
+          "caller": "handleClaim",
+          "callee": "alert",
+          "lineNumber": 88
+        },
+        {
+          "caller": "handleClaim",
+          "callee": "getErrorMessage",
+          "lineNumber": 88
+        },
+        {
+          "caller": "handleDone",
+          "callee": "updatePost",
+          "lineNumber": 93
+        },
+        {
+          "caller": "handleDone",
+          "callee": "loadPosts",
+          "lineNumber": 94
+        },
+        {
+          "caller": "handleDone",
+          "callee": "alert",
+          "lineNumber": 95
+        },
+        {
+          "caller": "handleDone",
+          "callee": "getErrorMessage",
+          "lineNumber": 95
+        },
+        {
+          "caller": "handleLike",
+          "callee": "toggleLike",
+          "lineNumber": 100
+        },
+        {
+          "caller": "updateCount",
+          "callee": "prev.map",
+          "lineNumber": 101
+        },
+        {
+          "caller": "handleLike",
+          "callee": "setPosts",
+          "lineNumber": 102
+        },
+        {
+          "caller": "handleLike",
+          "callee": "setSelectedPost",
+          "lineNumber": 103
+        },
+        {
+          "caller": "handleLike",
+          "callee": "setLikedPostIds",
+          "lineNumber": 104
+        },
+        {
+          "caller": "handleLike",
+          "callee": "next.add",
+          "lineNumber": 106
+        },
+        {
+          "caller": "handleLike",
+          "callee": "next.delete",
+          "lineNumber": 106
+        },
+        {
+          "caller": "handleComment",
+          "callee": "commentText.trim",
+          "lineNumber": 113
+        },
+        {
+          "caller": "handleComment",
+          "callee": "addComment",
+          "lineNumber": 115
+        },
+        {
+          "caller": "handleComment",
+          "callee": "commentText.trim",
+          "lineNumber": 115
+        },
+        {
+          "caller": "handleComment",
+          "callee": "setCommentText",
+          "lineNumber": 116
+        },
+        {
+          "caller": "handleComment",
+          "callee": "fetchPostById",
+          "lineNumber": 118
+        },
+        {
+          "caller": "handleComment",
+          "callee": "setSelectedPost",
+          "lineNumber": 119
+        },
+        {
+          "caller": "handleComment",
+          "callee": "alert",
+          "lineNumber": 120
+        },
+        {
+          "caller": "handleComment",
+          "callee": "getErrorMessage",
+          "lineNumber": 120
+        },
+        {
+          "caller": "handleJoin",
+          "callee": "joinPost",
+          "lineNumber": 125
+        },
+        {
+          "caller": "handleJoin",
+          "callee": "setJoinedPostIds",
+          "lineNumber": 126
+        },
+        {
+          "caller": "handleJoin",
+          "callee": "new Set(prev).add",
+          "lineNumber": 126
+        },
+        {
+          "caller": "handleJoin",
+          "callee": "loadPosts",
+          "lineNumber": 127
+        },
+        {
+          "caller": "handleJoin",
+          "callee": "alert",
+          "lineNumber": 128
+        },
+        {
+          "caller": "handleJoin",
+          "callee": "getErrorMessage",
+          "lineNumber": 128
+        },
+        {
+          "caller": "openDetail",
+          "callee": "fetchPostById",
+          "lineNumber": 133
+        },
+        {
+          "caller": "openDetail",
+          "callee": "setSelectedPost",
+          "lineNumber": 134
+        },
+        {
+          "caller": "openDetail",
+          "callee": "setJoinedPostIds",
+          "lineNumber": 137
+        },
+        {
+          "caller": "openDetail",
+          "callee": "new Set(prev).add",
+          "lineNumber": 137
+        },
+        {
+          "caller": "openDetail",
+          "callee": "setSelectedPost",
+          "lineNumber": 139
+        },
+        {
+          "caller": "formatTime",
+          "callee": "now.getTime",
+          "lineNumber": 145
+        },
+        {
+          "caller": "formatTime",
+          "callee": "d.getTime",
+          "lineNumber": 145
+        },
+        {
+          "caller": "formatTime",
+          "callee": "Math.floor",
+          "lineNumber": 147
+        },
+        {
+          "caller": "formatTime",
+          "callee": "Math.floor",
+          "lineNumber": 148
+        },
+        {
+          "caller": "formatTime",
+          "callee": "d.getMonth",
+          "lineNumber": 149
+        },
+        {
+          "caller": "formatTime",
+          "callee": "d.getDate",
+          "lineNumber": 149
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "SQUARE_TABS.map",
+          "lineNumber": 158
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "setActiveTab",
+          "lineNumber": 162
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "setSort",
+          "lineNumber": 169
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "setCreateType",
+          "lineNumber": 179
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "setShowCreate",
+          "lineNumber": 179
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "posts.map",
+          "lineNumber": 197
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "openDetail",
+          "lineNumber": 199
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "TYPE_COLORS[post.type]?.split",
+          "lineNumber": 201
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "TYPE_COLORS[post.type]?.split",
+          "lineNumber": 202
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "TYPE_COLORS[post.type]?.split",
+          "lineNumber": 203
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "TYPE_COLORS[post.type]?.split",
+          "lineNumber": 204
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "TYPE_COLORS[post.type]?.split",
+          "lineNumber": 205
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "joinedPostIds.has",
+          "lineNumber": 212
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "formatTime",
+          "lineNumber": 219
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "likedPostIds.has",
+          "lineNumber": 220
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "likedPostIds.has",
+          "lineNumber": 220
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "setCreateType",
+          "lineNumber": 231
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "setShowCreate",
+          "lineNumber": 231
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "setShowCreate",
+          "lineNumber": 239
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "SQUARE_TABS.map",
+          "lineNumber": 245
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "setCreateType",
+          "lineNumber": 246
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "setCreateTitle",
+          "lineNumber": 252
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "setCreateError",
+          "lineNumber": 252
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "setCreateContent",
+          "lineNumber": 255
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "setCreatePrice",
+          "lineNumber": 259
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "setCreateMaxPlayers",
+          "lineNumber": 263
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "setCreateAnonymous",
+          "lineNumber": 268
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "setShowCreate",
+          "lineNumber": 274
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "setSelectedPost",
+          "lineNumber": 287
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "TYPE_COLORS[selectedPost.type]?.split",
+          "lineNumber": 291
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "TYPE_COLORS[selectedPost.type]?.split",
+          "lineNumber": 292
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "TYPE_COLORS[selectedPost.type]?.split",
+          "lineNumber": 293
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "TYPE_COLORS[selectedPost.type]?.split",
+          "lineNumber": 294
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "TYPE_COLORS[selectedPost.type]?.split",
+          "lineNumber": 295
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "formatTime",
+          "lineNumber": 302
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "setSelectedPost",
+          "lineNumber": 305
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "handleLike",
+          "lineNumber": 313
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "likedPostIds.has",
+          "lineNumber": 314
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "likedPostIds.has",
+          "lineNumber": 315
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "handleClaim",
+          "lineNumber": 321
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "handleDone",
+          "lineNumber": 324
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "joinedPostIds.has",
+          "lineNumber": 327
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "handleJoin",
+          "lineNumber": 330
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "selectedPost.comments.map",
+          "lineNumber": 339
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "formatTime",
+          "lineNumber": 347
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "setCommentText",
+          "lineNumber": 358
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "handleComment",
+          "lineNumber": 359
+        },
+        {
+          "caller": "SquarePanel",
+          "callee": "handleComment",
+          "lineNumber": 361
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/main.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 13,
+      "nonEmptyLines": 12,
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    }
+  ]
+}

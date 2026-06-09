@@ -1,0 +1,273 @@
+{
+  "nodes": [
+    {
+      "id": "file:.understand-anything/.understandignore",
+      "type": "file",
+      "name": ".understandignore",
+      "filePath": ".understand-anything/.understandignore",
+      "summary": "代码分析忽略规则文件，定义分析时排除的文件和目录模式。",
+      "tags": [
+        "configuration",
+        "analysis",
+        "ignore-patterns"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:.understand-anything/config.json",
+      "type": "config",
+      "name": "config.json",
+      "filePath": ".understand-anything/config.json",
+      "summary": "Understand-Anything 分析配置，指定输出语言等选项。",
+      "tags": [
+        "configuration",
+        "analysis"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:eslint.config.mjs",
+      "type": "file",
+      "name": "eslint.config.mjs",
+      "filePath": "eslint.config.mjs",
+      "summary": "ESLint 配置文件，定义 TypeScript 和 React 代码检查规则。",
+      "tags": [
+        "configuration",
+        "linting",
+        "code-quality"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/__tests__/ErrorBoundary.test.tsx",
+      "type": "file",
+      "name": "ErrorBoundary.test.tsx",
+      "filePath": "src/__tests__/ErrorBoundary.test.tsx",
+      "summary": "ErrorBoundary 组件测试，验证错误捕获和回退 UI 渲染逻辑。",
+      "tags": [
+        "test",
+        "component-test",
+        "error-handling"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/__tests__/ErrorBoundary.test.tsx:BrokenComponent",
+      "type": "function",
+      "name": "BrokenComponent",
+      "filePath": "src/__tests__/ErrorBoundary.test.tsx",
+      "lineRange": [
+        7,
+        12
+      ],
+      "summary": "测试用组件，可控制是否抛出错误以验证 ErrorBoundary 行为。",
+      "tags": [
+        "test",
+        "mock",
+        "component"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/components/AnalyticsPanel.tsx",
+      "type": "file",
+      "name": "AnalyticsPanel.tsx",
+      "filePath": "src/components/AnalyticsPanel.tsx",
+      "summary": "数据分析面板组件，可视化展示订单统计图表和趋势。",
+      "tags": [
+        "component",
+        "analytics",
+        "charts"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/components/AnalyticsPanel.tsx:AnalyticsPanel",
+      "type": "function",
+      "name": "AnalyticsPanel",
+      "filePath": "src/components/AnalyticsPanel.tsx",
+      "lineRange": [
+        8,
+        128
+      ],
+      "summary": "数据分析面板，支持日/周/月维度切换和数据图表可视化。",
+      "tags": [
+        "component",
+        "analytics",
+        "dashboard"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/components/BarChart.tsx",
+      "type": "file",
+      "name": "BarChart.tsx",
+      "filePath": "src/components/BarChart.tsx",
+      "summary": "柱状图组件，基于 Canvas 渲染数据可视化图表。",
+      "tags": [
+        "component",
+        "charts",
+        "visualization"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/components/BarChart.tsx:BarChart",
+      "type": "function",
+      "name": "BarChart",
+      "filePath": "src/components/BarChart.tsx",
+      "lineRange": [
+        7,
+        89
+      ],
+      "summary": "可复用柱状图组件，基于 Canvas API 渲染响应式数据图表。",
+      "tags": [
+        "component",
+        "chart",
+        "canvas"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/components/ErrorBoundary.tsx",
+      "type": "file",
+      "name": "ErrorBoundary.tsx",
+      "filePath": "src/components/ErrorBoundary.tsx",
+      "summary": "React 错误边界组件，捕获子组件渲染异常并展示友好的错误回退界面。",
+      "tags": [
+        "component",
+        "error-handling",
+        "boundary"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/components/ErrorBoundary.tsx:ErrorBoundary",
+      "type": "class",
+      "name": "ErrorBoundary",
+      "filePath": "src/components/ErrorBoundary.tsx",
+      "lineRange": [
+        14,
+        66
+      ],
+      "summary": "React 错误边界，捕获子组件异常并渲染友好的错误回退界面。",
+      "tags": [
+        "component",
+        "error-handling",
+        "boundary"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/index.css",
+      "type": "file",
+      "name": "index.css",
+      "filePath": "src/index.css",
+      "summary": "全局样式文件，引入 Tailwind CSS v4 和自定义滚动条隐藏工具类。",
+      "tags": [
+        "stylesheet",
+        "tailwind",
+        "global"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:vite.config.ts",
+      "type": "file",
+      "name": "vite.config.ts",
+      "filePath": "vite.config.ts",
+      "summary": "Vite 构建配置，设置 API 代理、路径别名和环境变量注入。",
+      "tags": [
+        "configuration",
+        "vite",
+        "build-system"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:vitest.config.ts",
+      "type": "file",
+      "name": "vitest.config.ts",
+      "filePath": "vitest.config.ts",
+      "summary": "Vitest 测试框架配置，设置测试环境和路径别名。",
+      "tags": [
+        "configuration",
+        "testing",
+        "vitest"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src/__tests__/ErrorBoundary.test.tsx",
+      "target": "function:src/__tests__/ErrorBoundary.test.tsx:BrokenComponent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/__tests__/ErrorBoundary.test.tsx",
+      "target": "file:src/components/ErrorBoundary.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/ErrorBoundary.tsx",
+      "target": "file:src/__tests__/ErrorBoundary.test.tsx",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:src/components/AnalyticsPanel.tsx",
+      "target": "function:src/components/AnalyticsPanel.tsx:AnalyticsPanel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/components/AnalyticsPanel.tsx",
+      "target": "function:src/components/AnalyticsPanel.tsx:AnalyticsPanel",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/components/AnalyticsPanel.tsx",
+      "target": "file:src/api.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/AnalyticsPanel.tsx",
+      "target": "file:src/components/BarChart.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/BarChart.tsx",
+      "target": "function:src/components/BarChart.tsx:BarChart",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/components/BarChart.tsx",
+      "target": "function:src/components/BarChart.tsx:BarChart",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/components/ErrorBoundary.tsx",
+      "target": "class:src/components/ErrorBoundary.tsx:ErrorBoundary",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    }
+  ]
+}

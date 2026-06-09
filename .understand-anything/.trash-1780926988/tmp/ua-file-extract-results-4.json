@@ -1,0 +1,173 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 2,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "docker-compose.yml",
+      "language": "yaml",
+      "fileCategory": "infra",
+      "totalLines": 11,
+      "nonEmptyLines": 11,
+      "sections": [
+        {
+          "heading": "version",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "services",
+          "level": 1,
+          "line": 2
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 2
+      }
+    },
+    {
+      "path": "Dockerfile",
+      "language": "dockerfile",
+      "fileCategory": "infra",
+      "totalLines": 25,
+      "nonEmptyLines": 24,
+      "services": [
+        {
+          "name": "build",
+          "image": "node:20",
+          "ports": [],
+          "startLine": 2,
+          "endLine": 11
+        },
+        {
+          "name": "node",
+          "image": "node:20",
+          "ports": [
+            3001
+          ],
+          "startLine": 12,
+          "endLine": 26
+        }
+      ],
+      "steps": [
+        {
+          "name": "FROM node:20 AS build",
+          "startLine": 2,
+          "endLine": 2
+        },
+        {
+          "name": "WORKDIR /app",
+          "startLine": 3,
+          "endLine": 3
+        },
+        {
+          "name": "COPY package*.json ./",
+          "startLine": 4,
+          "endLine": 4
+        },
+        {
+          "name": "RUN npm config set registry https://registry.npmmirror.com",
+          "startLine": 5,
+          "endLine": 5
+        },
+        {
+          "name": "RUN npm ci",
+          "startLine": 6,
+          "endLine": 6
+        },
+        {
+          "name": "COPY . .",
+          "startLine": 7,
+          "endLine": 7
+        },
+        {
+          "name": "RUN npm run build",
+          "startLine": 8,
+          "endLine": 8
+        },
+        {
+          "name": "RUN npx tsc --project tsconfig.server.json",
+          "startLine": 9,
+          "endLine": 9
+        },
+        {
+          "name": "FROM node:20",
+          "startLine": 12,
+          "endLine": 12
+        },
+        {
+          "name": "WORKDIR /app",
+          "startLine": 13,
+          "endLine": 13
+        },
+        {
+          "name": "COPY --from=build /app/dist ./dist",
+          "startLine": 14,
+          "endLine": 14
+        },
+        {
+          "name": "COPY --from=build /app/dist-server ./dist-server",
+          "startLine": 15,
+          "endLine": 15
+        },
+        {
+          "name": "COPY --from=build /app/node_modules ./node_modules",
+          "startLine": 16,
+          "endLine": 16
+        },
+        {
+          "name": "COPY --from=build /app/package*.json ./",
+          "startLine": 17,
+          "endLine": 17
+        },
+        {
+          "name": "RUN node -e \"const p=require('./package.json'); delete p.type; r",
+          "startLine": 19,
+          "endLine": 19
+        },
+        {
+          "name": "RUN mkdir -p /app/data",
+          "startLine": 20,
+          "endLine": 20
+        },
+        {
+          "name": "EXPOSE 3001",
+          "startLine": 21,
+          "endLine": 21
+        },
+        {
+          "name": "ENV NODE_ENV=production",
+          "startLine": 22,
+          "endLine": 22
+        },
+        {
+          "name": "ENV PORT=3001",
+          "startLine": 23,
+          "endLine": 23
+        },
+        {
+          "name": "ENV DB_PATH=/app/data/ordering.db",
+          "startLine": 24,
+          "endLine": 24
+        },
+        {
+          "name": "CMD [\"node\", \"dist-server/server/index.js\"]",
+          "startLine": 25,
+          "endLine": 25
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "serviceCount": 2,
+        "stepCount": 21
+      }
+    }
+  ]
+}

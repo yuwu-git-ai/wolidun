@@ -1,0 +1,1759 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 8,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "src/__tests__/utils.test.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 85,
+      "nonEmptyLines": 67,
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/components/AdminPanel.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 439,
+      "nonEmptyLines": 411,
+      "functions": [
+        {
+          "name": "AdminPanel",
+          "startLine": 17,
+          "endLine": 439,
+          "params": [
+            "{ adminKey }"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "AdminPanel",
+          "line": 17,
+          "isDefault": true
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "AdminPanel",
+          "callee": "useState",
+          "lineNumber": 18
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "useState",
+          "lineNumber": 19
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "useState",
+          "lineNumber": 20
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "useState",
+          "lineNumber": 21
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "useState",
+          "lineNumber": 22
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "useState",
+          "lineNumber": 23
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "useState",
+          "lineNumber": 24
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "useRef",
+          "lineNumber": 25
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "useState",
+          "lineNumber": 26
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "useState",
+          "lineNumber": 29
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "useState",
+          "lineNumber": 30
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "useState",
+          "lineNumber": 33
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "useState",
+          "lineNumber": 34
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "useState",
+          "lineNumber": 35
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "useCallback",
+          "lineNumber": 37
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "fetchOrders().then(setOrders).catch",
+          "lineNumber": 38
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "fetchOrders().then",
+          "lineNumber": 38
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "fetchOrders",
+          "lineNumber": 38
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "console.warn",
+          "lineNumber": 38
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "useCallback",
+          "lineNumber": 41
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "fetchProducts().then(setProducts).catch",
+          "lineNumber": 42
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "fetchProducts().then",
+          "lineNumber": 42
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "fetchProducts",
+          "lineNumber": 42
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "console.warn",
+          "lineNumber": 42
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "useEffect",
+          "lineNumber": 45
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "loadOrders",
+          "lineNumber": 46
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "loadProducts",
+          "lineNumber": 47
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "fetchStats().then(s => { setTodayStats(s.today); }).catch",
+          "lineNumber": 48
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "fetchStats().then",
+          "lineNumber": 48
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "fetchStats",
+          "lineNumber": 48
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "setTodayStats",
+          "lineNumber": 48
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "console.warn",
+          "lineNumber": 48
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "useEffect",
+          "lineNumber": 52
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "setInterval",
+          "lineNumber": 53
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "fetchOrders({ status: 'pending' }).then((rows: Order[]) => {\n        const count = rows.length;\n        if (count > pendingCount && pendingCount > 0) {\n          // New order!\n          setNotified(true);\n          setTitleFlashing(true);\n          if (audioRef.current) audioRef.current.play().catch(err => console.warn('Audio play failed (autoplay policy):', err));\n          try { Notification.requestPermission().then(p => { if (p === 'granted') new Notification('窝里蹲新订单！', { body: `有 ${count} 个待处理订单` }); }); } catch { /* Notification API may not be available */ }\n          setTimeout(() => setNotified(false), 5000);\n        }\n        setPendingCount(count);\n      }).catch",
+          "lineNumber": 54
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "fetchOrders({ status: 'pending' }).then",
+          "lineNumber": 54
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "fetchOrders",
+          "lineNumber": 54
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "setNotified",
+          "lineNumber": 58
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "setTitleFlashing",
+          "lineNumber": 59
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "audioRef.current.play().catch",
+          "lineNumber": 60
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "audioRef.current.play",
+          "lineNumber": 60
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "console.warn",
+          "lineNumber": 60
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "Notification.requestPermission().then",
+          "lineNumber": 61
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "Notification.requestPermission",
+          "lineNumber": 61
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "setTimeout",
+          "lineNumber": 62
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "setNotified",
+          "lineNumber": 62
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "setPendingCount",
+          "lineNumber": 64
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "console.warn",
+          "lineNumber": 65
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "loadOrders",
+          "lineNumber": 67
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "fetchStats().then(s => { setTodayStats(s.today); }).catch",
+          "lineNumber": 68
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "fetchStats().then",
+          "lineNumber": 68
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "fetchStats",
+          "lineNumber": 68
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "setTodayStats",
+          "lineNumber": 68
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "console.warn",
+          "lineNumber": 68
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "clearInterval",
+          "lineNumber": 70
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "useEffect",
+          "lineNumber": 74
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "setInterval",
+          "lineNumber": 78
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "setTimeout",
+          "lineNumber": 82
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "clearInterval",
+          "lineNumber": 82
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "setTitleFlashing",
+          "lineNumber": 82
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "clearInterval",
+          "lineNumber": 83
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "clearTimeout",
+          "lineNumber": 83
+        },
+        {
+          "caller": "handleStatusChange",
+          "callee": "updateOrderStatus",
+          "lineNumber": 88
+        },
+        {
+          "caller": "handleStatusChange",
+          "callee": "loadOrders",
+          "lineNumber": 89
+        },
+        {
+          "caller": "handleStatusChange",
+          "callee": "loadProducts",
+          "lineNumber": 90
+        },
+        {
+          "caller": "handleStatusChange",
+          "callee": "alert",
+          "lineNumber": 92
+        },
+        {
+          "caller": "handleStatusChange",
+          "callee": "getErrorMessage",
+          "lineNumber": 92
+        },
+        {
+          "caller": "resetProductForm",
+          "callee": "setProductForm",
+          "lineNumber": 97
+        },
+        {
+          "caller": "resetProductForm",
+          "callee": "setEditingProduct",
+          "lineNumber": 98
+        },
+        {
+          "caller": "resetProductForm",
+          "callee": "setShowProductForm",
+          "lineNumber": 99
+        },
+        {
+          "caller": "handleProductSubmit",
+          "callee": "e.preventDefault",
+          "lineNumber": 103
+        },
+        {
+          "caller": "handleProductSubmit",
+          "callee": "parseInt",
+          "lineNumber": 104
+        },
+        {
+          "caller": "handleProductSubmit",
+          "callee": "isNaN",
+          "lineNumber": 105
+        },
+        {
+          "caller": "handleProductSubmit",
+          "callee": "alert",
+          "lineNumber": 106
+        },
+        {
+          "caller": "handleProductSubmit",
+          "callee": "parseFloat",
+          "lineNumber": 111
+        },
+        {
+          "caller": "handleProductSubmit",
+          "callee": "updateProduct",
+          "lineNumber": 121
+        },
+        {
+          "caller": "handleProductSubmit",
+          "callee": "createProduct",
+          "lineNumber": 123
+        },
+        {
+          "caller": "handleProductSubmit",
+          "callee": "resetProductForm",
+          "lineNumber": 125
+        },
+        {
+          "caller": "handleProductSubmit",
+          "callee": "loadProducts",
+          "lineNumber": 126
+        },
+        {
+          "caller": "handleProductSubmit",
+          "callee": "alert",
+          "lineNumber": 128
+        },
+        {
+          "caller": "handleProductSubmit",
+          "callee": "getErrorMessage",
+          "lineNumber": 128
+        },
+        {
+          "caller": "handleEditProduct",
+          "callee": "setEditingProduct",
+          "lineNumber": 133
+        },
+        {
+          "caller": "handleEditProduct",
+          "callee": "setProductForm",
+          "lineNumber": 134
+        },
+        {
+          "caller": "handleEditProduct",
+          "callee": "String",
+          "lineNumber": 135
+        },
+        {
+          "caller": "handleEditProduct",
+          "callee": "String",
+          "lineNumber": 136
+        },
+        {
+          "caller": "handleEditProduct",
+          "callee": "setShowProductForm",
+          "lineNumber": 139
+        },
+        {
+          "caller": "handleDeleteProduct",
+          "callee": "confirm",
+          "lineNumber": 143
+        },
+        {
+          "caller": "handleDeleteProduct",
+          "callee": "deleteProduct",
+          "lineNumber": 145
+        },
+        {
+          "caller": "handleDeleteProduct",
+          "callee": "loadProducts",
+          "lineNumber": 146
+        },
+        {
+          "caller": "handleDeleteProduct",
+          "callee": "alert",
+          "lineNumber": 148
+        },
+        {
+          "caller": "handleDeleteProduct",
+          "callee": "getErrorMessage",
+          "lineNumber": 148
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "orders.filter",
+          "lineNumber": 152
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "orders.filter",
+          "lineNumber": 153
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "orders.filter",
+          "lineNumber": 156
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "o.nickname.includes",
+          "lineNumber": 158
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "o.dorm.includes",
+          "lineNumber": 158
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "o.id.includes",
+          "lineNumber": 158
+        },
+        {
+          "caller": "exportCSV",
+          "callee": "orders.map(o => {\n      const items = o.items.map(i => `${i.name}x${i.quantity}`).join(';');\n      return [o.id, o.nickname, o.dorm, o.isDelivery ? '配送' : '自提', `\"${items}\"`, o.totalPrice.toFixed(2), STATUS_LABELS[o.status], new Date(o.createdAt).toLocaleString('zh-CN')].join(',');\n    }).join",
+          "lineNumber": 164
+        },
+        {
+          "caller": "exportCSV",
+          "callee": "orders.map",
+          "lineNumber": 164
+        },
+        {
+          "caller": "exportCSV",
+          "callee": "o.items.map(i => `${i.name}x${i.quantity}`).join",
+          "lineNumber": 165
+        },
+        {
+          "caller": "exportCSV",
+          "callee": "o.items.map",
+          "lineNumber": 165
+        },
+        {
+          "caller": "exportCSV",
+          "callee": "[o.id, o.nickname, o.dorm, o.isDelivery ? '配送' : '自提', `\"${items}\"`, o.totalPrice.toFixed(2), STATUS_LABELS[o.status], new Date(o.createdAt).toLocaleString('zh-CN')].join",
+          "lineNumber": 166
+        },
+        {
+          "caller": "exportCSV",
+          "callee": "o.totalPrice.toFixed",
+          "lineNumber": 166
+        },
+        {
+          "caller": "exportCSV",
+          "callee": "new Date(o.createdAt).toLocaleString",
+          "lineNumber": 166
+        },
+        {
+          "caller": "exportCSV",
+          "callee": "URL.createObjectURL",
+          "lineNumber": 170
+        },
+        {
+          "caller": "exportCSV",
+          "callee": "document.createElement",
+          "lineNumber": 171
+        },
+        {
+          "caller": "exportCSV",
+          "callee": "new Date().toISOString().slice",
+          "lineNumber": 173
+        },
+        {
+          "caller": "exportCSV",
+          "callee": "new Date().toISOString",
+          "lineNumber": 173
+        },
+        {
+          "caller": "exportCSV",
+          "callee": "a.click",
+          "lineNumber": 174
+        },
+        {
+          "caller": "exportCSV",
+          "callee": "URL.revokeObjectURL",
+          "lineNumber": 175
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "todayStats.revenue.toFixed",
+          "lineNumber": 199
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "setTab",
+          "lineNumber": 205
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "setTab",
+          "lineNumber": 210
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "setTab",
+          "lineNumber": 214
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "setTab",
+          "lineNumber": 222
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "setStatusFilter",
+          "lineNumber": 230
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "setSearchQuery",
+          "lineNumber": 238
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "pendingOrders.map",
+          "lineNumber": 261
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "setExpandedOrder",
+          "lineNumber": 264
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "filteredOrders.map",
+          "lineNumber": 275
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "setExpandedOrder",
+          "lineNumber": 278
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "otherOrders.map",
+          "lineNumber": 288
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "setExpandedOrder",
+          "lineNumber": 291
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "resetProductForm",
+          "lineNumber": 313
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "setShowProductForm",
+          "lineNumber": 313
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "resetProductForm",
+          "lineNumber": 322
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "setProductForm",
+          "lineNumber": 326
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "setProductForm",
+          "lineNumber": 329
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "setProductForm",
+          "lineNumber": 331
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "DEFAULT_CATEGORIES.map",
+          "lineNumber": 333
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "setProductForm",
+          "lineNumber": 336
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "setProductForm",
+          "lineNumber": 342
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "items[i].type.startsWith",
+          "lineNumber": 351
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "e.preventDefault",
+          "lineNumber": 352
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "items[i].getAsFile",
+          "lineNumber": 353
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "setProductForm",
+          "lineNumber": 356
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "reader.readAsDataURL",
+          "lineNumber": 357
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "setProductForm",
+          "lineNumber": 368
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "setProductForm",
+          "lineNumber": 370
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "setProductForm",
+          "lineNumber": 374
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "setProductForm",
+          "lineNumber": 379
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "products.map",
+          "lineNumber": 398
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "DEFAULT_CATEGORIES.find",
+          "lineNumber": 414
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "handleEditProduct",
+          "lineNumber": 422
+        },
+        {
+          "caller": "AdminPanel",
+          "callee": "handleDeleteProduct",
+          "lineNumber": 425
+        }
+      ],
+      "metrics": {
+        "importCount": 6,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/components/OrderCard.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 66,
+      "nonEmptyLines": 63,
+      "functions": [
+        {
+          "name": "OrderCard",
+          "startLine": 12,
+          "endLine": 66,
+          "params": [
+            "{ order, expanded, onToggle, onStatusChange }"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "OrderCard",
+          "line": 12,
+          "isDefault": true
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "OrderCard",
+          "callee": "order.items.map(i => `${i.name}x${i.quantity}`).join",
+          "lineNumber": 27
+        },
+        {
+          "caller": "OrderCard",
+          "callee": "order.items.map",
+          "lineNumber": 27
+        },
+        {
+          "caller": "OrderCard",
+          "callee": "new Date(order.createdAt).toLocaleString",
+          "lineNumber": 30
+        },
+        {
+          "caller": "OrderCard",
+          "callee": "e.stopPropagation",
+          "lineNumber": 35
+        },
+        {
+          "caller": "OrderCard",
+          "callee": "onStatusChange",
+          "lineNumber": 35
+        },
+        {
+          "caller": "OrderCard",
+          "callee": "e.stopPropagation",
+          "lineNumber": 41
+        },
+        {
+          "caller": "OrderCard",
+          "callee": "confirm",
+          "lineNumber": 41
+        },
+        {
+          "caller": "OrderCard",
+          "callee": "onStatusChange",
+          "lineNumber": 41
+        },
+        {
+          "caller": "OrderCard",
+          "callee": "order.items.map",
+          "lineNumber": 52
+        },
+        {
+          "caller": "OrderCard",
+          "callee": "(getItemUnitPrice(item) * item.quantity).toFixed",
+          "lineNumber": 55
+        },
+        {
+          "caller": "OrderCard",
+          "callee": "getItemUnitPrice",
+          "lineNumber": 55
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/constants.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 67,
+      "nonEmptyLines": 65,
+      "exports": [
+        {
+          "name": "DEFAULT_CATEGORIES",
+          "line": 3,
+          "isDefault": false
+        },
+        {
+          "name": "DEFAULT_PRODUCTS",
+          "line": 11,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 2,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/customerReducer.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 180,
+      "nonEmptyLines": 153,
+      "functions": [
+        {
+          "name": "createInitialState",
+          "startLine": 24,
+          "endLine": 41,
+          "params": []
+        },
+        {
+          "name": "customerReducer",
+          "startLine": 69,
+          "endLine": 180,
+          "params": [
+            "state",
+            "action"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "createInitialState",
+          "line": 24,
+          "isDefault": false
+        },
+        {
+          "name": "customerReducer",
+          "line": 69,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "customerReducer",
+          "callee": "getCartKey",
+          "lineNumber": 85
+        },
+        {
+          "caller": "customerReducer",
+          "callee": "state.cart.findIndex",
+          "lineNumber": 86
+        },
+        {
+          "caller": "customerReducer",
+          "callee": "getCartKey",
+          "lineNumber": 86
+        },
+        {
+          "caller": "customerReducer",
+          "callee": "state.cart.map",
+          "lineNumber": 90
+        },
+        {
+          "caller": "customerReducer",
+          "callee": "getCartKey",
+          "lineNumber": 102
+        },
+        {
+          "caller": "customerReducer",
+          "callee": "state.cart.findIndex",
+          "lineNumber": 103
+        },
+        {
+          "caller": "customerReducer",
+          "callee": "getCartKey",
+          "lineNumber": 103
+        },
+        {
+          "caller": "customerReducer",
+          "callee": "state.cart.map",
+          "lineNumber": 107
+        },
+        {
+          "caller": "customerReducer",
+          "callee": "state.cart.filter",
+          "lineNumber": 112
+        },
+        {
+          "caller": "customerReducer",
+          "callee": "getCartKey",
+          "lineNumber": 112
+        },
+        {
+          "caller": "customerReducer",
+          "callee": "state.cart.map",
+          "lineNumber": 120
+        },
+        {
+          "caller": "customerReducer",
+          "callee": "getCartKey",
+          "lineNumber": 122
+        },
+        {
+          "caller": "customerReducer",
+          "callee": "merged.findIndex",
+          "lineNumber": 123
+        },
+        {
+          "caller": "customerReducer",
+          "callee": "getCartKey",
+          "lineNumber": 123
+        },
+        {
+          "caller": "customerReducer",
+          "callee": "merged.push",
+          "lineNumber": 127
+        },
+        {
+          "caller": "customerReducer",
+          "callee": "getCartKey",
+          "lineNumber": 135
+        },
+        {
+          "caller": "customerReducer",
+          "callee": "state.cart.map",
+          "lineNumber": 138
+        },
+        {
+          "caller": "customerReducer",
+          "callee": "getCartKey",
+          "lineNumber": 139
+        }
+      ],
+      "metrics": {
+        "importCount": 3,
+        "exportCount": 2,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/hooks/useCustomerApp.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 288,
+      "nonEmptyLines": 241,
+      "functions": [
+        {
+          "name": "useCustomerApp",
+          "startLine": 52,
+          "endLine": 288,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "useCustomerApp",
+          "line": 52,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "useCustomerApp",
+          "callee": "getIdentity",
+          "lineNumber": 54
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "createInitialState",
+          "lineNumber": 56
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "loadCartFromStorage",
+          "lineNumber": 59
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "useReducer",
+          "lineNumber": 62
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "useEffect",
+          "lineNumber": 67
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "fetchProducts()\n      .then(products => dispatch({ type: 'SET_PRODUCTS', payload: products }))\n      .catch",
+          "lineNumber": 68
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "fetchProducts()\n      .then",
+          "lineNumber": 68
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "fetchProducts",
+          "lineNumber": 68
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "dispatch",
+          "lineNumber": 69
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "console.warn",
+          "lineNumber": 71
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "dispatch",
+          "lineNumber": 72
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "DEFAULT_PRODUCTS.map",
+          "lineNumber": 74
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "useEffect",
+          "lineNumber": 80
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "fetchStats()\n      .then(s => dispatch({ type: 'SET_POPULAR_IDS', payload: new Set(s.popular.map(p => p.id)) }))\n      .catch",
+          "lineNumber": 81
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "fetchStats()\n      .then",
+          "lineNumber": 81
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "fetchStats",
+          "lineNumber": 81
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "dispatch",
+          "lineNumber": 82
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "s.popular.map",
+          "lineNumber": 82
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "console.warn",
+          "lineNumber": 83
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "useEffect",
+          "lineNumber": 87
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "saveCartToStorage",
+          "lineNumber": 88
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "useEffect",
+          "lineNumber": 92
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "setInterval",
+          "lineNumber": 93
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "fetchProducts()\n        .then(products => dispatch({ type: 'SET_PRODUCTS', payload: products }))\n        .catch",
+          "lineNumber": 94
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "fetchProducts()\n        .then",
+          "lineNumber": 94
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "fetchProducts",
+          "lineNumber": 94
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "dispatch",
+          "lineNumber": 95
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "console.warn",
+          "lineNumber": 96
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "clearInterval",
+          "lineNumber": 98
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "useMemo",
+          "lineNumber": 103
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "[...rawState.cart].sort",
+          "lineNumber": 104
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "a.name.localeCompare",
+          "lineNumber": 104
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "useMemo",
+          "lineNumber": 108
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "sortedCart.reduce",
+          "lineNumber": 109
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "useMemo",
+          "lineNumber": 121
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "rawState.products.filter",
+          "lineNumber": 122
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "inStock.filter",
+          "lineNumber": 124
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "p.name.toLowerCase().includes",
+          "lineNumber": 125
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "p.name.toLowerCase",
+          "lineNumber": 125
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "rawState.searchQuery.toLowerCase",
+          "lineNumber": 125
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "p.description.toLowerCase().includes",
+          "lineNumber": 126
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "p.description.toLowerCase",
+          "lineNumber": 126
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "rawState.searchQuery.toLowerCase",
+          "lineNumber": 126
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "inStock.filter",
+          "lineNumber": 128
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "list.sort",
+          "lineNumber": 129
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "a.name.localeCompare",
+          "lineNumber": 129
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "rawState.cart.reduce",
+          "lineNumber": 132
+        },
+        {
+          "caller": "addToCart",
+          "callee": "dispatch",
+          "lineNumber": 147
+        },
+        {
+          "caller": "removeFromCart",
+          "callee": "dispatch",
+          "lineNumber": 150
+        },
+        {
+          "caller": "clearCart",
+          "callee": "dispatch",
+          "lineNumber": 152
+        },
+        {
+          "caller": "reorder",
+          "callee": "dispatch",
+          "lineNumber": 154
+        },
+        {
+          "caller": "updateCartNote",
+          "callee": "dispatch",
+          "lineNumber": 157
+        },
+        {
+          "caller": "setActiveCategory",
+          "callee": "dispatch",
+          "lineNumber": 159
+        },
+        {
+          "caller": "setSearchQuery",
+          "callee": "dispatch",
+          "lineNumber": 161
+        },
+        {
+          "caller": "setCopied",
+          "callee": "dispatch",
+          "lineNumber": 163
+        },
+        {
+          "caller": "setShowConfirm",
+          "callee": "dispatch",
+          "lineNumber": 165
+        },
+        {
+          "caller": "setShowIdentityForm",
+          "callee": "dispatch",
+          "lineNumber": 167
+        },
+        {
+          "caller": "setShowOrderHistory",
+          "callee": "dispatch",
+          "lineNumber": 169
+        },
+        {
+          "caller": "setShowProfileForm",
+          "callee": "dispatch",
+          "lineNumber": 171
+        },
+        {
+          "caller": "setIsDelivery",
+          "callee": "dispatch",
+          "lineNumber": 173
+        },
+        {
+          "caller": "setIsMobileCartOpen",
+          "callee": "dispatch",
+          "lineNumber": 175
+        },
+        {
+          "caller": "setMainTab",
+          "callee": "dispatch",
+          "lineNumber": 177
+        },
+        {
+          "caller": "copyToClipboard",
+          "callee": "navigator.clipboard.writeText(text).catch",
+          "lineNumber": 182
+        },
+        {
+          "caller": "copyToClipboard",
+          "callee": "navigator.clipboard.writeText",
+          "lineNumber": 182
+        },
+        {
+          "caller": "copyToClipboard",
+          "callee": "console.warn",
+          "lineNumber": 182
+        },
+        {
+          "caller": "copyToClipboard",
+          "callee": "document.createElement",
+          "lineNumber": 185
+        },
+        {
+          "caller": "copyToClipboard",
+          "callee": "document.body.appendChild",
+          "lineNumber": 190
+        },
+        {
+          "caller": "copyToClipboard",
+          "callee": "ta.focus",
+          "lineNumber": 191
+        },
+        {
+          "caller": "copyToClipboard",
+          "callee": "ta.select",
+          "lineNumber": 192
+        },
+        {
+          "caller": "copyToClipboard",
+          "callee": "document.execCommand",
+          "lineNumber": 194
+        },
+        {
+          "caller": "copyToClipboard",
+          "callee": "document.body.removeChild",
+          "lineNumber": 195
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "useCallback",
+          "lineNumber": 200
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "dispatch",
+          "lineNumber": 201
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "dispatch",
+          "lineNumber": 202
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "dispatch",
+          "lineNumber": 203
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "loadCartFromStorage",
+          "lineNumber": 203
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "useCallback",
+          "lineNumber": 207
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "dispatch",
+          "lineNumber": 208
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "dispatch",
+          "lineNumber": 209
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "useCallback",
+          "lineNumber": 212
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "clearIdentity",
+          "lineNumber": 213
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "dispatch",
+          "lineNumber": 214
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "dispatch",
+          "lineNumber": 215
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "useCallback",
+          "lineNumber": 218
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "alert",
+          "lineNumber": 221
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "createOrder",
+          "lineNumber": 225
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "sortedCart.map",
+          "lineNumber": 232
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "svc.push",
+          "lineNumber": 234
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "svc.push",
+          "lineNumber": 235
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "svc.join",
+          "lineNumber": 236
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "getItemUnitPrice",
+          "lineNumber": 238
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "(up * item.quantity).toFixed",
+          "lineNumber": 239
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "orderLines.join",
+          "lineNumber": 244
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "deliveryFee.toFixed",
+          "lineNumber": 244
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "totalPrice.toFixed",
+          "lineNumber": 244
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "copyToClipboard",
+          "lineNumber": 246
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "fetchProducts()\n        .then(products => dispatch({ type: 'SET_PRODUCTS', payload: products }))\n        .catch",
+          "lineNumber": 249
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "fetchProducts()\n        .then",
+          "lineNumber": 249
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "fetchProducts",
+          "lineNumber": 249
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "dispatch",
+          "lineNumber": 250
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "console.warn",
+          "lineNumber": 251
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "dispatch",
+          "lineNumber": 253
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "dispatch",
+          "lineNumber": 254
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "dispatch",
+          "lineNumber": 255
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "setTimeout",
+          "lineNumber": 256
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "dispatch",
+          "lineNumber": 256
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "alert",
+          "lineNumber": 258
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "getErrorMessage",
+          "lineNumber": 258
+        },
+        {
+          "caller": "useCustomerApp",
+          "callee": "useMemo",
+          "lineNumber": 264
+        }
+      ],
+      "metrics": {
+        "importCount": 5,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/types.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 35,
+      "nonEmptyLines": 32,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/utils.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 59,
+      "nonEmptyLines": 47,
+      "functions": [
+        {
+          "name": "getCartKey",
+          "startLine": 22,
+          "endLine": 24,
+          "params": [
+            "item"
+          ]
+        },
+        {
+          "name": "getItemUnitPrice",
+          "startLine": 26,
+          "endLine": 28,
+          "params": [
+            "item"
+          ]
+        },
+        {
+          "name": "getCartStorageKey",
+          "startLine": 32,
+          "endLine": 35,
+          "params": []
+        },
+        {
+          "name": "loadCartFromStorage",
+          "startLine": 37,
+          "endLine": 42,
+          "params": []
+        },
+        {
+          "name": "saveCartToStorage",
+          "startLine": 44,
+          "endLine": 52,
+          "params": [
+            "items"
+          ]
+        },
+        {
+          "name": "getErrorMessage",
+          "startLine": 56,
+          "endLine": 59,
+          "params": [
+            "err"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "STATUS_LABELS",
+          "line": 6,
+          "isDefault": false
+        },
+        {
+          "name": "STATUS_COLORS",
+          "line": 13,
+          "isDefault": false
+        },
+        {
+          "name": "getCartKey",
+          "line": 22,
+          "isDefault": false
+        },
+        {
+          "name": "getItemUnitPrice",
+          "line": 26,
+          "isDefault": false
+        },
+        {
+          "name": "getCartStorageKey",
+          "line": 32,
+          "isDefault": false
+        },
+        {
+          "name": "loadCartFromStorage",
+          "line": 37,
+          "isDefault": false
+        },
+        {
+          "name": "saveCartToStorage",
+          "line": 44,
+          "isDefault": false
+        },
+        {
+          "name": "getErrorMessage",
+          "line": 56,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "getCartStorageKey",
+          "callee": "getIdentity",
+          "lineNumber": 33
+        },
+        {
+          "caller": "loadCartFromStorage",
+          "callee": "localStorage.getItem",
+          "lineNumber": 39
+        },
+        {
+          "caller": "loadCartFromStorage",
+          "callee": "getCartStorageKey",
+          "lineNumber": 39
+        },
+        {
+          "caller": "loadCartFromStorage",
+          "callee": "JSON.parse",
+          "lineNumber": 40
+        },
+        {
+          "caller": "saveCartToStorage",
+          "callee": "localStorage.setItem",
+          "lineNumber": 47
+        },
+        {
+          "caller": "saveCartToStorage",
+          "callee": "getCartStorageKey",
+          "lineNumber": 47
+        },
+        {
+          "caller": "saveCartToStorage",
+          "callee": "JSON.stringify",
+          "lineNumber": 47
+        },
+        {
+          "caller": "saveCartToStorage",
+          "callee": "localStorage.removeItem",
+          "lineNumber": 49
+        },
+        {
+          "caller": "saveCartToStorage",
+          "callee": "getCartStorageKey",
+          "lineNumber": 49
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 8,
+        "functionCount": 6,
+        "classCount": 0
+      }
+    }
+  ]
+}

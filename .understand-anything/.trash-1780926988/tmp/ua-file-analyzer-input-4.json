@@ -1,0 +1,21 @@
+{
+  "projectRoot": "E:/窝里蹲点单系统",
+  "batchFiles": [
+    {
+      "path": "docker-compose.yml",
+      "language": "yaml",
+      "sizeLines": 11,
+      "fileCategory": "infra"
+    },
+    {
+      "path": "Dockerfile",
+      "language": "dockerfile",
+      "sizeLines": 25,
+      "fileCategory": "infra"
+    }
+  ],
+  "batchImportData": {
+    "docker-compose.yml": [],
+    "Dockerfile": []
+  }
+}

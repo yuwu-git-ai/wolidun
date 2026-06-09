@@ -1,0 +1,469 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 9,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": ".env.example",
+      "language": "config",
+      "fileCategory": "config",
+      "totalLines": 8,
+      "nonEmptyLines": 6,
+      "definitions": [
+        {
+          "name": "PORT",
+          "kind": "variable",
+          "fields": [],
+          "startLine": 2,
+          "endLine": 2
+        },
+        {
+          "name": "ADMIN_KEY",
+          "kind": "variable",
+          "fields": [],
+          "startLine": 5,
+          "endLine": 5
+        },
+        {
+          "name": "DB_PATH",
+          "kind": "variable",
+          "fields": [],
+          "startLine": 8,
+          "endLine": 8
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 3
+      }
+    },
+    {
+      "path": "CLAUDE.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 124,
+      "nonEmptyLines": 97,
+      "sections": [
+        {
+          "heading": "CLAUDE.md",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Project Overview",
+          "level": 2,
+          "line": 5
+        },
+        {
+          "heading": "Commands",
+          "level": 2,
+          "line": 9
+        },
+        {
+          "heading": "Architecture",
+          "level": 2,
+          "line": 24
+        },
+        {
+          "heading": "Client-side routing",
+          "level": 3,
+          "line": 26
+        },
+        {
+          "heading": "Backend (`server/`)",
+          "level": 3,
+          "line": 31
+        },
+        {
+          "heading": "Frontend (`src/`)",
+          "level": 3,
+          "line": 38
+        },
+        {
+          "heading": "Data flow",
+          "level": 3,
+          "line": 54
+        },
+        {
+          "heading": "Database (SQLite v2)",
+          "level": 3,
+          "line": 63
+        },
+        {
+          "heading": "Responsive Design",
+          "level": 2,
+          "line": 69
+        },
+        {
+          "heading": "Mobile (< 768px)",
+          "level": 3,
+          "line": 73
+        },
+        {
+          "heading": "Tablet (768px - 1024px)",
+          "level": 3,
+          "line": 80
+        },
+        {
+          "heading": "Desktop (≥ 1024px)",
+          "level": 3,
+          "line": 85
+        },
+        {
+          "heading": "Touch interactions",
+          "level": 3,
+          "line": 90
+        },
+        {
+          "heading": "Environment Variables",
+          "level": 2,
+          "line": 94
+        },
+        {
+          "heading": "Docker Deployment",
+          "level": 2,
+          "line": 103
+        },
+        {
+          "heading": "Deploy to server",
+          "level": 3,
+          "line": 111
+        },
+        {
+          "heading": "Build Notes",
+          "level": 2,
+          "line": 119
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 18
+      }
+    },
+    {
+      "path": "README.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 39,
+      "nonEmptyLines": 27,
+      "sections": [
+        {
+          "heading": "窝里蹲点单系统",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "技术栈",
+          "level": 2,
+          "line": 5
+        },
+        {
+          "heading": "本地开发",
+          "level": 2,
+          "line": 11
+        },
+        {
+          "heading": "环境变量",
+          "level": 2,
+          "line": 22
+        },
+        {
+          "heading": "部署",
+          "level": 2,
+          "line": 32
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 5
+      }
+    },
+    {
+      "path": "REQUIREMENTS.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 169,
+      "nonEmptyLines": 136,
+      "sections": [
+        {
+          "heading": "窝里蹲点单系统 · 需求文档 v2.0",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "产品定位",
+          "level": 2,
+          "line": 3
+        },
+        {
+          "heading": "用户角色",
+          "level": 2,
+          "line": 8
+        },
+        {
+          "heading": "功能清单",
+          "level": 2,
+          "line": 15
+        },
+        {
+          "heading": "P0 · 必须上线",
+          "level": 3,
+          "line": 17
+        },
+        {
+          "heading": "1. 免登录下单",
+          "level": 4,
+          "line": 19
+        },
+        {
+          "heading": "2. 商品浏览",
+          "level": 4,
+          "line": 24
+        },
+        {
+          "heading": "3. 购物车 & 下单",
+          "level": 4,
+          "line": 30
+        },
+        {
+          "heading": "4. 订单通知（店主端）",
+          "level": 4,
+          "line": 37
+        },
+        {
+          "heading": "5. 库存实时显示",
+          "level": 4,
+          "line": 44
+        },
+        {
+          "heading": "P1 · 重要",
+          "level": 3,
+          "line": 49
+        },
+        {
+          "heading": "6. 订单状态追踪",
+          "level": 4,
+          "line": 51
+        },
+        {
+          "heading": "7. 管理面板 · 精简版",
+          "level": 4,
+          "line": 60
+        },
+        {
+          "heading": "P2 · 锦上添花",
+          "level": 3,
+          "line": 68
+        },
+        {
+          "heading": "8. 前端重设计",
+          "level": 4,
+          "line": 70
+        },
+        {
+          "heading": "9. 商品图片上传",
+          "level": 4,
+          "line": 75
+        },
+        {
+          "heading": "技术方案",
+          "level": 2,
+          "line": 79
+        },
+        {
+          "heading": "架构不变",
+          "level": 3,
+          "line": 81
+        },
+        {
+          "heading": "数据库变更",
+          "level": 3,
+          "line": 86
+        },
+        {
+          "heading": "API 变更",
+          "level": 3,
+          "line": 119
+        },
+        {
+          "heading": "前端变更",
+          "level": 3,
+          "line": 135
+        },
+        {
+          "heading": "订单通知方案",
+          "level": 3,
+          "line": 145
+        },
+        {
+          "heading": "库存刷新方案",
+          "level": 3,
+          "line": 152
+        },
+        {
+          "heading": "不做的事",
+          "level": 2,
+          "line": 159
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 24
+      }
+    },
+    {
+      "path": "index.html",
+      "language": "html",
+      "fileCategory": "markup",
+      "totalLines": 17,
+      "nonEmptyLines": 16,
+      "metrics": {}
+    },
+    {
+      "path": "metadata.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 6,
+      "nonEmptyLines": 6,
+      "sections": [
+        {
+          "heading": "name",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "description",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "requestFramePermissions",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "majorCapabilities",
+          "level": 1,
+          "line": 5
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 4
+      }
+    },
+    {
+      "path": "package.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 61,
+      "nonEmptyLines": 61,
+      "sections": [
+        {
+          "heading": "name",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "private",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "version",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "type",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "scripts",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "dependencies",
+          "level": 1,
+          "line": 19
+        },
+        {
+          "heading": "devDependencies",
+          "level": 1,
+          "line": 34
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 7
+      }
+    },
+    {
+      "path": "tsconfig.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 27,
+      "nonEmptyLines": 27,
+      "sections": [
+        {
+          "heading": "compilerOptions",
+          "level": 1,
+          "line": 2
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 1
+      }
+    },
+    {
+      "path": "tsconfig.server.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 16,
+      "nonEmptyLines": 16,
+      "sections": [
+        {
+          "heading": "compilerOptions",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "include",
+          "level": 1,
+          "line": 15
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 2
+      }
+    }
+  ]
+}

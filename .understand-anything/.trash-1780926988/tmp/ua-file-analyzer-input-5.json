@@ -1,0 +1,14 @@
+{
+  "projectRoot": "E:/窝里蹲点单系统",
+  "batchFiles": [
+    {
+      "path": ".github/workflows/deploy.yml",
+      "language": "yaml",
+      "sizeLines": 22,
+      "fileCategory": "infra"
+    }
+  ],
+  "batchImportData": {
+    ".github/workflows/deploy.yml": []
+  }
+}

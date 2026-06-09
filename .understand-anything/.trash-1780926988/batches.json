@@ -1,0 +1,1174 @@
+{
+  "schemaVersion": 1,
+  "algorithm": "louvain",
+  "totalFiles": 52,
+  "totalBatches": 7,
+  "exportsByPath": {
+    ".understand-anything/.understandignore": [],
+    "eslint.config.mjs": [],
+    "server/__tests__/api.test.ts": [],
+    "server/app.ts": [
+      "createApp"
+    ],
+    "server/db.ts": [
+      "getDb"
+    ],
+    "server/index.ts": [],
+    "server/middleware/auth.ts": [
+      "requireAdmin"
+    ],
+    "server/middleware/rateLimit.ts": [
+      "rateLimit"
+    ],
+    "server/routes/auth.ts": [],
+    "server/routes/orders.ts": [],
+    "server/routes/posts.ts": [],
+    "server/routes/products.ts": [],
+    "server/routes/stats.ts": [],
+    "src/__tests__/ErrorBoundary.test.tsx": [],
+    "src/__tests__/IdentityForm.test.tsx": [],
+    "src/__tests__/utils.test.ts": [],
+    "src/api.ts": [
+      "register",
+      "login",
+      "updateProfile",
+      "changePassword",
+      "getIdentity",
+      "setIdentity",
+      "clearIdentity",
+      "getAdminKey",
+      "setAdminKey",
+      "verifyAdmin",
+      "fetchProducts",
+      "createProduct",
+      "updateProduct",
+      "deleteProduct",
+      "createOrder",
+      "fetchOrders",
+      "fetchOrderById",
+      "fetchStats",
+      "updateOrderStatus",
+      "fetchPosts",
+      "fetchPostById",
+      "createPost",
+      "updatePost",
+      "addComment",
+      "toggleLike",
+      "fetchJoinedPostIds",
+      "joinPost"
+    ],
+    "src/App.tsx": [
+      "App"
+    ],
+    "src/components/AdminGate.tsx": [
+      "AdminGate"
+    ],
+    "src/components/AdminPanel.tsx": [
+      "AdminPanel"
+    ],
+    "src/components/AnalyticsPanel.tsx": [
+      "AnalyticsPanel"
+    ],
+    "src/components/BarChart.tsx": [
+      "BarChart"
+    ],
+    "src/components/CartPanel.tsx": [
+      "CartPanel"
+    ],
+    "src/components/ErrorBoundary.tsx": [
+      "default"
+    ],
+    "src/components/IdentityForm.tsx": [
+      "IdentityForm"
+    ],
+    "src/components/OrderCard.tsx": [
+      "OrderCard"
+    ],
+    "src/components/OrderHistory.tsx": [
+      "OrderHistory"
+    ],
+    "src/components/ProductCard.tsx": [
+      "ProductCard"
+    ],
+    "src/components/ProfileForm.tsx": [
+      "ProfileForm"
+    ],
+    "src/components/SquarePanel.tsx": [
+      "SquarePanel"
+    ],
+    "src/constants.ts": [
+      "DEFAULT_CATEGORIES",
+      "DEFAULT_PRODUCTS"
+    ],
+    "src/customerReducer.ts": [
+      "createInitialState",
+      "customerReducer"
+    ],
+    "src/hooks/useCustomerApp.ts": [
+      "useCustomerApp"
+    ],
+    "src/main.tsx": [],
+    "src/types.ts": [],
+    "src/utils.ts": [
+      "STATUS_LABELS",
+      "STATUS_COLORS",
+      "getCartKey",
+      "getItemUnitPrice",
+      "getCartStorageKey",
+      "loadCartFromStorage",
+      "saveCartToStorage",
+      "getErrorMessage"
+    ],
+    "vite.config.ts": [],
+    "vitest.config.ts": []
+  },
+  "batches": [
+    {
+      "batchIndex": 1,
+      "files": [
+        {
+          "path": "server/__tests__/api.test.ts",
+          "language": "typescript",
+          "sizeLines": 114,
+          "fileCategory": "code"
+        },
+        {
+          "path": "server/app.ts",
+          "language": "typescript",
+          "sizeLines": 44,
+          "fileCategory": "code"
+        },
+        {
+          "path": "server/db.ts",
+          "language": "typescript",
+          "sizeLines": 269,
+          "fileCategory": "code"
+        },
+        {
+          "path": "server/index.ts",
+          "language": "typescript",
+          "sizeLines": 29,
+          "fileCategory": "code"
+        },
+        {
+          "path": "server/middleware/auth.ts",
+          "language": "typescript",
+          "sizeLines": 12,
+          "fileCategory": "code"
+        },
+        {
+          "path": "server/middleware/rateLimit.ts",
+          "language": "typescript",
+          "sizeLines": 49,
+          "fileCategory": "code"
+        },
+        {
+          "path": "server/routes/auth.ts",
+          "language": "typescript",
+          "sizeLines": 97,
+          "fileCategory": "code"
+        },
+        {
+          "path": "server/routes/orders.ts",
+          "language": "typescript",
+          "sizeLines": 136,
+          "fileCategory": "code"
+        },
+        {
+          "path": "server/routes/posts.ts",
+          "language": "typescript",
+          "sizeLines": 210,
+          "fileCategory": "code"
+        },
+        {
+          "path": "server/routes/products.ts",
+          "language": "typescript",
+          "sizeLines": 105,
+          "fileCategory": "code"
+        },
+        {
+          "path": "server/routes/stats.ts",
+          "language": "typescript",
+          "sizeLines": 150,
+          "fileCategory": "code"
+        }
+      ],
+      "batchImportData": {
+        "server/__tests__/api.test.ts": [
+          "server/app.ts"
+        ],
+        "server/app.ts": [
+          "server/db.ts",
+          "server/middleware/rateLimit.ts",
+          "server/routes/auth.ts",
+          "server/routes/orders.ts",
+          "server/routes/posts.ts",
+          "server/routes/products.ts",
+          "server/routes/stats.ts"
+        ],
+        "server/db.ts": [],
+        "server/index.ts": [
+          "server/app.ts"
+        ],
+        "server/middleware/auth.ts": [],
+        "server/middleware/rateLimit.ts": [],
+        "server/routes/auth.ts": [
+          "server/db.ts"
+        ],
+        "server/routes/orders.ts": [
+          "server/db.ts",
+          "server/middleware/auth.ts"
+        ],
+        "server/routes/posts.ts": [
+          "server/db.ts"
+        ],
+        "server/routes/products.ts": [
+          "server/db.ts",
+          "server/middleware/auth.ts"
+        ],
+        "server/routes/stats.ts": [
+          "server/db.ts"
+        ]
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 2,
+      "files": [
+        {
+          "path": "src/App.tsx",
+          "language": "typescript",
+          "sizeLines": 338,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/__tests__/IdentityForm.test.tsx",
+          "language": "typescript",
+          "sizeLines": 84,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/api.ts",
+          "language": "typescript",
+          "sizeLines": 316,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/components/AdminGate.tsx",
+          "language": "typescript",
+          "sizeLines": 67,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/components/CartPanel.tsx",
+          "language": "typescript",
+          "sizeLines": 119,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/components/IdentityForm.tsx",
+          "language": "typescript",
+          "sizeLines": 120,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/components/OrderHistory.tsx",
+          "language": "typescript",
+          "sizeLines": 196,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/components/ProductCard.tsx",
+          "language": "typescript",
+          "sizeLines": 76,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/components/ProfileForm.tsx",
+          "language": "typescript",
+          "sizeLines": 109,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/components/SquarePanel.tsx",
+          "language": "typescript",
+          "sizeLines": 372,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/main.tsx",
+          "language": "typescript",
+          "sizeLines": 13,
+          "fileCategory": "code"
+        }
+      ],
+      "batchImportData": {
+        "src/App.tsx": [
+          "src/components/AdminGate.tsx",
+          "src/components/CartPanel.tsx",
+          "src/components/ErrorBoundary.tsx",
+          "src/components/IdentityForm.tsx",
+          "src/components/OrderHistory.tsx",
+          "src/components/ProductCard.tsx",
+          "src/components/ProfileForm.tsx",
+          "src/components/SquarePanel.tsx",
+          "src/constants.ts",
+          "src/hooks/useCustomerApp.ts",
+          "src/utils.ts"
+        ],
+        "src/__tests__/IdentityForm.test.tsx": [
+          "src/api.ts",
+          "src/components/IdentityForm.tsx"
+        ],
+        "src/api.ts": [
+          "src/types.ts"
+        ],
+        "src/components/AdminGate.tsx": [
+          "src/api.ts",
+          "src/components/AdminPanel.tsx"
+        ],
+        "src/components/CartPanel.tsx": [
+          "src/types.ts",
+          "src/utils.ts"
+        ],
+        "src/components/IdentityForm.tsx": [
+          "src/api.ts",
+          "src/utils.ts"
+        ],
+        "src/components/OrderHistory.tsx": [
+          "src/api.ts",
+          "src/types.ts",
+          "src/utils.ts"
+        ],
+        "src/components/ProductCard.tsx": [
+          "src/types.ts"
+        ],
+        "src/components/ProfileForm.tsx": [
+          "src/api.ts",
+          "src/utils.ts"
+        ],
+        "src/components/SquarePanel.tsx": [
+          "src/api.ts",
+          "src/utils.ts"
+        ],
+        "src/main.tsx": [
+          "src/App.tsx",
+          "src/index.css"
+        ]
+      },
+      "neighborMap": {
+        "src/App.tsx": [
+          {
+            "path": "src/components/ErrorBoundary.tsx",
+            "batchIndex": 7,
+            "symbols": [
+              "default"
+            ]
+          },
+          {
+            "path": "src/constants.ts",
+            "batchIndex": 3,
+            "symbols": [
+              "DEFAULT_CATEGORIES",
+              "DEFAULT_PRODUCTS"
+            ]
+          },
+          {
+            "path": "src/hooks/useCustomerApp.ts",
+            "batchIndex": 3,
+            "symbols": [
+              "useCustomerApp"
+            ]
+          },
+          {
+            "path": "src/utils.ts",
+            "batchIndex": 3,
+            "symbols": [
+              "STATUS_LABELS",
+              "STATUS_COLORS",
+              "getCartKey",
+              "getItemUnitPrice",
+              "getCartStorageKey",
+              "loadCartFromStorage",
+              "saveCartToStorage",
+              "getErrorMessage"
+            ]
+          }
+        ],
+        "src/api.ts": [
+          {
+            "path": "src/types.ts",
+            "batchIndex": 3,
+            "symbols": []
+          },
+          {
+            "path": "src/components/AdminPanel.tsx",
+            "batchIndex": 3,
+            "symbols": [
+              "AdminPanel"
+            ]
+          },
+          {
+            "path": "src/components/AnalyticsPanel.tsx",
+            "batchIndex": 7,
+            "symbols": [
+              "AnalyticsPanel"
+            ]
+          },
+          {
+            "path": "src/customerReducer.ts",
+            "batchIndex": 3,
+            "symbols": [
+              "createInitialState",
+              "customerReducer"
+            ]
+          },
+          {
+            "path": "src/hooks/useCustomerApp.ts",
+            "batchIndex": 3,
+            "symbols": [
+              "useCustomerApp"
+            ]
+          },
+          {
+            "path": "src/utils.ts",
+            "batchIndex": 3,
+            "symbols": [
+              "STATUS_LABELS",
+              "STATUS_COLORS",
+              "getCartKey",
+              "getItemUnitPrice",
+              "getCartStorageKey",
+              "loadCartFromStorage",
+              "saveCartToStorage",
+              "getErrorMessage"
+            ]
+          }
+        ],
+        "src/components/AdminGate.tsx": [
+          {
+            "path": "src/components/AdminPanel.tsx",
+            "batchIndex": 3,
+            "symbols": [
+              "AdminPanel"
+            ]
+          }
+        ],
+        "src/components/CartPanel.tsx": [
+          {
+            "path": "src/types.ts",
+            "batchIndex": 3,
+            "symbols": []
+          },
+          {
+            "path": "src/utils.ts",
+            "batchIndex": 3,
+            "symbols": [
+              "STATUS_LABELS",
+              "STATUS_COLORS",
+              "getCartKey",
+              "getItemUnitPrice",
+              "getCartStorageKey",
+              "loadCartFromStorage",
+              "saveCartToStorage",
+              "getErrorMessage"
+            ]
+          }
+        ],
+        "src/components/IdentityForm.tsx": [
+          {
+            "path": "src/utils.ts",
+            "batchIndex": 3,
+            "symbols": [
+              "STATUS_LABELS",
+              "STATUS_COLORS",
+              "getCartKey",
+              "getItemUnitPrice",
+              "getCartStorageKey",
+              "loadCartFromStorage",
+              "saveCartToStorage",
+              "getErrorMessage"
+            ]
+          }
+        ],
+        "src/components/OrderHistory.tsx": [
+          {
+            "path": "src/types.ts",
+            "batchIndex": 3,
+            "symbols": []
+          },
+          {
+            "path": "src/utils.ts",
+            "batchIndex": 3,
+            "symbols": [
+              "STATUS_LABELS",
+              "STATUS_COLORS",
+              "getCartKey",
+              "getItemUnitPrice",
+              "getCartStorageKey",
+              "loadCartFromStorage",
+              "saveCartToStorage",
+              "getErrorMessage"
+            ]
+          }
+        ],
+        "src/components/ProductCard.tsx": [
+          {
+            "path": "src/types.ts",
+            "batchIndex": 3,
+            "symbols": []
+          }
+        ],
+        "src/components/ProfileForm.tsx": [
+          {
+            "path": "src/utils.ts",
+            "batchIndex": 3,
+            "symbols": [
+              "STATUS_LABELS",
+              "STATUS_COLORS",
+              "getCartKey",
+              "getItemUnitPrice",
+              "getCartStorageKey",
+              "loadCartFromStorage",
+              "saveCartToStorage",
+              "getErrorMessage"
+            ]
+          }
+        ],
+        "src/components/SquarePanel.tsx": [
+          {
+            "path": "src/utils.ts",
+            "batchIndex": 3,
+            "symbols": [
+              "STATUS_LABELS",
+              "STATUS_COLORS",
+              "getCartKey",
+              "getItemUnitPrice",
+              "getCartStorageKey",
+              "loadCartFromStorage",
+              "saveCartToStorage",
+              "getErrorMessage"
+            ]
+          }
+        ],
+        "src/main.tsx": [
+          {
+            "path": "src/index.css",
+            "batchIndex": 7,
+            "symbols": []
+          }
+        ]
+      }
+    },
+    {
+      "batchIndex": 3,
+      "files": [
+        {
+          "path": "src/__tests__/utils.test.ts",
+          "language": "typescript",
+          "sizeLines": 85,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/components/AdminPanel.tsx",
+          "language": "typescript",
+          "sizeLines": 439,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/components/OrderCard.tsx",
+          "language": "typescript",
+          "sizeLines": 66,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/constants.ts",
+          "language": "typescript",
+          "sizeLines": 67,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/customerReducer.ts",
+          "language": "typescript",
+          "sizeLines": 180,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/hooks/useCustomerApp.ts",
+          "language": "typescript",
+          "sizeLines": 288,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/types.ts",
+          "language": "typescript",
+          "sizeLines": 35,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/utils.ts",
+          "language": "typescript",
+          "sizeLines": 59,
+          "fileCategory": "code"
+        }
+      ],
+      "batchImportData": {
+        "src/__tests__/utils.test.ts": [
+          "src/utils.ts"
+        ],
+        "src/components/AdminPanel.tsx": [
+          "src/api.ts",
+          "src/components/AnalyticsPanel.tsx",
+          "src/components/OrderCard.tsx",
+          "src/constants.ts",
+          "src/types.ts",
+          "src/utils.ts"
+        ],
+        "src/components/OrderCard.tsx": [
+          "src/types.ts",
+          "src/utils.ts"
+        ],
+        "src/constants.ts": [
+          "src/types.ts"
+        ],
+        "src/customerReducer.ts": [
+          "src/api.ts",
+          "src/types.ts",
+          "src/utils.ts"
+        ],
+        "src/hooks/useCustomerApp.ts": [
+          "src/api.ts",
+          "src/constants.ts",
+          "src/customerReducer.ts",
+          "src/types.ts",
+          "src/utils.ts"
+        ],
+        "src/types.ts": [],
+        "src/utils.ts": [
+          "src/api.ts",
+          "src/types.ts"
+        ]
+      },
+      "neighborMap": {
+        "src/components/AdminPanel.tsx": [
+          {
+            "path": "src/api.ts",
+            "batchIndex": 2,
+            "symbols": [
+              "register",
+              "login",
+              "updateProfile",
+              "changePassword",
+              "getIdentity",
+              "setIdentity",
+              "clearIdentity",
+              "getAdminKey",
+              "setAdminKey",
+              "verifyAdmin",
+              "fetchProducts",
+              "createProduct",
+              "updateProduct",
+              "deleteProduct",
+              "createOrder",
+              "fetchOrders",
+              "fetchOrderById",
+              "fetchStats",
+              "updateOrderStatus",
+              "fetchPosts",
+              "fetchPostById",
+              "createPost",
+              "updatePost",
+              "addComment",
+              "toggleLike",
+              "fetchJoinedPostIds",
+              "joinPost"
+            ]
+          },
+          {
+            "path": "src/components/AnalyticsPanel.tsx",
+            "batchIndex": 7,
+            "symbols": [
+              "AnalyticsPanel"
+            ]
+          },
+          {
+            "path": "src/components/AdminGate.tsx",
+            "batchIndex": 2,
+            "symbols": [
+              "AdminGate"
+            ]
+          }
+        ],
+        "src/constants.ts": [
+          {
+            "path": "src/App.tsx",
+            "batchIndex": 2,
+            "symbols": [
+              "App"
+            ]
+          }
+        ],
+        "src/customerReducer.ts": [
+          {
+            "path": "src/api.ts",
+            "batchIndex": 2,
+            "symbols": [
+              "register",
+              "login",
+              "updateProfile",
+              "changePassword",
+              "getIdentity",
+              "setIdentity",
+              "clearIdentity",
+              "getAdminKey",
+              "setAdminKey",
+              "verifyAdmin",
+              "fetchProducts",
+              "createProduct",
+              "updateProduct",
+              "deleteProduct",
+              "createOrder",
+              "fetchOrders",
+              "fetchOrderById",
+              "fetchStats",
+              "updateOrderStatus",
+              "fetchPosts",
+              "fetchPostById",
+              "createPost",
+              "updatePost",
+              "addComment",
+              "toggleLike",
+              "fetchJoinedPostIds",
+              "joinPost"
+            ]
+          }
+        ],
+        "src/hooks/useCustomerApp.ts": [
+          {
+            "path": "src/api.ts",
+            "batchIndex": 2,
+            "symbols": [
+              "register",
+              "login",
+              "updateProfile",
+              "changePassword",
+              "getIdentity",
+              "setIdentity",
+              "clearIdentity",
+              "getAdminKey",
+              "setAdminKey",
+              "verifyAdmin",
+              "fetchProducts",
+              "createProduct",
+              "updateProduct",
+              "deleteProduct",
+              "createOrder",
+              "fetchOrders",
+              "fetchOrderById",
+              "fetchStats",
+              "updateOrderStatus",
+              "fetchPosts",
+              "fetchPostById",
+              "createPost",
+              "updatePost",
+              "addComment",
+              "toggleLike",
+              "fetchJoinedPostIds",
+              "joinPost"
+            ]
+          },
+          {
+            "path": "src/App.tsx",
+            "batchIndex": 2,
+            "symbols": [
+              "App"
+            ]
+          }
+        ],
+        "src/types.ts": [
+          {
+            "path": "src/api.ts",
+            "batchIndex": 2,
+            "symbols": [
+              "register",
+              "login",
+              "updateProfile",
+              "changePassword",
+              "getIdentity",
+              "setIdentity",
+              "clearIdentity",
+              "getAdminKey",
+              "setAdminKey",
+              "verifyAdmin",
+              "fetchProducts",
+              "createProduct",
+              "updateProduct",
+              "deleteProduct",
+              "createOrder",
+              "fetchOrders",
+              "fetchOrderById",
+              "fetchStats",
+              "updateOrderStatus",
+              "fetchPosts",
+              "fetchPostById",
+              "createPost",
+              "updatePost",
+              "addComment",
+              "toggleLike",
+              "fetchJoinedPostIds",
+              "joinPost"
+            ]
+          },
+          {
+            "path": "src/components/CartPanel.tsx",
+            "batchIndex": 2,
+            "symbols": [
+              "CartPanel"
+            ]
+          },
+          {
+            "path": "src/components/OrderHistory.tsx",
+            "batchIndex": 2,
+            "symbols": [
+              "OrderHistory"
+            ]
+          },
+          {
+            "path": "src/components/ProductCard.tsx",
+            "batchIndex": 2,
+            "symbols": [
+              "ProductCard"
+            ]
+          }
+        ],
+        "src/utils.ts": [
+          {
+            "path": "src/api.ts",
+            "batchIndex": 2,
+            "symbols": [
+              "register",
+              "login",
+              "updateProfile",
+              "changePassword",
+              "getIdentity",
+              "setIdentity",
+              "clearIdentity",
+              "getAdminKey",
+              "setAdminKey",
+              "verifyAdmin",
+              "fetchProducts",
+              "createProduct",
+              "updateProduct",
+              "deleteProduct",
+              "createOrder",
+              "fetchOrders",
+              "fetchOrderById",
+              "fetchStats",
+              "updateOrderStatus",
+              "fetchPosts",
+              "fetchPostById",
+              "createPost",
+              "updatePost",
+              "addComment",
+              "toggleLike",
+              "fetchJoinedPostIds",
+              "joinPost"
+            ]
+          },
+          {
+            "path": "src/App.tsx",
+            "batchIndex": 2,
+            "symbols": [
+              "App"
+            ]
+          },
+          {
+            "path": "src/components/CartPanel.tsx",
+            "batchIndex": 2,
+            "symbols": [
+              "CartPanel"
+            ]
+          },
+          {
+            "path": "src/components/IdentityForm.tsx",
+            "batchIndex": 2,
+            "symbols": [
+              "IdentityForm"
+            ]
+          },
+          {
+            "path": "src/components/OrderHistory.tsx",
+            "batchIndex": 2,
+            "symbols": [
+              "OrderHistory"
+            ]
+          },
+          {
+            "path": "src/components/ProfileForm.tsx",
+            "batchIndex": 2,
+            "symbols": [
+              "ProfileForm"
+            ]
+          },
+          {
+            "path": "src/components/SquarePanel.tsx",
+            "batchIndex": 2,
+            "symbols": [
+              "SquarePanel"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "batchIndex": 4,
+      "files": [
+        {
+          "path": "docker-compose.yml",
+          "language": "yaml",
+          "sizeLines": 11,
+          "fileCategory": "infra"
+        },
+        {
+          "path": "Dockerfile",
+          "language": "dockerfile",
+          "sizeLines": 25,
+          "fileCategory": "infra"
+        }
+      ],
+      "batchImportData": {
+        "docker-compose.yml": [],
+        "Dockerfile": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 5,
+      "files": [
+        {
+          "path": ".github/workflows/deploy.yml",
+          "language": "yaml",
+          "sizeLines": 22,
+          "fileCategory": "infra"
+        }
+      ],
+      "batchImportData": {
+        ".github/workflows/deploy.yml": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 6,
+      "files": [
+        {
+          "path": ".env.example",
+          "language": "config",
+          "sizeLines": 8,
+          "fileCategory": "config"
+        },
+        {
+          "path": "CLAUDE.md",
+          "language": "markdown",
+          "sizeLines": 124,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "README.md",
+          "language": "markdown",
+          "sizeLines": 39,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "REQUIREMENTS.md",
+          "language": "markdown",
+          "sizeLines": 169,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "index.html",
+          "language": "html",
+          "sizeLines": 17,
+          "fileCategory": "markup"
+        },
+        {
+          "path": "metadata.json",
+          "language": "json",
+          "sizeLines": 5,
+          "fileCategory": "config"
+        },
+        {
+          "path": "package.json",
+          "language": "json",
+          "sizeLines": 61,
+          "fileCategory": "config"
+        },
+        {
+          "path": "tsconfig.json",
+          "language": "json",
+          "sizeLines": 27,
+          "fileCategory": "config"
+        },
+        {
+          "path": "tsconfig.server.json",
+          "language": "json",
+          "sizeLines": 16,
+          "fileCategory": "config"
+        }
+      ],
+      "batchImportData": {
+        ".env.example": [],
+        "CLAUDE.md": [],
+        "README.md": [],
+        "REQUIREMENTS.md": [],
+        "index.html": [],
+        "metadata.json": [],
+        "package.json": [],
+        "tsconfig.json": [],
+        "tsconfig.server.json": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 7,
+      "files": [
+        {
+          "path": ".understand-anything/.understandignore",
+          "language": "unknown",
+          "sizeLines": 26,
+          "fileCategory": "code"
+        },
+        {
+          "path": ".understand-anything/config.json",
+          "language": "json",
+          "sizeLines": 1,
+          "fileCategory": "config"
+        },
+        {
+          "path": "eslint.config.mjs",
+          "language": "javascript",
+          "sizeLines": 27,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/__tests__/ErrorBoundary.test.tsx",
+          "language": "typescript",
+          "sizeLines": 41,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/components/AnalyticsPanel.tsx",
+          "language": "typescript",
+          "sizeLines": 128,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/components/BarChart.tsx",
+          "language": "typescript",
+          "sizeLines": 89,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/components/ErrorBoundary.tsx",
+          "language": "typescript",
+          "sizeLines": 66,
+          "fileCategory": "code"
+        },
+        {
+          "path": "src/index.css",
+          "language": "css",
+          "sizeLines": 51,
+          "fileCategory": "markup"
+        },
+        {
+          "path": "vite.config.ts",
+          "language": "typescript",
+          "sizeLines": 29,
+          "fileCategory": "code"
+        },
+        {
+          "path": "vitest.config.ts",
+          "language": "typescript",
+          "sizeLines": 23,
+          "fileCategory": "code"
+        }
+      ],
+      "batchImportData": {
+        ".understand-anything/.understandignore": [],
+        ".understand-anything/config.json": [],
+        "eslint.config.mjs": [],
+        "src/__tests__/ErrorBoundary.test.tsx": [
+          "src/components/ErrorBoundary.tsx"
+        ],
+        "src/components/AnalyticsPanel.tsx": [
+          "src/api.ts",
+          "src/components/BarChart.tsx"
+        ],
+        "src/components/BarChart.tsx": [],
+        "src/components/ErrorBoundary.tsx": [],
+        "src/index.css": [],
+        "vite.config.ts": [],
+        "vitest.config.ts": []
+      },
+      "neighborMap": {
+        "src/components/AnalyticsPanel.tsx": [
+          {
+            "path": "src/api.ts",
+            "batchIndex": 2,
+            "symbols": [
+              "register",
+              "login",
+              "updateProfile",
+              "changePassword",
+              "getIdentity",
+              "setIdentity",
+              "clearIdentity",
+              "getAdminKey",
+              "setAdminKey",
+              "verifyAdmin",
+              "fetchProducts",
+              "createProduct",
+              "updateProduct",
+              "deleteProduct",
+              "createOrder",
+              "fetchOrders",
+              "fetchOrderById",
+              "fetchStats",
+              "updateOrderStatus",
+              "fetchPosts",
+              "fetchPostById",
+              "createPost",
+              "updatePost",
+              "addComment",
+              "toggleLike",
+              "fetchJoinedPostIds",
+              "joinPost"
+            ]
+          },
+          {
+            "path": "src/components/AdminPanel.tsx",
+            "batchIndex": 3,
+            "symbols": [
+              "AdminPanel"
+            ]
+          }
+        ],
+        "src/components/ErrorBoundary.tsx": [
+          {
+            "path": "src/App.tsx",
+            "batchIndex": 2,
+            "symbols": [
+              "App"
+            ]
+          }
+        ],
+        "src/index.css": [
+          {
+            "path": "src/main.tsx",
+            "batchIndex": 2,
+            "symbols": []
+          }
+        ]
+      }
+    }
+  ]
+}

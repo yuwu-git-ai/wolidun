@@ -1,0 +1,2216 @@
+{
+  "version": "1.0.0",
+  "gitCommitHash": "df5c9c2a9c2b39a3ca7639e88fc5f873dc542acd",
+  "generatedAt": "2026-06-08T13:56:16.246Z",
+  "files": {
+    ".env.example": {
+      "filePath": ".env.example",
+      "contentHash": "d34e663cf6d4d694d3f64f6585053ac5bbf12d59e59b24befd389d9bedcd63c4",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 9,
+      "hasStructuralAnalysis": true
+    },
+    ".github/workflows/deploy.yml": {
+      "filePath": ".github/workflows/deploy.yml",
+      "contentHash": "16803b742a901078d9f25eeec8b9bc0e0db90a737b67930cce2fe7875433e1d3",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 23,
+      "hasStructuralAnalysis": true
+    },
+    ".understand-anything/.understandignore": {
+      "filePath": ".understand-anything/.understandignore",
+      "contentHash": "05b87d32a17adb9712a2a8cb9eda2ebc5db8d037a5768bfa828b2ff1657994f1",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 27,
+      "hasStructuralAnalysis": false
+    },
+    ".understand-anything/config.json": {
+      "filePath": ".understand-anything/config.json",
+      "contentHash": "c4a81b476be169d02009b0f55951562958b700b6d831e2b5754648ac73552ec9",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 2,
+      "hasStructuralAnalysis": true
+    },
+    "CLAUDE.md": {
+      "filePath": "CLAUDE.md",
+      "contentHash": "8737520810366635a8f754c82f690903d55e9899dff898a0a7eb354efb5f9e52",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 125,
+      "hasStructuralAnalysis": true
+    },
+    "docker-compose.yml": {
+      "filePath": "docker-compose.yml",
+      "contentHash": "079f3fe743452a4012c950a1ef78a7898e774f87a48e1f94cfd16c1229edffbc",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 12,
+      "hasStructuralAnalysis": true
+    },
+    "Dockerfile": {
+      "filePath": "Dockerfile",
+      "contentHash": "7a3476418de577df6291d6c756b09e9b89d499f0d28c929e70fe9b530c4152bb",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 26,
+      "hasStructuralAnalysis": true
+    },
+    "eslint.config.mjs": {
+      "filePath": "eslint.config.mjs",
+      "contentHash": "d2435ed2f26d9360640cd03f46f7eb8108630a2a73801eb07b08e0499c9be462",
+      "functions": [],
+      "classes": [],
+      "imports": [
+        {
+          "source": "@eslint/js",
+          "specifiers": [
+            "js"
+          ]
+        },
+        {
+          "source": "typescript-eslint",
+          "specifiers": [
+            "tseslint"
+          ]
+        },
+        {
+          "source": "eslint-plugin-react-hooks",
+          "specifiers": [
+            "reactHooks"
+          ]
+        },
+        {
+          "source": "eslint-plugin-react-refresh",
+          "specifiers": [
+            "reactRefresh"
+          ]
+        },
+        {
+          "source": "globals",
+          "specifiers": [
+            "globals"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 28,
+      "hasStructuralAnalysis": true
+    },
+    "index.html": {
+      "filePath": "index.html",
+      "contentHash": "c5fe087aadde0bddbf837a5b19bbcb97868b9ba0de7381a4c548468b950479db",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 18,
+      "hasStructuralAnalysis": false
+    },
+    "metadata.json": {
+      "filePath": "metadata.json",
+      "contentHash": "d0133bc422dcf87349b1ba02d037c7889ea6a1c9195504783e4c10ba7c53e567",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 6,
+      "hasStructuralAnalysis": true
+    },
+    "package.json": {
+      "filePath": "package.json",
+      "contentHash": "895e281421f799b7105b23960fc30380fa5f974e7570c9f6c35e7cadd5210124",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 62,
+      "hasStructuralAnalysis": true
+    },
+    "README.md": {
+      "filePath": "README.md",
+      "contentHash": "5f84f7b62ab128798e676066237d0ed1fe2164957a3b78c5733d97a57d0199ba",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 40,
+      "hasStructuralAnalysis": true
+    },
+    "REQUIREMENTS.md": {
+      "filePath": "REQUIREMENTS.md",
+      "contentHash": "db97cb06ce5f8968a9050336de38337f3885dfbc01e71aa63b5750f878ac3d85",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 170,
+      "hasStructuralAnalysis": true
+    },
+    "server/__tests__/api.test.ts": {
+      "filePath": "server/__tests__/api.test.ts",
+      "contentHash": "a823981f8f02dbd55e6b598d9c9fe5dd5443ecbc59c98f7e739ce13f8eb9bd8a",
+      "functions": [],
+      "classes": [],
+      "imports": [
+        {
+          "source": "vitest",
+          "specifiers": [
+            "describe",
+            "it",
+            "expect",
+            "beforeAll"
+          ]
+        },
+        {
+          "source": "supertest",
+          "specifiers": [
+            "request"
+          ]
+        },
+        {
+          "source": "../app",
+          "specifiers": [
+            "createApp"
+          ]
+        },
+        {
+          "source": "express",
+          "specifiers": [
+            "Express"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 115,
+      "hasStructuralAnalysis": true
+    },
+    "server/app.ts": {
+      "filePath": "server/app.ts",
+      "contentHash": "3545669bb947ac7cecc7d209a870af45c6d18c64ee2e54d4cce3301e132e7cd4",
+      "functions": [
+        {
+          "name": "createApp",
+          "params": [],
+          "exported": true,
+          "lineCount": 35
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "express",
+          "specifiers": [
+            "express"
+          ]
+        },
+        {
+          "source": "./db",
+          "specifiers": [
+            "getDb"
+          ]
+        },
+        {
+          "source": "./routes/products",
+          "specifiers": [
+            "productRoutes"
+          ]
+        },
+        {
+          "source": "./routes/orders",
+          "specifiers": [
+            "orderRoutes"
+          ]
+        },
+        {
+          "source": "./routes/stats",
+          "specifiers": [
+            "statsRoutes"
+          ]
+        },
+        {
+          "source": "./routes/auth",
+          "specifiers": [
+            "authRoutes"
+          ]
+        },
+        {
+          "source": "./routes/posts",
+          "specifiers": [
+            "postRoutes"
+          ]
+        },
+        {
+          "source": "./middleware/rateLimit",
+          "specifiers": [
+            "rateLimit"
+          ]
+        }
+      ],
+      "exports": [
+        "createApp"
+      ],
+      "totalLines": 45,
+      "hasStructuralAnalysis": true
+    },
+    "server/db.ts": {
+      "filePath": "server/db.ts",
+      "contentHash": "7f775bd89dd53de010f1beddd6201f5e7b07d0ba0c7468f833eab311d73ddb80",
+      "functions": [
+        {
+          "name": "getDb",
+          "params": [],
+          "returnType": "Database.Database",
+          "exported": true,
+          "lineCount": 19
+        },
+        {
+          "name": "runMigrations",
+          "params": [],
+          "exported": false,
+          "lineCount": 141
+        },
+        {
+          "name": "initTables",
+          "params": [],
+          "exported": false,
+          "lineCount": 27
+        },
+        {
+          "name": "seedDefaults",
+          "params": [],
+          "exported": false,
+          "lineCount": 15
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "better-sqlite3",
+          "specifiers": [
+            "Database"
+          ]
+        },
+        {
+          "source": "path",
+          "specifiers": [
+            "path"
+          ]
+        },
+        {
+          "source": "fs",
+          "specifiers": [
+            "fs"
+          ]
+        }
+      ],
+      "exports": [
+        "getDb"
+      ],
+      "totalLines": 270,
+      "hasStructuralAnalysis": true
+    },
+    "server/index.ts": {
+      "filePath": "server/index.ts",
+      "contentHash": "3fd551d309c96be0c208b72325d67b8923101ba37e3d1d306091e6c59d593a21",
+      "functions": [],
+      "classes": [],
+      "imports": [
+        {
+          "source": "dotenv",
+          "specifiers": [
+            "dotenv"
+          ]
+        },
+        {
+          "source": "express",
+          "specifiers": [
+            "express"
+          ]
+        },
+        {
+          "source": "path",
+          "specifiers": [
+            "path"
+          ]
+        },
+        {
+          "source": "./app",
+          "specifiers": [
+            "createApp"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 30,
+      "hasStructuralAnalysis": true
+    },
+    "server/middleware/auth.ts": {
+      "filePath": "server/middleware/auth.ts",
+      "contentHash": "005147e0af4eca8c85d4fbf27c4a034cf9d63b3c8f3c21a41d4cf835d1265599",
+      "functions": [
+        {
+          "name": "requireAdmin",
+          "params": [
+            "req",
+            "res",
+            "next"
+          ],
+          "exported": true,
+          "lineCount": 10
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "express",
+          "specifiers": [
+            "Request",
+            "Response",
+            "NextFunction"
+          ]
+        }
+      ],
+      "exports": [
+        "requireAdmin"
+      ],
+      "totalLines": 13,
+      "hasStructuralAnalysis": true
+    },
+    "server/middleware/rateLimit.ts": {
+      "filePath": "server/middleware/rateLimit.ts",
+      "contentHash": "07179218656f8ea14e8e8760b9fa4ca0d92bdc3c91feac02db584c4afc81018d",
+      "functions": [
+        {
+          "name": "rateLimit",
+          "params": [
+            "windowMs",
+            "maxRequests",
+            "methods"
+          ],
+          "exported": true,
+          "lineCount": 32
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "express",
+          "specifiers": [
+            "Request",
+            "Response",
+            "NextFunction"
+          ]
+        }
+      ],
+      "exports": [
+        "rateLimit"
+      ],
+      "totalLines": 50,
+      "hasStructuralAnalysis": true
+    },
+    "server/routes/auth.ts": {
+      "filePath": "server/routes/auth.ts",
+      "contentHash": "fe48f58930ba5f492f380c54042213d2190dbb13a13e541dca4ec0439f24846b",
+      "functions": [
+        {
+          "name": "hashPassword",
+          "params": [
+            "password"
+          ],
+          "returnType": "string",
+          "exported": false,
+          "lineCount": 3
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "express",
+          "specifiers": [
+            "Router",
+            "Request",
+            "Response"
+          ]
+        },
+        {
+          "source": "crypto",
+          "specifiers": [
+            "crypto"
+          ]
+        },
+        {
+          "source": "../db",
+          "specifiers": [
+            "getDb"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 98,
+      "hasStructuralAnalysis": true
+    },
+    "server/routes/orders.ts": {
+      "filePath": "server/routes/orders.ts",
+      "contentHash": "2d631f885cc79abc9f63b8d30942a29b9c9ccc0e27a5fa4188864c4e3e7d699b",
+      "functions": [
+        {
+          "name": "serializeOrder",
+          "params": [
+            "o"
+          ],
+          "exported": false,
+          "lineCount": 12
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "express",
+          "specifiers": [
+            "Router",
+            "Request",
+            "Response"
+          ]
+        },
+        {
+          "source": "uuid",
+          "specifiers": [
+            "uuid"
+          ]
+        },
+        {
+          "source": "../db",
+          "specifiers": [
+            "getDb"
+          ]
+        },
+        {
+          "source": "../middleware/auth",
+          "specifiers": [
+            "requireAdmin"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 137,
+      "hasStructuralAnalysis": true
+    },
+    "server/routes/posts.ts": {
+      "filePath": "server/routes/posts.ts",
+      "contentHash": "2026a76c26c8147282f927102e7d58ef98db3a74413751887dd86dcbb3de091a",
+      "functions": [],
+      "classes": [],
+      "imports": [
+        {
+          "source": "express",
+          "specifiers": [
+            "Router",
+            "Request",
+            "Response"
+          ]
+        },
+        {
+          "source": "../db",
+          "specifiers": [
+            "getDb"
+          ]
+        },
+        {
+          "source": "crypto",
+          "specifiers": [
+            "randomUUID"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 211,
+      "hasStructuralAnalysis": true
+    },
+    "server/routes/products.ts": {
+      "filePath": "server/routes/products.ts",
+      "contentHash": "8b013e0f49d651d692fc0b042e080cccab2868b922c0a731388830efa4874798",
+      "functions": [
+        {
+          "name": "serializeProduct",
+          "params": [
+            "p"
+          ],
+          "exported": false,
+          "lineCount": 13
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "express",
+          "specifiers": [
+            "Router",
+            "Request",
+            "Response"
+          ]
+        },
+        {
+          "source": "uuid",
+          "specifiers": [
+            "uuid"
+          ]
+        },
+        {
+          "source": "../db",
+          "specifiers": [
+            "getDb"
+          ]
+        },
+        {
+          "source": "../middleware/auth",
+          "specifiers": [
+            "requireAdmin"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 106,
+      "hasStructuralAnalysis": true
+    },
+    "server/routes/stats.ts": {
+      "filePath": "server/routes/stats.ts",
+      "contentHash": "1a5e7f7905fc889925f8b5b6ecd2ac1ac2addc44a8192479104880f5100e7871",
+      "functions": [
+        {
+          "name": "daysInMonth",
+          "params": [
+            "year",
+            "month"
+          ],
+          "returnType": "number",
+          "exported": false,
+          "lineCount": 3
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "express",
+          "specifiers": [
+            "Router",
+            "Request",
+            "Response"
+          ]
+        },
+        {
+          "source": "../db",
+          "specifiers": [
+            "getDb"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 151,
+      "hasStructuralAnalysis": true
+    },
+    "src/__tests__/ErrorBoundary.test.tsx": {
+      "filePath": "src/__tests__/ErrorBoundary.test.tsx",
+      "contentHash": "0287538fc06e13bcd02484793c017ac666e7f641b706d34e5ffd235afbf51795",
+      "functions": [
+        {
+          "name": "BrokenComponent",
+          "params": [
+            "{ shouldThrow }"
+          ],
+          "exported": false,
+          "lineCount": 6
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "vitest",
+          "specifiers": [
+            "describe",
+            "it",
+            "expect",
+            "vi",
+            "beforeAll",
+            "afterAll"
+          ]
+        },
+        {
+          "source": "@testing-library/react",
+          "specifiers": [
+            "render",
+            "screen"
+          ]
+        },
+        {
+          "source": "../components/ErrorBoundary",
+          "specifiers": [
+            "ErrorBoundary"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 42,
+      "hasStructuralAnalysis": true
+    },
+    "src/__tests__/IdentityForm.test.tsx": {
+      "filePath": "src/__tests__/IdentityForm.test.tsx",
+      "contentHash": "3e2fb8961eb46daafa76cde8c739b6335e64bdf91177b3daf36a5e783bb4d964",
+      "functions": [],
+      "classes": [],
+      "imports": [
+        {
+          "source": "vitest",
+          "specifiers": [
+            "describe",
+            "it",
+            "expect",
+            "vi",
+            "beforeEach"
+          ]
+        },
+        {
+          "source": "@testing-library/react",
+          "specifiers": [
+            "render",
+            "screen",
+            "waitFor"
+          ]
+        },
+        {
+          "source": "@testing-library/user-event",
+          "specifiers": [
+            "userEvent"
+          ]
+        },
+        {
+          "source": "../components/IdentityForm",
+          "specifiers": [
+            "IdentityForm"
+          ]
+        },
+        {
+          "source": "../api",
+          "specifiers": [
+            "login"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 85,
+      "hasStructuralAnalysis": true
+    },
+    "src/__tests__/utils.test.ts": {
+      "filePath": "src/__tests__/utils.test.ts",
+      "contentHash": "fedeac0ce31a4866972c46c3fc4a334b3400e8c3472e9442c50f4040f5a9320a",
+      "functions": [],
+      "classes": [],
+      "imports": [
+        {
+          "source": "vitest",
+          "specifiers": [
+            "describe",
+            "it",
+            "expect"
+          ]
+        },
+        {
+          "source": "../utils",
+          "specifiers": [
+            "getErrorMessage",
+            "getCartKey",
+            "getItemUnitPrice",
+            "STATUS_LABELS",
+            "STATUS_COLORS"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 86,
+      "hasStructuralAnalysis": true
+    },
+    "src/api.ts": {
+      "filePath": "src/api.ts",
+      "contentHash": "eae7519c09a300c440d4ad4c0e0c1eee08fbdfd246285ea2baaff9305d9faa7a",
+      "functions": [
+        {
+          "name": "register",
+          "params": [
+            "nickname",
+            "dorm",
+            "password"
+          ],
+          "returnType": "Promise<{ nickname: string; dorm: string }>",
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "login",
+          "params": [
+            "nickname",
+            "password"
+          ],
+          "returnType": "Promise<{ nickname: string; dorm: string }>",
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "updateProfile",
+          "params": [
+            "nickname",
+            "dorm",
+            "password"
+          ],
+          "returnType": "Promise<{ nickname: string; dorm: string }>",
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "changePassword",
+          "params": [
+            "nickname",
+            "oldPassword",
+            "newPassword"
+          ],
+          "returnType": "Promise<{ success: boolean }>",
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "getIdentity",
+          "params": [],
+          "returnType": "Identity | null",
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "setIdentity",
+          "params": [
+            "nickname",
+            "dorm"
+          ],
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "clearIdentity",
+          "params": [],
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "getAdminKey",
+          "params": [],
+          "returnType": "string | null",
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "setAdminKey",
+          "params": [
+            "key"
+          ],
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "isRetryableError",
+          "params": [
+            "err"
+          ],
+          "returnType": "boolean",
+          "exported": false,
+          "lineCount": 13
+        },
+        {
+          "name": "delay",
+          "params": [
+            "ms"
+          ],
+          "returnType": "Promise<void>",
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "request",
+          "params": [
+            "url",
+            "options",
+            "retries"
+          ],
+          "returnType": "Promise<T>",
+          "exported": false,
+          "lineCount": 38
+        },
+        {
+          "name": "getErrorMessage",
+          "params": [
+            "err"
+          ],
+          "returnType": "string",
+          "exported": false,
+          "lineCount": 5
+        },
+        {
+          "name": "verifyAdmin",
+          "params": [
+            "adminKey"
+          ],
+          "returnType": "Promise<{ valid: boolean }>",
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "fetchProducts",
+          "params": [],
+          "returnType": "Promise<Product[]>",
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "createProduct",
+          "params": [
+            "product",
+            "adminKey"
+          ],
+          "returnType": "Promise<Product>",
+          "exported": true,
+          "lineCount": 7
+        },
+        {
+          "name": "updateProduct",
+          "params": [
+            "id",
+            "product",
+            "adminKey"
+          ],
+          "returnType": "Promise<Product>",
+          "exported": true,
+          "lineCount": 7
+        },
+        {
+          "name": "deleteProduct",
+          "params": [
+            "id",
+            "adminKey"
+          ],
+          "returnType": "Promise<{ success: boolean }>",
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "createOrder",
+          "params": [
+            "params"
+          ],
+          "returnType": "Promise<Order>",
+          "exported": true,
+          "lineCount": 11
+        },
+        {
+          "name": "fetchOrders",
+          "params": [
+            "params"
+          ],
+          "returnType": "Promise<Order[]>",
+          "exported": true,
+          "lineCount": 8
+        },
+        {
+          "name": "fetchOrderById",
+          "params": [
+            "id"
+          ],
+          "returnType": "Promise<Order>",
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "fetchStats",
+          "params": [
+            "params"
+          ],
+          "returnType": "Promise<{\n  popular: { id: string; count: number }[];\n  today: { orders: number; revenue: number };\n  daily: { label: string; date: string; orders: number; revenue: number }[];\n  monthly: { label: string; month: string; orders: number; revenue: number }[];\n}>",
+          "exported": true,
+          "lineCount": 13
+        },
+        {
+          "name": "updateOrderStatus",
+          "params": [
+            "orderId",
+            "status",
+            "adminKey"
+          ],
+          "returnType": "Promise<Order>",
+          "exported": true,
+          "lineCount": 7
+        },
+        {
+          "name": "fetchPosts",
+          "params": [
+            "params"
+          ],
+          "returnType": "Promise<{\n  posts: Post[];\n  total: number;\n  page: number;\n  limit: number;\n}>",
+          "exported": true,
+          "lineCount": 14
+        },
+        {
+          "name": "fetchPostById",
+          "params": [
+            "id",
+            "userId"
+          ],
+          "returnType": "Promise<Post>",
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "createPost",
+          "params": [
+            "data"
+          ],
+          "returnType": "Promise<Post>",
+          "exported": true,
+          "lineCount": 16
+        },
+        {
+          "name": "updatePost",
+          "params": [
+            "id",
+            "data"
+          ],
+          "returnType": "Promise<Post>",
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "addComment",
+          "params": [
+            "postId",
+            "data"
+          ],
+          "returnType": "Promise<Comment>",
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "toggleLike",
+          "params": [
+            "postId",
+            "userId"
+          ],
+          "returnType": "Promise<{ liked: boolean }>",
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "fetchJoinedPostIds",
+          "params": [
+            "userId"
+          ],
+          "returnType": "Promise<string[]>",
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "joinPost",
+          "params": [
+            "postId",
+            "userId"
+          ],
+          "returnType": "Promise<Post>",
+          "exported": true,
+          "lineCount": 6
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "./types",
+          "specifiers": [
+            "Product",
+            "CartItem",
+            "Order"
+          ]
+        }
+      ],
+      "exports": [
+        "register",
+        "login",
+        "updateProfile",
+        "changePassword",
+        "getIdentity",
+        "setIdentity",
+        "clearIdentity",
+        "getAdminKey",
+        "setAdminKey",
+        "verifyAdmin",
+        "fetchProducts",
+        "createProduct",
+        "updateProduct",
+        "deleteProduct",
+        "createOrder",
+        "fetchOrders",
+        "fetchOrderById",
+        "fetchStats",
+        "updateOrderStatus",
+        "fetchPosts",
+        "fetchPostById",
+        "createPost",
+        "updatePost",
+        "addComment",
+        "toggleLike",
+        "fetchJoinedPostIds",
+        "joinPost"
+      ],
+      "totalLines": 317,
+      "hasStructuralAnalysis": true
+    },
+    "src/App.tsx": {
+      "filePath": "src/App.tsx",
+      "contentHash": "87841244b1e3cafa3102c9909bb5d069a840306a5248054a8678f97cf448eda1",
+      "functions": [
+        {
+          "name": "CustomerApp",
+          "params": [],
+          "exported": false,
+          "lineCount": 303
+        },
+        {
+          "name": "App",
+          "params": [],
+          "exported": true,
+          "lineCount": 10
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "motion/react",
+          "specifiers": [
+            "motion",
+            "AnimatePresence"
+          ]
+        },
+        {
+          "source": "lucide-react",
+          "specifiers": [
+            "ShoppingBag",
+            "Check",
+            "Flame",
+            "Utensils",
+            "Pizza",
+            "Coffee",
+            "IceCream",
+            "Package",
+            "UserIcon",
+            "Search",
+            "Edit3",
+            "X",
+            "LogOut",
+            "Clock",
+            "MessageCircle"
+          ]
+        },
+        {
+          "source": "./constants",
+          "specifiers": [
+            "DEFAULT_CATEGORIES"
+          ]
+        },
+        {
+          "source": "./components/ProductCard",
+          "specifiers": [
+            "ProductCard"
+          ]
+        },
+        {
+          "source": "./components/SquarePanel",
+          "specifiers": [
+            "SquarePanel"
+          ]
+        },
+        {
+          "source": "./components/AdminGate",
+          "specifiers": [
+            "AdminGate"
+          ]
+        },
+        {
+          "source": "./components/IdentityForm",
+          "specifiers": [
+            "IdentityForm"
+          ]
+        },
+        {
+          "source": "./components/ProfileForm",
+          "specifiers": [
+            "ProfileForm"
+          ]
+        },
+        {
+          "source": "./components/OrderHistory",
+          "specifiers": [
+            "OrderHistory"
+          ]
+        },
+        {
+          "source": "./components/CartPanel",
+          "specifiers": [
+            "CartPanel"
+          ]
+        },
+        {
+          "source": "./utils",
+          "specifiers": [
+            "getItemUnitPrice"
+          ]
+        },
+        {
+          "source": "react-router-dom",
+          "specifiers": [
+            "Routes",
+            "Route"
+          ]
+        },
+        {
+          "source": "./components/ErrorBoundary",
+          "specifiers": [
+            "ErrorBoundary"
+          ]
+        },
+        {
+          "source": "./hooks/useCustomerApp",
+          "specifiers": [
+            "useCustomerApp"
+          ]
+        }
+      ],
+      "exports": [
+        "App"
+      ],
+      "totalLines": 339,
+      "hasStructuralAnalysis": true
+    },
+    "src/components/AdminGate.tsx": {
+      "filePath": "src/components/AdminGate.tsx",
+      "contentHash": "9e1434aacdbecc81022b1bb6c51872e9107c183a77fd0c1143d71f3c2e30bbed",
+      "functions": [
+        {
+          "name": "AdminGate",
+          "params": [],
+          "exported": true,
+          "lineCount": 60
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "react",
+          "specifiers": [
+            "useState",
+            "useEffect",
+            "FormEvent"
+          ]
+        },
+        {
+          "source": "motion/react",
+          "specifiers": [
+            "motion"
+          ]
+        },
+        {
+          "source": "lucide-react",
+          "specifiers": [
+            "Settings"
+          ]
+        },
+        {
+          "source": "react-router-dom",
+          "specifiers": [
+            "Link"
+          ]
+        },
+        {
+          "source": "./AdminPanel",
+          "specifiers": [
+            "AdminPanel"
+          ]
+        },
+        {
+          "source": "../api",
+          "specifiers": [
+            "getAdminKey",
+            "saveAdminKey",
+            "verifyAdmin"
+          ]
+        }
+      ],
+      "exports": [
+        "AdminGate"
+      ],
+      "totalLines": 68,
+      "hasStructuralAnalysis": true
+    },
+    "src/components/AdminPanel.tsx": {
+      "filePath": "src/components/AdminPanel.tsx",
+      "contentHash": "e8b9fd9859ad6de757be404247d7141b498631f7c0a3d1ba8502c7f8110614d7",
+      "functions": [
+        {
+          "name": "AdminPanel",
+          "params": [
+            "{ adminKey }"
+          ],
+          "exported": true,
+          "lineCount": 423
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "react",
+          "specifiers": [
+            "useState",
+            "useEffect",
+            "useRef",
+            "useCallback",
+            "FormEvent"
+          ]
+        },
+        {
+          "source": "motion/react",
+          "specifiers": [
+            "motion"
+          ]
+        },
+        {
+          "source": "lucide-react",
+          "specifiers": [
+            "Bell",
+            "ArrowLeft",
+            "Download",
+            "Package",
+            "Edit3",
+            "X"
+          ]
+        },
+        {
+          "source": "react-router-dom",
+          "specifiers": [
+            "Link"
+          ]
+        },
+        {
+          "source": "./OrderCard",
+          "specifiers": [
+            "OrderCard"
+          ]
+        },
+        {
+          "source": "./AnalyticsPanel",
+          "specifiers": [
+            "AnalyticsPanel"
+          ]
+        },
+        {
+          "source": "../api",
+          "specifiers": [
+            "fetchOrders",
+            "fetchProducts",
+            "fetchStats",
+            "updateOrderStatus",
+            "createProduct",
+            "updateProduct",
+            "deleteProduct"
+          ]
+        },
+        {
+          "source": "../types",
+          "specifiers": [
+            "Order",
+            "Product"
+          ]
+        },
+        {
+          "source": "../constants",
+          "specifiers": [
+            "DEFAULT_CATEGORIES"
+          ]
+        },
+        {
+          "source": "../utils",
+          "specifiers": [
+            "STATUS_LABELS",
+            "getErrorMessage"
+          ]
+        }
+      ],
+      "exports": [
+        "AdminPanel"
+      ],
+      "totalLines": 440,
+      "hasStructuralAnalysis": true
+    },
+    "src/components/AnalyticsPanel.tsx": {
+      "filePath": "src/components/AnalyticsPanel.tsx",
+      "contentHash": "5a4128cd9d52ebb0b9722be9cf04a8bf6d81f26aaf8902f82f80f29a2bc1ab4a",
+      "functions": [
+        {
+          "name": "AnalyticsPanel",
+          "params": [
+            "_props"
+          ],
+          "exported": true,
+          "lineCount": 121
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "react",
+          "specifiers": [
+            "useState",
+            "useEffect",
+            "useCallback"
+          ]
+        },
+        {
+          "source": "lucide-react",
+          "specifiers": [
+            "ChevronUp"
+          ]
+        },
+        {
+          "source": "./BarChart",
+          "specifiers": [
+            "BarChart"
+          ]
+        },
+        {
+          "source": "../api",
+          "specifiers": [
+            "fetchStats"
+          ]
+        }
+      ],
+      "exports": [
+        "AnalyticsPanel"
+      ],
+      "totalLines": 129,
+      "hasStructuralAnalysis": true
+    },
+    "src/components/BarChart.tsx": {
+      "filePath": "src/components/BarChart.tsx",
+      "contentHash": "4ea73e14ef6d4237f8c2c6632362b4dbd630e7f29d9c27aa71a61d49906647a5",
+      "functions": [
+        {
+          "name": "BarChart",
+          "params": [
+            "{ data }"
+          ],
+          "exported": true,
+          "lineCount": 83
+        }
+      ],
+      "classes": [],
+      "imports": [],
+      "exports": [
+        "BarChart"
+      ],
+      "totalLines": 90,
+      "hasStructuralAnalysis": true
+    },
+    "src/components/CartPanel.tsx": {
+      "filePath": "src/components/CartPanel.tsx",
+      "contentHash": "582518e94dd738802d16fc96145a6fb644e323891fd4dad8d706ee1361c5b3d8",
+      "functions": [
+        {
+          "name": "CartPanel",
+          "params": [
+            "{ cart, products, identity, isDelivery, setIsDelivery, itemsTotal, deliveryFee, totalPrice, onRemove, onAdd, onClear, onConfirm, onUpdateNote, compact }"
+          ],
+          "exported": true,
+          "lineCount": 97
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "motion/react",
+          "specifiers": [
+            "motion",
+            "AnimatePresence"
+          ]
+        },
+        {
+          "source": "lucide-react",
+          "specifiers": [
+            "Plus",
+            "Minus",
+            "Trash2"
+          ]
+        },
+        {
+          "source": "../types",
+          "specifiers": [
+            "Product",
+            "CartItem"
+          ]
+        },
+        {
+          "source": "../utils",
+          "specifiers": [
+            "getCartKey",
+            "getItemUnitPrice"
+          ]
+        }
+      ],
+      "exports": [
+        "CartPanel"
+      ],
+      "totalLines": 120,
+      "hasStructuralAnalysis": true
+    },
+    "src/components/ErrorBoundary.tsx": {
+      "filePath": "src/components/ErrorBoundary.tsx",
+      "contentHash": "0cf4797cc1e7f0c2a47f957dab1b0e7fe726dc1f0215c84312b8d2430b6a30d5",
+      "functions": [],
+      "classes": [
+        {
+          "name": "ErrorBoundary",
+          "methods": [
+            "constructor",
+            "getDerivedStateFromError",
+            "componentDidCatch",
+            "render"
+          ],
+          "properties": [
+            "handleRetry"
+          ],
+          "exported": false,
+          "lineCount": 53
+        }
+      ],
+      "imports": [
+        {
+          "source": "react",
+          "specifiers": [
+            "Component",
+            "ReactNode"
+          ]
+        },
+        {
+          "source": "motion/react",
+          "specifiers": [
+            "motion"
+          ]
+        },
+        {
+          "source": "lucide-react",
+          "specifiers": [
+            "AlertTriangle",
+            "RotateCcw"
+          ]
+        }
+      ],
+      "exports": [
+        "default"
+      ],
+      "totalLines": 67,
+      "hasStructuralAnalysis": true
+    },
+    "src/components/IdentityForm.tsx": {
+      "filePath": "src/components/IdentityForm.tsx",
+      "contentHash": "988e32acca16b40e695c462dfb545ef552deb0641fd39c99376f076b266b0b18",
+      "functions": [
+        {
+          "name": "IdentityForm",
+          "params": [
+            "{ onSave, onSkip }"
+          ],
+          "exported": true,
+          "lineCount": 110
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "react",
+          "specifiers": [
+            "useState",
+            "FormEvent"
+          ]
+        },
+        {
+          "source": "motion/react",
+          "specifiers": [
+            "motion"
+          ]
+        },
+        {
+          "source": "../api",
+          "specifiers": [
+            "register",
+            "login",
+            "saveIdentity"
+          ]
+        },
+        {
+          "source": "../utils",
+          "specifiers": [
+            "getErrorMessage"
+          ]
+        }
+      ],
+      "exports": [
+        "IdentityForm"
+      ],
+      "totalLines": 121,
+      "hasStructuralAnalysis": true
+    },
+    "src/components/OrderCard.tsx": {
+      "filePath": "src/components/OrderCard.tsx",
+      "contentHash": "55e94c51257fb85fe79dffa6d645d0132a1fe3bd60ca021eea89e73d6e458280",
+      "functions": [
+        {
+          "name": "OrderCard",
+          "params": [
+            "{ order, expanded, onToggle, onStatusChange }"
+          ],
+          "exported": true,
+          "lineCount": 55
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "lucide-react",
+          "specifiers": [
+            "ChevronUp",
+            "ChevronDown"
+          ]
+        },
+        {
+          "source": "../types",
+          "specifiers": [
+            "Order"
+          ]
+        },
+        {
+          "source": "../utils",
+          "specifiers": [
+            "STATUS_LABELS",
+            "STATUS_COLORS",
+            "getItemUnitPrice"
+          ]
+        }
+      ],
+      "exports": [
+        "OrderCard"
+      ],
+      "totalLines": 67,
+      "hasStructuralAnalysis": true
+    },
+    "src/components/OrderHistory.tsx": {
+      "filePath": "src/components/OrderHistory.tsx",
+      "contentHash": "437a06b6d47570538fe2bfaef21f7378f9861f1df93f67e47e71337d56eebeaa",
+      "functions": [
+        {
+          "name": "OrderHistory",
+          "params": [
+            "{ identity, onClose, onReorder }"
+          ],
+          "exported": true,
+          "lineCount": 184
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "react",
+          "specifiers": [
+            "useState",
+            "useEffect",
+            "FormEvent"
+          ]
+        },
+        {
+          "source": "lucide-react",
+          "specifiers": [
+            "ArrowLeft",
+            "Clock",
+            "Search"
+          ]
+        },
+        {
+          "source": "../types",
+          "specifiers": [
+            "Order",
+            "CartItem"
+          ]
+        },
+        {
+          "source": "../api",
+          "specifiers": [
+            "fetchOrders",
+            "fetchOrderById"
+          ]
+        },
+        {
+          "source": "../utils",
+          "specifiers": [
+            "STATUS_LABELS",
+            "STATUS_COLORS",
+            "getItemUnitPrice",
+            "getErrorMessage"
+          ]
+        }
+      ],
+      "exports": [
+        "OrderHistory"
+      ],
+      "totalLines": 197,
+      "hasStructuralAnalysis": true
+    },
+    "src/components/ProductCard.tsx": {
+      "filePath": "src/components/ProductCard.tsx",
+      "contentHash": "529dd99d0a99b61902268509bc62f28f246139159451c87cb17dfe3876ca6d9c",
+      "functions": [
+        {
+          "name": "ProductCard",
+          "params": [
+            "{ product, onAdd, quantityInCart, isPopular }"
+          ],
+          "exported": true,
+          "lineCount": 65
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "react",
+          "specifiers": [
+            "useState",
+            "useEffect"
+          ]
+        },
+        {
+          "source": "lucide-react",
+          "specifiers": [
+            "Plus"
+          ]
+        },
+        {
+          "source": "../types",
+          "specifiers": [
+            "Product"
+          ]
+        }
+      ],
+      "exports": [
+        "ProductCard"
+      ],
+      "totalLines": 77,
+      "hasStructuralAnalysis": true
+    },
+    "src/components/ProfileForm.tsx": {
+      "filePath": "src/components/ProfileForm.tsx",
+      "contentHash": "a992576585809a4a0f181c80f4afdf8f28d8bf35e93d7c7f3cd2f9ef97d3a592",
+      "functions": [
+        {
+          "name": "ProfileForm",
+          "params": [
+            "{ identity, onSave, onClose }"
+          ],
+          "exported": true,
+          "lineCount": 98
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "react",
+          "specifiers": [
+            "useState",
+            "FormEvent"
+          ]
+        },
+        {
+          "source": "lucide-react",
+          "specifiers": [
+            "ArrowLeft"
+          ]
+        },
+        {
+          "source": "../api",
+          "specifiers": [
+            "updateProfile",
+            "changePassword",
+            "saveIdentity"
+          ]
+        },
+        {
+          "source": "../utils",
+          "specifiers": [
+            "getErrorMessage"
+          ]
+        }
+      ],
+      "exports": [
+        "ProfileForm"
+      ],
+      "totalLines": 110,
+      "hasStructuralAnalysis": true
+    },
+    "src/components/SquarePanel.tsx": {
+      "filePath": "src/components/SquarePanel.tsx",
+      "contentHash": "95e01482e85940596b7f6c43f45d41ec5b403b539445530fc727bc0237ba3545",
+      "functions": [
+        {
+          "name": "SquarePanel",
+          "params": [
+            "{ identity }"
+          ],
+          "exported": true,
+          "lineCount": 353
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "react",
+          "specifiers": [
+            "useState",
+            "useEffect",
+            "useCallback",
+            "useRef",
+            "FormEvent"
+          ]
+        },
+        {
+          "source": "lucide-react",
+          "specifiers": [
+            "Plus",
+            "Heart",
+            "MessageCircle",
+            "HelpCircle",
+            "Wrench",
+            "EyeOff",
+            "Users",
+            "X",
+            "Send"
+          ]
+        },
+        {
+          "source": "../api",
+          "specifiers": [
+            "fetchPosts",
+            "createPost",
+            "updatePost",
+            "toggleLike",
+            "addComment",
+            "joinPost",
+            "fetchPostById",
+            "fetchJoinedPostIds"
+          ]
+        },
+        {
+          "source": "../api",
+          "specifiers": [
+            "Post"
+          ]
+        },
+        {
+          "source": "../utils",
+          "specifiers": [
+            "getErrorMessage"
+          ]
+        }
+      ],
+      "exports": [
+        "SquarePanel"
+      ],
+      "totalLines": 373,
+      "hasStructuralAnalysis": true
+    },
+    "src/constants.ts": {
+      "filePath": "src/constants.ts",
+      "contentHash": "fb720fa8394aa11bb5d01a6507c624c4f1f22f3a77fc8b1b75052af9f849ae51",
+      "functions": [],
+      "classes": [],
+      "imports": [
+        {
+          "source": "./types",
+          "specifiers": [
+            "Product",
+            "Category"
+          ]
+        }
+      ],
+      "exports": [
+        "DEFAULT_CATEGORIES",
+        "DEFAULT_PRODUCTS"
+      ],
+      "totalLines": 68,
+      "hasStructuralAnalysis": true
+    },
+    "src/customerReducer.ts": {
+      "filePath": "src/customerReducer.ts",
+      "contentHash": "d64389f8e38cc1d9750a57246ad65028f7723adc1a584a3833e7b8b6efbf621f",
+      "functions": [
+        {
+          "name": "createInitialState",
+          "params": [],
+          "returnType": "CustomerRawState",
+          "exported": true,
+          "lineCount": 18
+        },
+        {
+          "name": "customerReducer",
+          "params": [
+            "state",
+            "action"
+          ],
+          "returnType": "CustomerRawState",
+          "exported": true,
+          "lineCount": 112
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "./types",
+          "specifiers": [
+            "Product",
+            "CartItem"
+          ]
+        },
+        {
+          "source": "./utils",
+          "specifiers": [
+            "getCartKey"
+          ]
+        },
+        {
+          "source": "./api",
+          "specifiers": [
+            "Identity"
+          ]
+        }
+      ],
+      "exports": [
+        "createInitialState",
+        "customerReducer"
+      ],
+      "totalLines": 181,
+      "hasStructuralAnalysis": true
+    },
+    "src/hooks/useCustomerApp.ts": {
+      "filePath": "src/hooks/useCustomerApp.ts",
+      "contentHash": "a89c433e5a1db68f9a241cf744b5aecd03b636410ba69f9be48ba9188716c890",
+      "functions": [
+        {
+          "name": "useCustomerApp",
+          "params": [],
+          "returnType": "{ state: CustomerAppState; actions: CustomerAppActions }",
+          "exported": true,
+          "lineCount": 237
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "react",
+          "specifiers": [
+            "useReducer",
+            "useEffect",
+            "useMemo",
+            "useCallback"
+          ]
+        },
+        {
+          "source": "../types",
+          "specifiers": [
+            "Product",
+            "CartItem"
+          ]
+        },
+        {
+          "source": "../constants",
+          "specifiers": [
+            "DEFAULT_PRODUCTS"
+          ]
+        },
+        {
+          "source": "../api",
+          "specifiers": [
+            "getIdentity",
+            "clearIdentity",
+            "fetchProducts",
+            "createOrder",
+            "fetchStats"
+          ]
+        },
+        {
+          "source": "../utils",
+          "specifiers": [
+            "getItemUnitPrice",
+            "loadCartFromStorage",
+            "saveCartToStorage",
+            "getErrorMessage"
+          ]
+        },
+        {
+          "source": "../customerReducer",
+          "specifiers": [
+            "customerReducer",
+            "createInitialState",
+            "CustomerRawState"
+          ]
+        }
+      ],
+      "exports": [
+        "useCustomerApp"
+      ],
+      "totalLines": 289,
+      "hasStructuralAnalysis": true
+    },
+    "src/index.css": {
+      "filePath": "src/index.css",
+      "contentHash": "e8bc490409f9cef6f83ba093c402e20fa18d8873ceb7569f4dae978a0d4b25b6",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 52,
+      "hasStructuralAnalysis": false
+    },
+    "src/main.tsx": {
+      "filePath": "src/main.tsx",
+      "contentHash": "e2679d485645b6d6e8ff47e2bcf372aa4dcfb82df88401b835fde128b397da65",
+      "functions": [],
+      "classes": [],
+      "imports": [
+        {
+          "source": "react",
+          "specifiers": [
+            "StrictMode"
+          ]
+        },
+        {
+          "source": "react-dom/client",
+          "specifiers": [
+            "createRoot"
+          ]
+        },
+        {
+          "source": "react-router-dom",
+          "specifiers": [
+            "BrowserRouter"
+          ]
+        },
+        {
+          "source": "./App.tsx",
+          "specifiers": [
+            "App"
+          ]
+        },
+        {
+          "source": "./index.css",
+          "specifiers": []
+        }
+      ],
+      "exports": [],
+      "totalLines": 14,
+      "hasStructuralAnalysis": true
+    },
+    "src/types.ts": {
+      "filePath": "src/types.ts",
+      "contentHash": "14129b483c24d79d95211a14ea3fb6838c37dfa726dc031848d970b9430ef0e4",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 36,
+      "hasStructuralAnalysis": true
+    },
+    "src/utils.ts": {
+      "filePath": "src/utils.ts",
+      "contentHash": "48cc36c49f2936e2c0da3d8f27d9fbae23592cfdf5f0faa50a0331c11da4465e",
+      "functions": [
+        {
+          "name": "getCartKey",
+          "params": [
+            "item"
+          ],
+          "returnType": "string",
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "getItemUnitPrice",
+          "params": [
+            "item"
+          ],
+          "returnType": "number",
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "getCartStorageKey",
+          "params": [],
+          "returnType": "string",
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "loadCartFromStorage",
+          "params": [],
+          "returnType": "CartItem[]",
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "saveCartToStorage",
+          "params": [
+            "items"
+          ],
+          "exported": true,
+          "lineCount": 9
+        },
+        {
+          "name": "getErrorMessage",
+          "params": [
+            "err"
+          ],
+          "returnType": "string",
+          "exported": true,
+          "lineCount": 4
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "./types",
+          "specifiers": [
+            "CartItem"
+          ]
+        },
+        {
+          "source": "./api",
+          "specifiers": [
+            "getIdentity"
+          ]
+        }
+      ],
+      "exports": [
+        "STATUS_LABELS",
+        "STATUS_COLORS",
+        "getCartKey",
+        "getItemUnitPrice",
+        "getCartStorageKey",
+        "loadCartFromStorage",
+        "saveCartToStorage",
+        "getErrorMessage"
+      ],
+      "totalLines": 60,
+      "hasStructuralAnalysis": true
+    },
+    "tsconfig.json": {
+      "filePath": "tsconfig.json",
+      "contentHash": "f580e175cc42525abcb738377b9461b96e24a2e73d6032640c25e99fefc0cecc",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 28,
+      "hasStructuralAnalysis": true
+    },
+    "tsconfig.server.json": {
+      "filePath": "tsconfig.server.json",
+      "contentHash": "c43ec6aba776ca073c848df2da24e4e9da6016a6db7de25f51c8b32028a603f1",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 17,
+      "hasStructuralAnalysis": true
+    },
+    "vite.config.ts": {
+      "filePath": "vite.config.ts",
+      "contentHash": "7bf798ed3c56d411fddbe7ac221f0a5f2b7672e5b14c615a4e0c2ebb1315b6a0",
+      "functions": [],
+      "classes": [],
+      "imports": [
+        {
+          "source": "@tailwindcss/vite",
+          "specifiers": [
+            "tailwindcss"
+          ]
+        },
+        {
+          "source": "@vitejs/plugin-react",
+          "specifiers": [
+            "react"
+          ]
+        },
+        {
+          "source": "path",
+          "specifiers": [
+            "path"
+          ]
+        },
+        {
+          "source": "vite",
+          "specifiers": [
+            "defineConfig",
+            "loadEnv"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 30,
+      "hasStructuralAnalysis": true
+    },
+    "vitest.config.ts": {
+      "filePath": "vitest.config.ts",
+      "contentHash": "09a1f3d46f330099f486bb569416339c6376d91c8b9c4d72d990ade9e406788c",
+      "functions": [],
+      "classes": [],
+      "imports": [
+        {
+          "source": "vitest/config",
+          "specifiers": [
+            "defineConfig"
+          ]
+        },
+        {
+          "source": "path",
+          "specifiers": [
+            "path"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 24,
+      "hasStructuralAnalysis": true
+    }
+  }
+}
