@@ -2,7 +2,7 @@ import { lazy, Suspense, useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   ShoppingBag, Check, Flame, Utensils, Pizza, Coffee, IceCream, Package,
-  User as UserIcon, Search, Edit3, X, LogOut, Clock, MessageCircle, Bell, Users, ChevronDown,
+  User as UserIcon, Search, Edit3, X, LogOut, Clock, MessageCircle, Bell, Users, ChevronDown, Sparkles,
 } from 'lucide-react';
 import { fetchUnreadCount } from './shared/api';
 import { DEFAULT_CATEGORIES } from './shared/constants';
@@ -193,7 +193,7 @@ function CustomerApp() {
           {state.identity && (
             <Link to="/square"
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-slate-100 text-slate-500 hover:bg-slate-200 transition-all">
-              <MessageCircle size={14} />
+              <Sparkles size={14} />
               <span className="hidden sm:inline">广场</span>
             </Link>
           )}
