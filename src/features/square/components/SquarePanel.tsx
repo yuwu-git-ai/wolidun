@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef, FormEvent } from 'react';
-import { Plus, Heart, MessageCircle, HelpCircle, Wrench, MessageSquareText, Users, X, Send, Search, List, LogOut, Trash2 } from 'lucide-react';
+import { Plus, Heart, MessageCircle, HelpCircle, Wrench, MessageSquareText, Users, X, Send, Search, LogOut, Trash2 } from 'lucide-react';
 import {
   fetchPosts, createPost, updatePost, toggleLike,
   addComment, joinPost, fetchPostById, fetchJoinedPostIds, leavePost, deletePost
@@ -187,7 +187,7 @@ export default function SquarePanel({ identity, onViewProfile }: { identity: { n
   return (
     <div className="flex flex-col h-full">
       {/* Sub tabs */}
-      <div className="flex gap-1 px-3 py-2.5 bg-white border-b border-slate-100 overflow-x-auto shrink-0">
+      <div className="flex gap-1 px-3 pt-2.5 bg-white overflow-x-auto shrink-0">
         {SQUARE_TABS.map(t => {
           const Icon = t.icon;
           const active = activeTab === t.key;
@@ -198,26 +198,17 @@ export default function SquarePanel({ identity, onViewProfile }: { identity: { n
             </button>
           );
         })}
-        <div className="flex-1" />
-        <button onClick={() => { setStatusFilter(f => f === 'active' ? 'history' : 'active'); }}
-          className={`text-xs px-2 py-0.5 rounded-lg font-bold transition-colors ${statusFilter === 'history' ? 'bg-slate-100 text-slate-500' : 'text-slate-400 hover:text-slate-600'}`}>
-          {statusFilter === 'active' ? '历史' : '进行中'}
-        </button>
-        <button onClick={() => setSort(sort === 'newest' ? 'hot' : 'newest')}
-          className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold transition-all ${sort === 'newest' ? 'bg-slate-100 text-slate-600' : 'bg-orange-50 text-orange-500'}`}>
-          <List size={12} />{sort === 'newest' ? '最新' : '最热'}
-        </button>
       </div>
 
-      {/* Search bar */}
-      <div className="px-3 pb-2 shrink-0">
-        <div className="flex items-center gap-2 bg-slate-50 rounded-xl px-3 py-2 border border-slate-100">
+      {/* Search bar + filters */}
+      <div className="px-3 py-2 bg-white border-b border-slate-100 shrink-0 flex items-center gap-2">
+        <div className="flex items-center gap-2 bg-slate-50 rounded-xl px-3 py-2 border border-slate-100 flex-1 min-w-0">
           <Search size={14} className="text-slate-400 shrink-0" />
           <input
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="搜索标题或用户名..."
-            className="flex-1 bg-transparent outline-none text-sm text-slate-600 placeholder-slate-400"
+            className="flex-1 bg-transparent outline-none text-sm text-slate-600 placeholder-slate-400 min-w-0"
           />
           {search && (
             <button onClick={() => setSearch('')} className="text-slate-400 hover:text-slate-600 shrink-0">
@@ -225,6 +216,14 @@ export default function SquarePanel({ identity, onViewProfile }: { identity: { n
             </button>
           )}
         </div>
+        <button onClick={() => { setStatusFilter(f => f === 'active' ? 'history' : 'active'); }}
+          className={`shrink-0 text-xs px-2.5 py-2 rounded-lg font-bold transition-colors ${statusFilter === 'history' ? 'bg-slate-200 text-slate-600' : 'text-slate-400 hover:text-slate-500'}`}>
+          {statusFilter === 'active' ? '历史' : '进行'}
+        </button>
+        <button onClick={() => setSort(sort === 'newest' ? 'hot' : 'newest')}
+          className={`shrink-0 flex items-center gap-1 px-2.5 py-2 rounded-lg text-xs font-bold transition-all ${sort === 'newest' ? 'bg-slate-200 text-slate-600' : 'bg-amber-50 text-amber-600'}`}>
+          {sort === 'newest' ? '🔥' : '🕐'}{sort === 'newest' ? '最新' : '最热'}
+        </button>
       </div>
 
       {/* Post list */}
