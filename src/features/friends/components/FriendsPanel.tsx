@@ -49,7 +49,6 @@ export default function FriendsPanel({ userId, onClose, onViewProfile, onChat }:
   };
 
   const handleSearch = useCallback(async () => {
-    if (!searchQuery.trim()) { setSearchResults([]); return; }
     setSearching(true);
     try {
       const data = await searchUsers(searchQuery.trim());
