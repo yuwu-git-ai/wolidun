@@ -74,7 +74,7 @@ function SquareApp() {
   return (
     <div className="app-viewport flex flex-col bg-slate-50 text-slate-800 font-sans overflow-hidden h-[100dvh] relative">
       {/* Header */}
-      <nav className="h-14 sm:h-16 bg-white border-b border-slate-200 flex items-center justify-between px-3 sm:px-6 shrink-0 shadow-sm relative z-10">
+      <nav className="h-14 sm:h-16 bg-white border-b border-slate-200 flex items-center justify-between px-3 sm:px-6 shrink-0 shadow-sm">
         <div className="flex min-w-0 flex-1 items-center gap-2 sm:gap-3 select-none">
           <Link to="/" className="w-9 h-9 sm:w-10 sm:h-10 bg-purple-500 rounded-xl flex items-center justify-center text-white font-bold text-lg sm:text-xl shrink-0">窝</Link>
           <h1 className="min-w-0 truncate text-base sm:text-xl font-bold tracking-tight">窝里蹲广场</h1>
@@ -223,7 +223,7 @@ function CustomerApp() {
       )}
 
       {/* ── Persistent Header ── */}
-      <nav className="h-14 sm:h-16 bg-white border-b border-slate-200 flex items-center justify-between px-3 sm:px-6 shrink-0 shadow-sm relative z-10">
+      <nav className="h-14 sm:h-16 bg-white border-b border-slate-200 flex items-center justify-between px-3 sm:px-6 shrink-0 shadow-sm relative">
         <div className="flex min-w-0 flex-1 items-center gap-2 sm:gap-3 select-none">
           <div className="w-9 h-9 sm:w-10 sm:h-10 bg-orange-500 rounded-xl flex items-center justify-center text-white font-bold text-lg sm:text-xl shrink-0">窝</div>
           <h1 className="min-w-0 truncate text-base sm:text-xl font-bold tracking-tight">窝里蹲点单</h1>
