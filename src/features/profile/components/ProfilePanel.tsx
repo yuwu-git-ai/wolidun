@@ -114,7 +114,7 @@ export default function ProfilePanel({ nickname, myIdentity, onClose, onChat }: 
   if (loading) {
     return (
       <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4">
-        <div className="w-full max-w-md bg-white rounded-t-[28px] sm:rounded-[28px] p-6"><p className="text-center text-slate-400 py-10">加载中...</p></div>
+        <div className="w-full max-w-md bg-white rounded-[28px] p-6"><p className="text-center text-slate-400 py-10">加载中...</p></div>
       </div>
     );
   }
@@ -122,7 +122,7 @@ export default function ProfilePanel({ nickname, myIdentity, onClose, onChat }: 
   if (!profile) {
     return (
       <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4">
-        <div className="w-full max-w-md bg-white rounded-t-[28px] sm:rounded-[28px] p-6 text-center">
+        <div className="w-full max-w-md bg-white rounded-[28px] p-6 text-center">
           <p className="text-slate-400 py-10">用户不存在</p>
           <button onClick={onClose} className="px-4 py-2 bg-slate-100 rounded-xl text-sm font-bold">关闭</button>
         </div>
@@ -135,7 +135,7 @@ export default function ProfilePanel({ nickname, myIdentity, onClose, onChat }: 
   return (
     <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4"
       onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
-      <div className="w-full max-w-md bg-white rounded-t-[28px] sm:rounded-[28px] p-6 max-h-[85vh] overflow-y-auto shadow-2xl space-y-4">
+      <div className="w-full max-w-md bg-white rounded-[28px] p-6 max-h-[85vh] overflow-y-auto shadow-2xl space-y-4">
         {/* Close */}
         <button onClick={onClose} className="absolute top-4 right-4 text-slate-400 hover:text-slate-600"><X size={20} /></button>
 
