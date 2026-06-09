@@ -122,6 +122,10 @@ function SquareApp() {
                   className="w-full flex items-center gap-2 px-3 py-2 text-xs font-bold hover:bg-slate-50 text-left sm:hidden">
                   <Users size={12} />好友
                 </button>
+                <Link to="/" onClick={() => setShowUserMenu(false)}
+                  className="w-full flex items-center gap-2 px-3 py-2 text-xs font-bold hover:bg-slate-50 text-left">
+                  <ShoppingBag size={12} />回到点单
+                </Link>
               </div>
             )}
           </div>
