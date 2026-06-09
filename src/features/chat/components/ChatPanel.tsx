@@ -156,11 +156,11 @@ export default function ChatPanel({ userId, initialPartner, onClose, onViewProfi
               ) : (
                 <div className="space-y-2">
                   {filtered.map(c => (
-                    <button key={c.partner}
-                      onClick={() => setActivePartner(c.partner)}
+                    <div key={c.partner}
                       className="flex items-center gap-3 w-full p-3 bg-slate-50 rounded-xl hover:bg-slate-100 transition-colors text-left">
-                      <div className="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center text-xl shrink-0">{c.avatar}</div>
-                      <div className="flex-1 min-w-0">
+                      <button onClick={(e) => { e.stopPropagation(); onViewProfile(c.partner); }}
+                        className="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center text-xl shrink-0 hover:ring-2 hover:ring-orange-300 transition-all cursor-pointer">{c.avatar}</button>
+                      <button onClick={() => setActivePartner(c.partner)} className="flex-1 min-w-0 text-left cursor-pointer py-0.5">
                         <div className="flex items-center justify-between">
                           <span className="text-sm font-bold truncate">{c.partner}</span>
                           {c.last_message && <span className="text-[10px] text-slate-400 shrink-0 ml-2">{formatTime(c.last_message.created_at)}</span>}
@@ -169,8 +169,8 @@ export default function ChatPanel({ userId, initialPartner, onClose, onViewProfi
                           <span className="text-xs text-slate-400 truncate">{c.last_message?.content || ''}</span>
                           {c.unread > 0 && <span className="shrink-0 ml-2 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center text-[10px] font-bold">{c.unread}</span>}
                         </div>
-                      </div>
-                    </button>
+                      </button>
+                    </div>
                   ))}
                 </div>
               )}
