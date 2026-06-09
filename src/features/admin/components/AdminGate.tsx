@@ -3,20 +3,34 @@ import { motion } from 'motion/react';
 import { Settings } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import AdminPanel from './AdminPanel';
-import { getAdminKey, setAdminKey as saveAdminKey, verifyAdmin } from '../../../shared/api';
+import { getAdminKey, setAdminKey as saveAdminKey, verifyAdmin, getIdentity, checkIsAdmin } from '../../../shared/api';
 
 export default function AdminGate() {
   const [authorized, setAuthorized] = useState(false);
   const [key, setKey] = useState('');
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const saved = getAdminKey();
+  const identity = getIdentity();
 
   useEffect(() => {
+    // Check admin key first
     if (saved) {
-      verifyAdmin(saved).then(() => setAuthorized(true)).catch(err => console.warn('Admin verification failed:', err));
+      verifyAdmin(saved).then(() => setAuthorized(true)).catch(() => {}).finally(() => setLoading(false));
+      return;
     }
-  }, [saved]);
+    // Then check if current user is admin
+    if (identity) {
+      checkIsAdmin(identity.nickname).then(r => {
+        if (r.is_admin) {
+          setAuthorized(true);
+          setKey(identity.nickname); // pass nickname as "key" for X-User header
+        }
+      }).catch(() => {}).finally(() => setLoading(false));
+      return;
+    }
+    setLoading(false);
+  }, [saved, identity]);
 
   const handleLogin = async (e: FormEvent) => {
     e.preventDefault();
@@ -34,7 +48,8 @@ export default function AdminGate() {
   };
 
   if (authorized) {
-    return <AdminPanel adminKey={saved || key} />;
+    const isUserAdmin = !saved && identity?.nickname === key;
+    return <AdminPanel adminKey={saved || (isUserAdmin ? '' : key)} adminUser={isUserAdmin ? identity!.nickname : undefined} />;
   }
 
   return (

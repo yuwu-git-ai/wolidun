@@ -213,6 +213,31 @@ router.delete('/friends/:nickname', (req: Request, res: Response) => {
   res.json({ ok: true });
 });
 
+// PUT /api/admin/users/:nickname/admin — toggle admin status
+router.put('/admin/users/:nickname/admin', (req: Request, res: Response) => {
+  const adminKey = req.headers['x-admin-key'] as string;
+  const expectedKey = process.env.ADMIN_KEY || 'admin123';
+  if (adminKey !== expectedKey) return res.status(403).json({ error: '需要管理员密钥' });
+
+  const db = getDb();
+  const user = db.prepare('SELECT * FROM users WHERE nickname = ?').get(req.params.nickname) as any;
+  if (!user) return res.status(404).json({ error: '用户不存在' });
+
+  const newVal = user.is_admin ? 0 : 1;
+  db.prepare('UPDATE users SET is_admin = ? WHERE nickname = ?').run(newVal, req.params.nickname);
+  res.json({ nickname: req.params.nickname, is_admin: newVal === 1 });
+});
+
+// GET /api/admin/check — check if user is admin
+router.get('/admin/check', (req: Request, res: Response) => {
+  const db = getDb();
+  const { nickname } = req.query;
+  if (!nickname) return res.json({ is_admin: false });
+
+  const user = db.prepare('SELECT is_admin FROM users WHERE nickname = ?').get(nickname) as any;
+  res.json({ is_admin: !!user?.is_admin });
+});
+
 // GET /api/admin/users — list all registered users (admin only)
 router.get('/admin/users', (req: Request, res: Response) => {
   const adminKey = req.headers['x-admin-key'] as string;
@@ -221,7 +246,7 @@ router.get('/admin/users', (req: Request, res: Response) => {
 
   const db = getDb();
   const users = db.prepare(`
-    SELECT u.nickname, u.dorm, u.created_at,
+    SELECT u.nickname, u.dorm, u.created_at, u.is_admin,
       (SELECT COUNT(*) FROM friendships WHERE (from_user = u.nickname OR to_user = u.nickname) AND status = 'accepted') as friend_count,
       (SELECT COUNT(*) FROM posts WHERE user_id = u.nickname) as post_count
     FROM users u ORDER BY u.created_at DESC

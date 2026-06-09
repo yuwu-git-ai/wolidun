@@ -9,13 +9,19 @@ import {
   updateOrderStatus, deleteOrder, createProduct, updateProduct, deleteProduct,
 } from '../../../shared/api';
 import type { Order, Product, Combo } from '../../../shared/types';
-import { fetchCombos, createCombo, updateCombo, deleteCombo, fetchAllUsers, broadcastNotification } from '../../../shared/api';
+import { fetchCombos, createCombo, updateCombo, deleteCombo, fetchAllUsers, toggleUserAdmin, broadcastNotification, setGlobalAdminUser } from '../../../shared/api';
 import { DEFAULT_CATEGORIES } from '../../../shared/constants';
 import { STATUS_LABELS, getErrorMessage } from '../../../shared/utils';
 
 const NOTIFICATION_SOUND = 'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACAf39/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/gH9/f4B/f3+Af39/g';
 
-export default function AdminPanel({ adminKey }: { adminKey: string }) {
+export default function AdminPanel({ adminKey, adminUser }: { adminKey: string; adminUser?: string }) {
+  const adminHeaders = (): Record<string, string> => {
+    const h: Record<string, string> = {};
+    if (adminKey) h['X-Admin-Key'] = adminKey;
+    if (adminUser) h['X-User'] = adminUser;
+    return h;
+  };
   const [tab, setTab] = useState<'orders' | 'products' | 'analytics' | 'combos' | 'users' | 'broadcast'>('orders');
   const [orders, setOrders] = useState<Order[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
@@ -41,7 +47,7 @@ export default function AdminPanel({ adminKey }: { adminKey: string }) {
   const [editingCombo, setEditingCombo] = useState<Combo | null>(null);
   const [showComboForm, setShowComboForm] = useState(false);
   const [comboForm, setComboForm] = useState({ name: '', discount: '', items: [] as { productId: string; variantId: string }[] });
-  const [users, setUsers] = useState<{ nickname: string; dorm: string; created_at: string; friend_count: number; post_count: number }[]>([]);
+  const [users, setUsers] = useState<{ nickname: string; dorm: string; created_at: string; friend_count: number; post_count: number; is_admin: number }[]>([]);
   const [broadcastTitle, setBroadcastTitle] = useState('');
   const [broadcastContent, setBroadcastContent] = useState('');
   const [broadcasting, setBroadcasting] = useState(false);
@@ -83,6 +89,12 @@ export default function AdminPanel({ adminKey }: { adminKey: string }) {
     }, 5000);
     return () => clearInterval(t);
   }, [pendingCount, loadOrders]);
+
+  // Set global admin user for API calls
+  useEffect(() => {
+    setGlobalAdminUser(adminUser);
+    return () => setGlobalAdminUser(undefined);
+  }, [adminUser]);
 
   // Load users when tab changes to users
   useEffect(() => {
@@ -150,6 +162,13 @@ export default function AdminPanel({ adminKey }: { adminKey: string }) {
       setSelectedUserIds(new Set());
     } catch (err) { alert(getErrorMessage(err)); }
     finally { setBroadcasting(false); }
+  };
+
+  const handleToggleAdmin = async (nickname: string) => {
+    try {
+      const r = await toggleUserAdmin(adminKey, nickname);
+      setUsers(prev => prev.map(u => u.nickname === nickname ? { ...u, is_admin: r.is_admin ? 1 : 0 } : u));
+    } catch (err) { alert(getErrorMessage(err)); }
   };
 
   const resetProductForm = () => {
@@ -776,11 +795,12 @@ export default function AdminPanel({ adminKey }: { adminKey: string }) {
                       <th className="px-4 py-3 font-bold text-slate-500">注册时间</th>
                       <th className="px-4 py-3 font-bold text-slate-500 text-center">好友</th>
                       <th className="px-4 py-3 font-bold text-slate-500 text-center">帖子</th>
+                      <th className="px-4 py-3 font-bold text-slate-500 text-center">管理</th>
                     </tr>
                   </thead>
                   <tbody>
                     {users.length === 0 ? (
-                      <tr><td colSpan={5} className="px-4 py-10 text-center text-slate-400">暂无注册用户</td></tr>
+                      <tr><td colSpan={6} className="px-4 py-10 text-center text-slate-400">暂无注册用户</td></tr>
                     ) : (
                       users.map(u => (
                         <tr key={u.nickname} className="border-b border-slate-50 hover:bg-slate-50/50">
@@ -789,6 +809,12 @@ export default function AdminPanel({ adminKey }: { adminKey: string }) {
                           <td className="px-4 py-3 text-slate-400 text-xs">{u.created_at}</td>
                           <td className="px-4 py-3 text-center">{u.friend_count}</td>
                           <td className="px-4 py-3 text-center">{u.post_count}</td>
+                          <td className="px-4 py-3 text-center">
+                            <button onClick={() => handleToggleAdmin(u.nickname)}
+                              className={`px-2 py-1 rounded-lg text-[10px] font-bold transition-colors ${u.is_admin ? 'bg-indigo-100 text-indigo-600 hover:bg-red-50 hover:text-red-500' : 'bg-slate-100 text-slate-400 hover:bg-indigo-50 hover:text-indigo-500'}`}>
+                              {u.is_admin ? '管理员' : '设为管理'}
+                            </button>
+                          </td>
                         </tr>
                       ))
                     )}

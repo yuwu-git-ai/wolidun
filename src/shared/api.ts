@@ -84,6 +84,19 @@ async function delay(ms: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+let _globalAdminUser: string | undefined;
+export function setGlobalAdminUser(user: string | undefined) {
+  _globalAdminUser = user;
+}
+
+function buildAdminHeaders(adminKey?: string, adminUser?: string): Record<string, string> {
+  const h: Record<string, string> = {};
+  if (adminKey) h['X-Admin-Key'] = adminKey;
+  const user = adminUser || _globalAdminUser;
+  if (user) h['X-User'] = user;
+  return h;
+}
+
 async function request<T = unknown>(url: string, options: RequestInit = {}, retries = 3): Promise<T> {
   const headers: Record<string, string> = {
     ...(options.headers as Record<string, string>),
@@ -133,7 +146,7 @@ function getErrorMessage(err: unknown): string {
 export async function verifyAdmin(adminKey: string): Promise<{ valid: boolean }> {
   return request(`${BASE}/admin/verify`, {
     method: 'POST',
-    headers: { 'X-Admin-Key': adminKey },
+    headers: buildAdminHeaders(adminKey),
   });
 }
 
@@ -145,7 +158,7 @@ export async function fetchProducts(): Promise<Product[]> {
 export async function createProduct(product: Omit<Product, 'id'>, adminKey: string): Promise<Product> {
   return request(`${BASE}/products`, {
     method: 'POST',
-    headers: { 'X-Admin-Key': adminKey },
+    headers: buildAdminHeaders(adminKey),
     body: JSON.stringify(product),
   });
 }
@@ -153,7 +166,7 @@ export async function createProduct(product: Omit<Product, 'id'>, adminKey: stri
 export async function updateProduct(id: string, product: Partial<Product>, adminKey: string): Promise<Product> {
   return request(`${BASE}/products/${id}`, {
     method: 'PUT',
-    headers: { 'X-Admin-Key': adminKey },
+    headers: buildAdminHeaders(adminKey),
     body: JSON.stringify(product),
   });
 }
@@ -161,7 +174,7 @@ export async function updateProduct(id: string, product: Partial<Product>, admin
 export async function deleteProduct(id: string, adminKey: string): Promise<{ success: boolean }> {
   return request(`${BASE}/products/${id}`, {
     method: 'DELETE',
-    headers: { 'X-Admin-Key': adminKey },
+    headers: buildAdminHeaders(adminKey),
   });
 }
 
@@ -219,7 +232,7 @@ export async function fetchStats(params?: { view?: 'monthly' | 'yearly'; year?: 
 export async function updateOrderStatus(orderId: string, status: string, adminKey: string): Promise<Order> {
   return request(`${BASE}/orders/${orderId}`, {
     method: 'PUT',
-    headers: { 'X-Admin-Key': adminKey },
+    headers: buildAdminHeaders(adminKey),
     body: JSON.stringify({ status }),
   });
 }
@@ -358,7 +371,7 @@ export async function fetchCombos(): Promise<Combo[]> {
 export async function createCombo(combo: { name: string; discount: number; items: { productId: string; variantId?: string | null }[] }, adminKey: string): Promise<Combo> {
   return request(`${BASE}/combos`, {
     method: 'POST',
-    headers: { 'X-Admin-Key': adminKey },
+    headers: buildAdminHeaders(adminKey),
     body: JSON.stringify(combo),
   });
 }
@@ -366,7 +379,7 @@ export async function createCombo(combo: { name: string; discount: number; items
 export async function updateCombo(id: string, combo: { name?: string; discount?: number; items?: { productId: string; variantId?: string | null }[] }, adminKey: string): Promise<Combo> {
   return request(`${BASE}/combos/${id}`, {
     method: 'PUT',
-    headers: { 'X-Admin-Key': adminKey },
+    headers: buildAdminHeaders(adminKey),
     body: JSON.stringify(combo),
   });
 }
@@ -374,15 +387,27 @@ export async function updateCombo(id: string, combo: { name?: string; discount?:
 export async function deleteCombo(id: string, adminKey: string): Promise<{ success: boolean }> {
   return request(`${BASE}/combos/${id}`, {
     method: 'DELETE',
-    headers: { 'X-Admin-Key': adminKey },
+    headers: buildAdminHeaders(adminKey),
   });
 }
 
 // ── Admin ──
-export async function fetchAllUsers(adminKey: string): Promise<{ users: { nickname: string; dorm: string; created_at: string; friend_count: number; post_count: number }[] }> {
+export async function fetchAllUsers(adminKey: string, adminUser?: string): Promise<{ users: { nickname: string; dorm: string; created_at: string; friend_count: number; post_count: number; is_admin: number }[] }> {
   return request(`${BASE}/admin/users`, {
-    headers: { 'X-Admin-Key': adminKey },
+    headers: buildAdminHeaders(adminKey, adminUser),
   });
+}
+
+export async function toggleUserAdmin(adminKey: string, nickname: string, adminUser?: string): Promise<{ nickname: string; is_admin: boolean }> {
+  return request(`${BASE}/admin/users/${encodeURIComponent(nickname)}/admin`, {
+    method: 'PUT',
+    headers: buildAdminHeaders(adminKey, adminUser),
+  });
+}
+
+// ── Auth check ──
+export async function checkIsAdmin(nickname: string): Promise<{ is_admin: boolean }> {
+  return request(`${BASE}/admin/check?nickname=${encodeURIComponent(nickname)}`);
 }
 
 // ── Notifications ──
@@ -401,7 +426,7 @@ export async function markNotificationRead(id: string): Promise<{ success: boole
 export async function broadcastNotification(adminKey: string, title: string, content: string, isGlobal?: boolean, userIds?: string[]): Promise<{ success: boolean; count: number; global?: boolean }> {
   return request(`${BASE}/notifications/broadcast`, {
     method: 'POST',
-    headers: { 'X-Admin-Key': adminKey },
+    headers: buildAdminHeaders(adminKey),
     body: JSON.stringify({ title, content, is_global: isGlobal, user_ids: userIds }),
   });
 }

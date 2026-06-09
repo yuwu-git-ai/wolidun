@@ -304,6 +304,12 @@ function runMigrations() {
     db.prepare('INSERT INTO schema_version (version) VALUES (12)').run();
     console.log('[DB] Migrated to schema v12 (announcements).');
   }
+
+  if (current < 13) {
+    db.exec(`ALTER TABLE users ADD COLUMN is_admin INTEGER DEFAULT 0`);
+    db.prepare('INSERT INTO schema_version (version) VALUES (13)').run();
+    console.log('[DB] Migrated to schema v13 (users.is_admin).');
+  }
 }
 
 function initTables() {
