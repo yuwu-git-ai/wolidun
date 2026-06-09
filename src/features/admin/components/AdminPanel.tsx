@@ -34,7 +34,7 @@ export default function AdminPanel({ adminKey }: { adminKey: string }) {
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [showProductForm, setShowProductForm] = useState(false);
   interface VariantFormItem { id?: string; name: string; price: string; stock: string; }
-  const [productForm, setProductForm] = useState({ name: '', price: '', category: '1', description: '', image: '', stock: '999', allowBrewing: false, allowFreezing: false, isHot: false, variants: [] as VariantFormItem[] });
+  const [productForm, setProductForm] = useState({ name: '', price: '', category: '2', description: '', image: '', stock: '999', allowBrewing: false, allowFreezing: false, isHot: false, variants: [] as VariantFormItem[] });
 
   // Combo state
   const [combos, setCombos] = useState<Combo[]>([]);
@@ -102,7 +102,7 @@ export default function AdminPanel({ adminKey }: { adminKey: string }) {
   };
 
   const resetProductForm = () => {
-    setProductForm({ name: '', price: '', category: '1', description: '', image: '', stock: '999', allowBrewing: false, allowFreezing: false, isHot: false, variants: [] });
+    setProductForm({ name: '', price: '', category: '2', description: '', image: '', stock: '999', allowBrewing: false, allowFreezing: false, isHot: false, variants: [] });
     setEditingProduct(null);
     setShowProductForm(false);
   };
@@ -407,7 +407,7 @@ export default function AdminPanel({ adminKey }: { adminKey: string }) {
                       placeholder="价格" required className="flex-1 p-3 bg-slate-50 rounded-xl border border-slate-200 outline-none focus:border-orange-300" />
                     <select value={productForm.category} onChange={e => setProductForm(p => ({ ...p, category: e.target.value }))}
                       className="flex-1 p-3 bg-slate-50 rounded-xl border border-slate-200 outline-none">
-                      {DEFAULT_CATEGORIES.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                      {DEFAULT_CATEGORIES.filter(c => c.id !== '1').map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                     </select>
                   </div>
                   <input value={productForm.description} onChange={e => setProductForm(p => ({ ...p, description: e.target.value }))}
