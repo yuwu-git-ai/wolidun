@@ -26,6 +26,8 @@ export default function NotificationPanel({ nickname, onClose, onRead }: Notific
       setNotifs(ns.notifications);
       setAnnouncements(ns.announcements);
       setFriendRequests(frs);
+      // Remember that user has seen these announcements
+      localStorage.setItem('wolidun_last_seen_announcements', String((ns.announcements as any[]).length));
     }).finally(() => setLoading(false));
   }, [nickname]);
 

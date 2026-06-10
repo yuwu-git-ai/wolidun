@@ -29,10 +29,15 @@ router.get('/notifications/unread-count', (req: Request, res: Response) => {
   const { user_id } = req.query;
   if (!user_id) return res.status(400).json({ error: '缺少 user_id' });
 
-  const row = db.prepare(
+  const notifRow = db.prepare(
     'SELECT COUNT(*) as count FROM notifications WHERE user_id = ? AND is_read = 0'
   ).get(user_id) as any;
-  res.json({ count: row.count });
+
+  const announceRow = db.prepare(
+    'SELECT COUNT(*) as count FROM announcements WHERE is_global = 1'
+  ).get() as any;
+
+  res.json({ count: notifRow.count, announcement_count: announceRow.count });
 });
 
 // PUT /api/notifications/:id/read — mark as read
@@ -68,23 +73,7 @@ router.post('/notifications/broadcast', requireAdmin, (req: Request, res: Respon
     db.prepare(
       'INSERT INTO announcements (id, title, content, is_global) VALUES (?, ?, ?, 1)'
     ).run(id, title, content || '');
-
-    // Also send notification to all existing users so they see a red badge
-    const users = db.prepare('SELECT nickname FROM users').all() as { nickname: string }[];
-    if (users.length > 0) {
-      const insertStmt = db.prepare(
-        'INSERT INTO notifications (id, user_id, title, content) VALUES (?, ?, ?, ?)'
-      );
-      const notifTitle = `📌 ${title}`;
-      const tx = db.transaction(() => {
-        for (const u of users) {
-          insertStmt.run(uuid(), u.nickname, notifTitle, content || '');
-        }
-      });
-      tx();
-    }
-
-    res.json({ success: true, count: users.length, global: true });
+    res.json({ success: true, count: -1, global: true });
   } else {
     // Send to specific users or all
     const users = (user_ids && user_ids.length > 0)
@@ -140,12 +129,6 @@ router.delete('/announcements/:id', requireAdmin, (req: Request, res: Response) 
   if (!announcement) return res.status(404).json({ error: '公告不存在' });
 
   db.prepare('DELETE FROM announcements WHERE id = ?').run(req.params.id);
-
-  // Also delete the companion notifications sent to users
-  db.prepare(
-    'DELETE FROM notifications WHERE title = ?'
-  ).run(`📌 ${announcement.title}`);
-
   res.json({ success: true });
 });
 

@@ -421,7 +421,7 @@ export async function fetchNotifications(userId: string): Promise<{ notification
   return request(`${BASE}/notifications?user_id=${encodeURIComponent(userId)}`);
 }
 
-export async function fetchUnreadCount(userId: string): Promise<{ count: number }> {
+export async function fetchUnreadCount(userId: string): Promise<{ count: number; announcement_count: number }> {
   return request(`${BASE}/notifications/unread-count?user_id=${encodeURIComponent(userId)}`);
 }
 

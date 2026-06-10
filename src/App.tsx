@@ -57,12 +57,16 @@ function SquareApp() {
     if (!identity) return;
     const nick = identity.nickname;
     const load = () => {
-      fetchUnreadCount(nick).then(r => setUnreadCount(r.count)).catch(() => {});
+      fetchUnreadCount(nick).then(r => {
+        const lastSeen = parseInt(localStorage.getItem('wolidun_last_seen_announcements') || '0');
+        const newAnnounce = Math.max(0, (r.announcement_count || 0) - lastSeen);
+        setUnreadCount((r.count || 0) + newAnnounce);
+      }).catch(() => {});
       fetchTotalUnread(nick).then(r => setUnreadMessages(r.count)).catch(() => {});
       fetchPendingFriendCount(nick).then(r => setPendingFriendRequests(r.count)).catch(() => {});
     };
     load();
-    const t = setInterval(load, 30000);
+    const t = setInterval(load, 5000);
     return () => clearInterval(t);
   }, [identity]);
 
@@ -210,12 +214,16 @@ function CustomerApp() {
     if (!state.identity) return;
     const nick = state.identity.nickname;
     const load = () => {
-      fetchUnreadCount(nick).then(r => setUnreadCount(r.count)).catch(() => {});
+      fetchUnreadCount(nick).then(r => {
+        const lastSeen = parseInt(localStorage.getItem('wolidun_last_seen_announcements') || '0');
+        const newAnnounce = Math.max(0, (r.announcement_count || 0) - lastSeen);
+        setUnreadCount((r.count || 0) + newAnnounce);
+      }).catch(() => {});
       fetchTotalUnread(nick).then(r => setUnreadMessages(r.count)).catch(() => {});
       fetchPendingFriendCount(nick).then(r => setPendingFriendRequests(r.count)).catch(() => {});
     };
     load();
-    const t = setInterval(load, 30000);
+    const t = setInterval(load, 5000);
     return () => clearInterval(t);
   }, [state.identity]);
 
