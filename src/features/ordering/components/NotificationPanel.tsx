@@ -6,9 +6,10 @@ import { getErrorMessage } from '../../../shared/utils';
 interface NotificationPanelProps {
   nickname: string;
   onClose: () => void;
+  onRead?: () => void;
 }
 
-export default function NotificationPanel({ nickname, onClose }: NotificationPanelProps) {
+export default function NotificationPanel({ nickname, onClose, onRead }: NotificationPanelProps) {
   const [notifs, setNotifs] = useState<any[]>([]);
   const [announcements, setAnnouncements] = useState<any[]>([]);
   const [friendRequests, setFriendRequests] = useState<any[]>([]);
@@ -32,7 +33,8 @@ export default function NotificationPanel({ nickname, onClose }: NotificationPan
     try {
       await markNotificationRead(id);
       setNotifs(prev => prev.map(n => n.id === id ? { ...n, is_read: 1 } : n));
-    } catch { /* ignore */ }
+      onRead?.();
+    } catch (err) { console.warn('markRead failed:', err); }
   };
 
   const handleRespond = async (from: string, to: string, action: 'accept' | 'reject') => {
@@ -48,8 +50,10 @@ export default function NotificationPanel({ nickname, onClose }: NotificationPan
     e.stopPropagation();
     if (!confirm('删除这条通知？')) return;
     try {
+      const wasUnread = !notifs.find(n => n.id === id)?.is_read;
       await deleteNotification(id);
       setNotifs(prev => prev.filter(n => n.id !== id));
+      if (wasUnread) onRead?.();
     } catch { /* ignore */ }
   };
 

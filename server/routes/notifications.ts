@@ -68,7 +68,23 @@ router.post('/notifications/broadcast', requireAdmin, (req: Request, res: Respon
     db.prepare(
       'INSERT INTO announcements (id, title, content, is_global) VALUES (?, ?, ?, 1)'
     ).run(id, title, content || '');
-    res.json({ success: true, count: -1, global: true });
+
+    // Also send notification to all existing users so they see a red badge
+    const users = db.prepare('SELECT nickname FROM users').all() as { nickname: string }[];
+    if (users.length > 0) {
+      const insertStmt = db.prepare(
+        'INSERT INTO notifications (id, user_id, title, content) VALUES (?, ?, ?, ?)'
+      );
+      const notifTitle = `📌 ${title}`;
+      const tx = db.transaction(() => {
+        for (const u of users) {
+          insertStmt.run(uuid(), u.nickname, notifTitle, content || '');
+        }
+      });
+      tx();
+    }
+
+    res.json({ success: true, count: users.length, global: true });
   } else {
     // Send to specific users or all
     const users = (user_ids && user_ids.length > 0)
@@ -96,6 +112,40 @@ router.delete('/notifications/:id', (req: Request, res: Response) => {
   if (!notification) return res.status(404).json({ error: '通知不存在' });
 
   db.prepare('DELETE FROM notifications WHERE id = ?').run(req.params.id);
+  res.json({ success: true });
+});
+
+// GET /api/announcements — admin lists all global announcements
+router.get('/announcements', requireAdmin, (_req: Request, res: Response) => {
+  const db = getDb();
+  const announcements = db.prepare(
+    'SELECT * FROM announcements ORDER BY created_at DESC'
+  ).all();
+  res.json({ announcements });
+});
+
+// GET /api/notifications/recent — admin lists recent notifications (for retract)
+router.get('/notifications/recent', requireAdmin, (_req: Request, res: Response) => {
+  const db = getDb();
+  const rows = db.prepare(
+    'SELECT * FROM notifications ORDER BY created_at DESC LIMIT 100'
+  ).all();
+  res.json({ notifications: rows });
+});
+
+// DELETE /api/announcements/:id — admin deletes an announcement
+router.delete('/announcements/:id', requireAdmin, (req: Request, res: Response) => {
+  const db = getDb();
+  const announcement = db.prepare('SELECT * FROM announcements WHERE id = ?').get(req.params.id) as any;
+  if (!announcement) return res.status(404).json({ error: '公告不存在' });
+
+  db.prepare('DELETE FROM announcements WHERE id = ?').run(req.params.id);
+
+  // Also delete the companion notifications sent to users
+  db.prepare(
+    'DELETE FROM notifications WHERE title = ?'
+  ).run(`📌 ${announcement.title}`);
+
   res.json({ success: true });
 });
 

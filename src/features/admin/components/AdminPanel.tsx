@@ -9,7 +9,7 @@ import {
   updateOrderStatus, deleteOrder, createProduct, updateProduct, deleteProduct,
 } from '../../../shared/api';
 import type { Order, Product, Combo } from '../../../shared/types';
-import { fetchCombos, createCombo, updateCombo, deleteCombo, fetchAllUsers, toggleUserAdmin, broadcastNotification, setGlobalAdminUser } from '../../../shared/api';
+import { fetchCombos, createCombo, updateCombo, deleteCombo, fetchAllUsers, toggleUserAdmin, broadcastNotification, setGlobalAdminUser, fetchAnnouncements, deleteAnnouncement, fetchRecentNotifications, deleteNotification } from '../../../shared/api';
 import { DEFAULT_CATEGORIES } from '../../../shared/constants';
 import { STATUS_LABELS, getErrorMessage } from '../../../shared/utils';
 
@@ -53,6 +53,32 @@ export default function AdminPanel({ adminKey, adminUser }: { adminKey: string; 
   const [broadcasting, setBroadcasting] = useState(false);
   const [broadcastMode, setBroadcastMode] = useState<'all' | 'selected' | 'global'>('all');
   const [selectedUserIds, setSelectedUserIds] = useState<Set<string>>(new Set());
+  const [announcements, setAnnouncements] = useState<any[]>([]);
+  const [recentNotifs, setRecentNotifs] = useState<any[]>([]);
+
+  const loadAnnouncements = useCallback(() => {
+    fetchAnnouncements(adminKey).then(r => setAnnouncements(r.announcements)).catch(() => {});
+  }, [adminKey]);
+
+  const loadRecentNotifs = useCallback(() => {
+    fetchRecentNotifications(adminKey).then(r => setRecentNotifs(r.notifications)).catch(() => {});
+  }, [adminKey]);
+
+  const handleDeleteAnnouncement = async (id: string, title: string) => {
+    if (!confirm(`确定撤回公告「${title}」？`)) return;
+    try {
+      await deleteAnnouncement(adminKey, id);
+      setAnnouncements(prev => prev.filter(a => a.id !== id));
+    } catch (err) { alert(getErrorMessage(err)); }
+  };
+
+  const handleDeleteNotif = async (id: string, user: string, title: string) => {
+    if (!confirm(`确定撤回发给「${user}」的通知「${title}」？`)) return;
+    try {
+      await deleteNotification(id);
+      setRecentNotifs(prev => prev.filter(n => n.id !== id));
+    } catch (err) { alert(getErrorMessage(err)); }
+  };
 
   const loadOrders = useCallback(() => {
     fetchOrders().then(setOrders).catch(err => console.warn('Failed to load orders (admin):', err));
@@ -67,6 +93,11 @@ export default function AdminPanel({ adminKey, adminUser }: { adminKey: string; 
     loadProducts();
     fetchStats().then(s => { setTodayStats(s.today); }).catch(err => console.warn('Failed to load stats (admin init):', err));
   }, [loadOrders, loadProducts]);
+
+  // Load announcements & recent notifs when entering broadcast tab
+  useEffect(() => {
+    if (tab === 'broadcast') { loadAnnouncements(); loadRecentNotifs(); }
+  }, [tab, loadAnnouncements, loadRecentNotifs]);
 
   // Poll for new orders every 5 seconds
   useEffect(() => {
@@ -902,6 +933,58 @@ export default function AdminPanel({ adminKey, adminUser }: { adminKey: string; 
                   `发送给全部 ${users.length} 个用户`}
               </button>
             </div>
+
+            {/* Existing announcements list */}
+            <div className="mt-8">
+              <h3 className="font-bold text-sm text-slate-600 mb-3">📋 已发布公告</h3>
+              {announcements.length === 0 ? (
+                <p className="text-xs text-slate-400 py-8 text-center">暂无公告</p>
+              ) : (
+                <div className="space-y-2">
+                  {announcements.map(a => (
+                    <div key={a.id} className="flex items-center gap-3 bg-white rounded-xl border border-slate-100 p-3">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs font-bold text-slate-700 truncate">{a.title}</span>
+                          {a.is_global ? <span className="text-[10px] px-1.5 py-0.5 bg-indigo-100 text-indigo-600 rounded font-bold shrink-0">全局</span> : null}
+                        </div>
+                        {a.content && <p className="text-xs text-slate-400 mt-0.5 truncate">{a.content}</p>}
+                      </div>
+                      <button onClick={() => handleDeleteAnnouncement(a.id, a.title)}
+                        className="text-slate-300 hover:text-red-500 transition-colors shrink-0 p-1"
+                        title="撤回公告">
+                        <X size={16} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Recent sent notifications */}
+            {recentNotifs.length > 0 && (
+              <div className="mt-8">
+                <h3 className="font-bold text-sm text-slate-600 mb-3">📨 最近发送的通知</h3>
+                <div className="space-y-2">
+                  {recentNotifs.map(n => (
+                    <div key={n.id} className="flex items-center gap-3 bg-white rounded-xl border border-slate-100 p-3">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <span className="text-[10px] px-1.5 py-0.5 bg-slate-100 text-slate-500 rounded font-bold shrink-0">{n.user_id}</span>
+                          <span className="text-xs font-bold text-slate-700 truncate">{n.title}</span>
+                        </div>
+                        {n.content && <p className="text-xs text-slate-400 mt-0.5 truncate">{n.content}</p>}
+                      </div>
+                      <button onClick={() => handleDeleteNotif(n.id, n.user_id, n.title)}
+                        className="text-slate-300 hover:text-red-500 transition-colors shrink-0 p-1"
+                        title="撤回通知">
+                        <X size={16} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>

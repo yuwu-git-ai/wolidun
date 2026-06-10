@@ -441,6 +441,18 @@ export async function broadcastNotification(adminKey: string, title: string, con
   });
 }
 
+export async function fetchAnnouncements(adminKey: string): Promise<{ announcements: any[] }> {
+  return request(`${BASE}/announcements`, { headers: buildAdminHeaders(adminKey) });
+}
+
+export async function fetchRecentNotifications(adminKey: string): Promise<{ notifications: any[] }> {
+  return request(`${BASE}/notifications/recent`, { headers: buildAdminHeaders(adminKey) });
+}
+
+export async function deleteAnnouncement(adminKey: string, id: string): Promise<{ success: boolean }> {
+  return request(`${BASE}/announcements/${id}`, { method: 'DELETE', headers: buildAdminHeaders(adminKey) });
+}
+
 // ── Users & Profiles ──
 
 export interface UserProfile {
