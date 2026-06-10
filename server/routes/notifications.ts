@@ -89,4 +89,14 @@ router.post('/notifications/broadcast', requireAdmin, (req: Request, res: Respon
   }
 });
 
+// DELETE /api/notifications/:id — user deletes own notification
+router.delete('/notifications/:id', (req: Request, res: Response) => {
+  const db = getDb();
+  const notification = db.prepare('SELECT * FROM notifications WHERE id = ?').get(req.params.id) as any;
+  if (!notification) return res.status(404).json({ error: '通知不存在' });
+
+  db.prepare('DELETE FROM notifications WHERE id = ?').run(req.params.id);
+  res.json({ success: true });
+});
+
 export default router;

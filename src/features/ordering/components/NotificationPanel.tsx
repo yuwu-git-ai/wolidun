@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { ArrowLeft, Bell, Check, X, Clock, Pin, ChevronDown, ChevronUp } from 'lucide-react';
-import { fetchNotifications, markNotificationRead, fetchFriends, respondFriendRequest } from '../../../shared/api';
+import { fetchNotifications, markNotificationRead, deleteNotification, fetchFriends, respondFriendRequest } from '../../../shared/api';
 import { getErrorMessage } from '../../../shared/utils';
 
 interface NotificationPanelProps {
@@ -42,6 +42,15 @@ export default function NotificationPanel({ nickname, onClose }: NotificationPan
       setFriendRequests(prev => prev.filter(r => !(r.from_user === from && r.to_user === to)));
     } catch (err) { alert(getErrorMessage(err)); }
     finally { setActingId(null); }
+  };
+
+  const handleDeleteNotif = async (e: React.MouseEvent, id: string) => {
+    e.stopPropagation();
+    if (!confirm('删除这条通知？')) return;
+    try {
+      await deleteNotification(id);
+      setNotifs(prev => prev.filter(n => n.id !== id));
+    } catch { /* ignore */ }
   };
 
   const toggleExpand = (id: string) => {
@@ -167,7 +176,11 @@ export default function NotificationPanel({ nickname, onClose }: NotificationPan
                             n.content && <p className="text-xs text-slate-400 mt-1 truncate">{n.content}</p>
                           )}
                         </div>
-                        <div className="text-slate-400 shrink-0">
+                        <div className="text-slate-400 shrink-0 flex items-center gap-1">
+                          <button onClick={(e) => handleDeleteNotif(e, n.id)}
+                            className="text-slate-300 hover:text-red-400 transition-colors p-0.5">
+                            <X size={12} />
+                          </button>
                           {isExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
                         </div>
                       </div>

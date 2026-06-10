@@ -105,7 +105,7 @@ function runMigrations() {
       CREATE TABLE IF NOT EXISTS posts (
         id TEXT PRIMARY KEY,
         user_id TEXT NOT NULL,
-        type TEXT NOT NULL CHECK(type IN ('help','skill','feedback','teamup')),
+        type TEXT NOT NULL CHECK(type IN ('help','skill','feedback','teamup','chat')),
         title TEXT NOT NULL,
         content TEXT DEFAULT '',
         tags TEXT DEFAULT '',
@@ -203,7 +203,7 @@ function runMigrations() {
       CREATE TABLE posts_new (
         id TEXT PRIMARY KEY,
         user_id TEXT NOT NULL,
-        type TEXT NOT NULL CHECK(type IN ('help','skill','feedback','teamup')),
+        type TEXT NOT NULL CHECK(type IN ('help','skill','feedback','teamup','chat')),
         title TEXT NOT NULL,
         content TEXT DEFAULT '',
         tags TEXT DEFAULT '',
@@ -309,6 +309,39 @@ function runMigrations() {
     db.exec(`ALTER TABLE users ADD COLUMN is_admin INTEGER DEFAULT 0`);
     db.prepare('INSERT INTO schema_version (version) VALUES (13)').run();
     console.log('[DB] Migrated to schema v13 (users.is_admin).');
+  }
+
+  if (current < 14) {
+    // v14: add 'chat' post type to CHECK constraint
+    db.exec(`
+      CREATE TABLE posts_v14 (
+        id TEXT PRIMARY KEY,
+        user_id TEXT NOT NULL,
+        type TEXT NOT NULL CHECK(type IN ('help','skill','feedback','teamup','chat')),
+        title TEXT NOT NULL,
+        content TEXT DEFAULT '',
+        tags TEXT DEFAULT '',
+        price TEXT DEFAULT '',
+        status TEXT DEFAULT 'open' CHECK(status IN ('open','claimed','done','cancelled')),
+        claimed_by TEXT DEFAULT '',
+        players INT DEFAULT 1,
+        max_players INT DEFAULT 0,
+        anonymous INT DEFAULT 0,
+        likes_count INT DEFAULT 0,
+        comments_count INT DEFAULT 0,
+        created_at TEXT DEFAULT (datetime('now'))
+      );
+
+      INSERT INTO posts_v14 SELECT * FROM posts;
+      DROP TABLE posts;
+      ALTER TABLE posts_v14 RENAME TO posts;
+
+      CREATE INDEX IF NOT EXISTS idx_posts_type ON posts(type);
+      CREATE INDEX IF NOT EXISTS idx_posts_status ON posts(status);
+      CREATE INDEX IF NOT EXISTS idx_posts_created ON posts(created_at);
+    `);
+    db.prepare('INSERT INTO schema_version (version) VALUES (14)').run();
+    console.log('[DB] Migrated to schema v14 (chat post type).');
   }
 }
 

@@ -32,7 +32,18 @@ router.get('/posts', (req: Request, res: Response) => {
 
   const posts = db.prepare(sql).all(...params);
 
-  res.json({ posts, total, page: parseInt(page), limit: parseInt(limit) });
+  // For teamup posts, attach member lists
+  const postsWithMembers = posts.map((post: any) => {
+    if (post.type === 'teamup') {
+      const members = db.prepare(
+        'SELECT user_id FROM teamup_members WHERE post_id = ? ORDER BY rowid ASC'
+      ).all(post.id) as { user_id: string }[];
+      return { ...post, team_members: members };
+    }
+    return post;
+  });
+
+  res.json({ posts: postsWithMembers, total, page: parseInt(page), limit: parseInt(limit) });
 });
 
 // GET /api/posts/joined — get IDs of teamup posts a user has joined
@@ -70,7 +81,15 @@ router.get('/posts/:id', (req: Request, res: Response) => {
     joined = !!member;
   }
 
-  res.json({ ...post, comments, joined });
+  // For teamup posts, fetch member list
+  let team_members: { user_id: string }[] = [];
+  if (post.type === 'teamup') {
+    team_members = db.prepare(
+      'SELECT user_id FROM teamup_members WHERE post_id = ? ORDER BY rowid ASC'
+    ).all(req.params.id) as { user_id: string }[];
+  }
+
+  res.json({ ...post, comments, joined, team_members });
 });
 
 // POST /api/posts — create a post
@@ -81,7 +100,7 @@ router.post('/posts', (req: Request, res: Response) => {
   if (!user_id || !type || !title) {
     return res.status(400).json({ error: '缺少必填字段' });
   }
-  if (!['help', 'skill', 'feedback', 'teamup'].includes(type)) {
+  if (!['help', 'skill', 'feedback', 'teamup', 'chat'].includes(type)) {
     return res.status(400).json({ error: '无效的帖子类型' });
   }
 
@@ -272,16 +291,32 @@ router.post('/posts/:id/leave', (req: Request, res: Response) => {
   res.json(updated2);
 });
 
-// DELETE /api/posts/:id — creator deletes own post
+// DELETE /api/posts/:id — creator or admin deletes post
 router.delete('/posts/:id', (req: Request, res: Response) => {
   const db = getDb();
   const post = db.prepare('SELECT * FROM posts WHERE id = ?').get(req.params.id) as any;
   if (!post) return res.status(404).json({ error: '帖子不存在' });
 
-  const { user_id } = req.body;
+  const { user_id, reason } = req.body;
   if (!user_id) return res.status(400).json({ error: '缺少 user_id' });
-  if (post.user_id !== user_id) return res.status(403).json({ error: '只有发帖人可以删除' });
 
+  const adminKey = req.headers['x-admin-key'] as string;
+  const expectedKey = process.env.ADMIN_KEY || 'admin123';
+  const isAdmin = adminKey && adminKey === expectedKey;
+
+  if (!isAdmin && post.user_id !== user_id) {
+    return res.status(403).json({ error: '只有发帖人或管理员可以删除' });
+  }
+
+  // If admin deletes someone else's post with reason, notify the author
+  if (isAdmin && reason && post.user_id !== user_id) {
+    const notifId = randomUUID();
+    db.prepare(
+      'INSERT INTO notifications (id, user_id, title, content) VALUES (?, ?, ?, ?)'
+    ).run(notifId, post.user_id, '帖子被撤回', `你的帖子「${post.title}」已被管理员撤回。原因：${reason}`);
+  }
+
+  // CASCADE will clean up comments, likes, teamup_members
   db.prepare('DELETE FROM posts WHERE id = ?').run(req.params.id);
   res.json({ success: true });
 });

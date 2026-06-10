@@ -242,7 +242,7 @@ export async function updateOrderStatus(orderId: string, status: string, adminKe
 export interface Post {
   id: string;
   user_id: string;
-  type: 'help' | 'skill' | 'feedback' | 'teamup';
+  type: 'help' | 'skill' | 'feedback' | 'teamup' | 'chat';
   title: string;
   content: string;
   tags: string;
@@ -257,6 +257,7 @@ export interface Post {
   created_at: string;
   comments?: Comment[];
   joined?: boolean;
+  team_members?: { user_id: string }[];
 }
 
 export interface Comment {
@@ -356,10 +357,15 @@ export async function leavePost(postId: string, userId: string): Promise<Post> {
   });
 }
 
-export async function deletePost(postId: string, userId: string): Promise<{ success: boolean }> {
+export async function deletePost(postId: string, userId: string, adminKey?: string, reason?: string): Promise<{ success: boolean }> {
+  const headers: Record<string, string> = {};
+  if (adminKey) headers['X-Admin-Key'] = adminKey;
+  const body: Record<string, string> = { user_id: userId };
+  if (reason) body.reason = reason;
   return request(`${BASE}/posts/${postId}`, {
     method: 'DELETE',
-    body: JSON.stringify({ user_id: userId }),
+    headers: Object.keys(headers).length > 0 ? headers : undefined,
+    body: JSON.stringify(body),
   });
 }
 
@@ -421,6 +427,10 @@ export async function fetchUnreadCount(userId: string): Promise<{ count: number 
 
 export async function markNotificationRead(id: string): Promise<{ success: boolean }> {
   return request(`${BASE}/notifications/${id}/read`, { method: 'PUT' });
+}
+
+export async function deleteNotification(id: string): Promise<{ success: boolean }> {
+  return request(`${BASE}/notifications/${id}`, { method: 'DELETE' });
 }
 
 export async function broadcastNotification(adminKey: string, title: string, content: string, isGlobal?: boolean, userIds?: string[]): Promise<{ success: boolean; count: number; global?: boolean }> {

@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef, FormEvent } from 'react';
-import { Plus, Heart, MessageCircle, HelpCircle, Wrench, MessageSquareText, Users, X, Send, Search, LogOut, Trash2 } from 'lucide-react';
+import { Plus, Heart, MessageCircle, HelpCircle, Wrench, MessageSquareText, Users, X, Send, Search, LogOut, Trash2, Coffee } from 'lucide-react';
 import {
   fetchPosts, createPost, updatePost, toggleLike,
   addComment, deleteComment, joinPost, fetchPostById, fetchJoinedPostIds, leavePost, deletePost,
@@ -9,14 +9,15 @@ import type { Post } from '../../../shared/api';
 import { getErrorMessage } from '../../../shared/utils';
 
 const SQUARE_TABS = [
+  { key: 'chat', label: '闲聊', icon: Coffee, color: 'text-teal-500', bg: 'bg-teal-50' },
   { key: 'help', label: '求助', icon: HelpCircle, color: 'text-rose-500', bg: 'bg-rose-50' },
   { key: 'skill', label: '技能', icon: Wrench, color: 'text-indigo-500', bg: 'bg-indigo-50' },
   { key: 'feedback', label: '反馈', icon: MessageSquareText, color: 'text-emerald-500', bg: 'bg-emerald-50' },
   { key: 'teamup', label: '组队', icon: Users, color: 'text-amber-500', bg: 'bg-amber-50' },
 ] as const;
 
-const TYPE_LABELS: Record<string, string> = { help: '求助', skill: '技能', feedback: '反馈', teamup: '组队' };
-const TYPE_COLORS: Record<string, string> = { help: 'bg-rose-50 text-rose-600', skill: 'bg-indigo-50 text-indigo-600', feedback: 'bg-emerald-50 text-emerald-600', teamup: 'bg-amber-50 text-amber-600' };
+const TYPE_LABELS: Record<string, string> = { chat: '闲聊', help: '求助', skill: '技能', feedback: '反馈', teamup: '组队' };
+const TYPE_COLORS: Record<string, string> = { chat: 'bg-teal-50 text-teal-600', help: 'bg-rose-50 text-rose-600', skill: 'bg-indigo-50 text-indigo-600', feedback: 'bg-emerald-50 text-emerald-600', teamup: 'bg-amber-50 text-amber-600' };
 
 export default function SquarePanel({ identity, onViewProfile, isAdmin }: { identity: { nickname: string; dorm: string }; onViewProfile?: (nickname: string) => void; isAdmin?: boolean }) {
   const [activeTab, setActiveTab] = useState<string>('help');
@@ -159,6 +160,13 @@ export default function SquarePanel({ identity, onViewProfile, isAdmin }: { iden
     try {
       await joinPost(postId, identity.nickname);
       setJoinedPostIds(prev => new Set(prev).add(postId));
+      // Immediately update detail modal so members show without re-opening
+      setSelectedPost(prev => prev?.id === postId ? {
+        ...prev,
+        joined: true,
+        players: prev.players + 1,
+        team_members: [...(prev.team_members || []), { user_id: identity.nickname }],
+      } : prev);
       loadPosts();
     } catch (err) { alert(getErrorMessage(err)); }
   };
@@ -167,14 +175,29 @@ export default function SquarePanel({ identity, onViewProfile, isAdmin }: { iden
     try {
       await leavePost(postId, identity.nickname);
       setJoinedPostIds(prev => { const next = new Set(prev); next.delete(postId); return next; });
+      // Immediately update detail modal
+      setSelectedPost(prev => prev?.id === postId ? {
+        ...prev,
+        joined: false,
+        players: Math.max(1, prev.players - 1),
+        team_members: (prev.team_members || []).filter(m => m.user_id !== identity.nickname),
+      } : prev);
       loadPosts();
     } catch (err) { alert(getErrorMessage(err)); }
   };
 
-  const handleDelete = async (postId: string) => {
-    if (!confirm('确定删除这条帖子？')) return;
+  const handleDelete = async (postId: string, asAdmin?: boolean) => {
+    let reason = '';
+    if (asAdmin) {
+      reason = prompt('请输入撤回原因（将通知发帖人）：') || '';
+      if (!reason) return;
+      if (!confirm(`确定撤回帖子并通知用户？原因：${reason}`)) return;
+    } else {
+      if (!confirm('确定删除这条帖子？')) return;
+    }
     try {
-      await deletePost(postId, identity.nickname);
+      const adminKey = asAdmin ? getAdminKey() : undefined;
+      await deletePost(postId, identity.nickname, adminKey || undefined, reason || undefined);
       setSelectedPost(null);
       loadPosts();
     } catch (err) { alert(getErrorMessage(err)); }
@@ -255,7 +278,7 @@ export default function SquarePanel({ identity, onViewProfile, isAdmin }: { iden
           <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center shrink-0">
             <Plus size={20} className="text-slate-400" />
           </div>
-          <span className="text-sm text-slate-400 font-medium">发布{activeTab === 'help' ? '求助' : activeTab === 'skill' ? '技能' : activeTab === 'feedback' ? '反馈' : '组队'}帖...</span>
+          <span className="text-sm text-slate-400 font-medium">发布{activeTab === 'chat' ? '闲聊' : activeTab === 'help' ? '求助' : activeTab === 'skill' ? '技能' : activeTab === 'feedback' ? '反馈' : '组队'}帖...</span>
         </button>
 
         {loading ? (
@@ -275,6 +298,7 @@ export default function SquarePanel({ identity, onViewProfile, isAdmin }: { iden
                   {post.type === 'help' ? <HelpCircle size={16} className={TYPE_COLORS[post.type]?.split(' ')[1] || 'text-slate-400'} /> :
                    post.type === 'skill' ? <Wrench size={16} className={TYPE_COLORS[post.type]?.split(' ')[1] || 'text-slate-400'} /> :
                    post.type === 'feedback' ? <MessageSquareText size={16} className={TYPE_COLORS[post.type]?.split(' ')[1] || 'text-slate-400'} /> :
+                   post.type === 'chat' ? <Coffee size={16} className={TYPE_COLORS[post.type]?.split(' ')[1] || 'text-slate-400'} /> :
                    <Users size={16} className={TYPE_COLORS[post.type]?.split(' ')[1] || 'text-slate-400'} />}
                 </div>
                 <div className="flex-1 min-w-0">
@@ -300,6 +324,19 @@ export default function SquarePanel({ identity, onViewProfile, isAdmin }: { iden
                     )}：{post.title}
                   </h4>
                   {post.content && <p className="text-xs text-slate-500 mt-1 line-clamp-2">{post.content}</p>}
+                  {post.type === 'teamup' && post.team_members && post.team_members.length > 0 && (
+                    <div className="flex items-center gap-1 mt-1 flex-wrap">
+                      <span className="text-[10px] text-slate-400 shrink-0">成员</span>
+                      <span className={`text-[10px] px-1 py-0.5 rounded font-medium bg-amber-100 text-amber-700`}>
+                        {post.user_id}👑
+                      </span>
+                      {post.team_members.map(m => (
+                        <span key={m.user_id} className={`text-[10px] px-1 py-0.5 rounded font-medium ${m.user_id === identity.nickname ? 'bg-amber-50 text-amber-600' : 'bg-slate-100 text-slate-500'}`}>
+                          {m.user_id}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                   <div className="flex items-center gap-4 mt-2 text-[10px] text-slate-400">
                     <span>{formatTime(post.created_at)}</span>
                     <span className={`flex items-center gap-1 ${likedPostIds.has(post.id) ? 'text-red-500' : ''}`}><Heart size={10} fill={likedPostIds.has(post.id) ? 'currentColor' : 'none'} />{post.likes_count}</span>
@@ -358,14 +395,7 @@ export default function SquarePanel({ identity, onViewProfile, isAdmin }: { iden
               <div className="flex gap-3">
                 <button type="button" onClick={() => setShowCreate(false)}
                   className="flex-1 py-3 bg-slate-100 text-slate-600 rounded-2xl font-bold text-sm">取消</button>
-                <button type="button" onClick={(e) => {
-                    const form = formRef.current || (e.target as HTMLElement).closest('form');
-                    if (form && typeof form.requestSubmit === 'function') {
-                      form.requestSubmit();
-                    } else if (form) {
-                      form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
-                    }
-                  }}
+                <button type="submit"
                   className="flex-1 py-3 bg-slate-800 text-white rounded-2xl font-bold text-sm hover:bg-slate-700 transition-all">发布</button>
               </div>
             </div>
@@ -384,6 +414,7 @@ export default function SquarePanel({ identity, onViewProfile, isAdmin }: { iden
                 {selectedPost.type === 'help' ? <HelpCircle size={18} className={TYPE_COLORS[selectedPost.type]?.split(' ')[1]} /> :
                  selectedPost.type === 'skill' ? <Wrench size={18} className={TYPE_COLORS[selectedPost.type]?.split(' ')[1]} /> :
                  selectedPost.type === 'feedback' ? <MessageSquareText size={18} className={TYPE_COLORS[selectedPost.type]?.split(' ')[1]} /> :
+                 selectedPost.type === 'chat' ? <Coffee size={18} className={TYPE_COLORS[selectedPost.type]?.split(' ')[1]} /> :
                  <Users size={18} className={TYPE_COLORS[selectedPost.type]?.split(' ')[1]} />}
               </div>
               <div className="flex-1">
@@ -407,14 +438,51 @@ export default function SquarePanel({ identity, onViewProfile, isAdmin }: { iden
                   <span className="text-[10px] text-slate-400">{formatTime(selectedPost.created_at)}</span>
                 </div>
               </div>
-              {selectedPost.user_id === identity.nickname && (
-                <button onClick={() => handleDelete(selectedPost.id)} className="text-slate-300 hover:text-red-500 transition-colors"><Trash2 size={16} /></button>
+              {(selectedPost.user_id === identity.nickname || isAdmin) && (
+                <button onClick={() => handleDelete(selectedPost.id, isAdmin && selectedPost.user_id !== identity.nickname)}
+                  className={`transition-colors ${selectedPost.user_id === identity.nickname ? 'text-slate-300 hover:text-red-500' : 'text-orange-300 hover:text-red-500'}`}
+                  title={isAdmin && selectedPost.user_id !== identity.nickname ? '管理员撤回帖子' : '删除帖子'}>
+                  <Trash2 size={16} />
+                </button>
               )}
               <button onClick={() => setSelectedPost(null)} className="text-slate-400 hover:text-slate-600"><X size={20} /></button>
             </div>
 
             {/* Content */}
             {selectedPost.content && <p className="text-sm text-slate-600 whitespace-pre-wrap">{selectedPost.content}</p>}
+
+            {/* Team members — for teamup posts */}
+            {selectedPost.type === 'teamup' && (
+              <div className="bg-amber-50 rounded-2xl p-4 space-y-2">
+                <h4 className="font-bold text-xs text-amber-700 flex items-center gap-1.5">
+                  <Users size={14} />队伍成员
+                  <span className="font-normal text-amber-500">({selectedPost.players}/{selectedPost.max_players || '∞'}人)</span>
+                </h4>
+                <div className="flex flex-wrap gap-1.5">
+                  {/* Creator */}
+                  <span className="inline-flex items-center gap-1 px-2 py-1 rounded-xl text-xs font-bold bg-amber-200 text-amber-800 cursor-pointer hover:bg-amber-300 transition-colors"
+                    onClick={() => onViewProfile?.(selectedPost.user_id)}>
+                    {selectedPost.user_id} 👑
+                  </span>
+                  {/* Joined members */}
+                  {selectedPost.team_members?.map(m => (
+                    <span key={m.user_id}
+                      onClick={() => onViewProfile?.(m.user_id)}
+                      className={`inline-flex items-center gap-1 px-2 py-1 rounded-xl text-xs font-bold cursor-pointer hover:opacity-80 transition-colors ${m.user_id === identity.nickname ? 'bg-white text-amber-600 ring-1 ring-amber-300' : 'bg-white text-slate-500'}`}>
+                      {m.user_id}{m.user_id === identity.nickname ? ' (你)' : ''}
+                    </span>
+                  ))}
+                  {/* Empty slots */}
+                  {selectedPost.max_players > selectedPost.players && selectedPost.status === 'open' && (
+                    Array.from({ length: selectedPost.max_players - selectedPost.players }).map((_, i) => (
+                      <span key={`empty-${i}`} className="inline-flex items-center px-2 py-1 rounded-xl text-xs font-bold bg-amber-100/50 text-amber-300 border border-dashed border-amber-300">
+                        虚位以待
+                      </span>
+                    ))
+                  )}
+                </div>
+              </div>
+            )}
 
             {/* Actions */}
             <div className="flex items-center gap-4 border-t border-b border-slate-100 py-2">

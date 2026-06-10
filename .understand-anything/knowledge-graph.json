@@ -26,8 +26,8 @@
       "react-router-dom"
     ],
     "description": "宿舍便利店点单小程序，支持商品浏览、购物车管理、一键复制订单、广场发帖组队、个人主页名片/好友/私聊、管理后台。React + Express + SQLite 全栈应用。",
-    "analyzedAt": "2026-06-09T08:00:00.000Z",
-    "gitCommitHash": "cbb0c992b05b029bc948ca4213e763843fdae4e2"
+    "analyzedAt": "2026-06-09T14:32:22.155Z",
+    "gitCommitHash": "123aa4b92a673fb75e2ef6c3195763c76a8db346"
   },
   "nodes": [
     {
@@ -1861,7 +1861,12 @@
       "name": "users.ts",
       "filePath": "server/routes/users.ts",
       "summary": "用户个人主页与好友路由，处理名片查看/编辑、好友申请/接受/删除和用户搜索。",
-      "tags": ["api-handler", "profile", "friends", "social"],
+      "tags": [
+        "api-handler",
+        "profile",
+        "friends",
+        "social"
+      ],
       "complexity": "moderate"
     },
     {
@@ -1869,9 +1874,16 @@
       "type": "function",
       "name": "ensureProfile",
       "filePath": "server/routes/users.ts",
-      "lineRange": [8, 14],
+      "lineRange": [
+        8,
+        14
+      ],
       "summary": "确保用户名片记录存在，不存在则自动创建。",
-      "tags": ["utility", "profile", "database"],
+      "tags": [
+        "utility",
+        "profile",
+        "database"
+      ],
       "complexity": "simple"
     },
     {
@@ -1880,7 +1892,12 @@
       "name": "messages.ts",
       "filePath": "server/routes/messages.ts",
       "summary": "私信路由，处理发送消息、查看对话记录和会话列表（含未读计数）。",
-      "tags": ["api-handler", "messages", "chat", "social"],
+      "tags": [
+        "api-handler",
+        "messages",
+        "chat",
+        "social"
+      ],
       "complexity": "simple"
     },
     {
@@ -1889,7 +1906,12 @@
       "name": "ProfilePanel.tsx",
       "filePath": "src/features/profile/components/ProfilePanel.tsx",
       "summary": "个人名片弹窗，支持查看/编辑名片(头像、简介、技能标签、联系方式)、好友操作和展开历史帖子。",
-      "tags": ["component", "profile", "social", "modal"],
+      "tags": [
+        "component",
+        "profile",
+        "social",
+        "modal"
+      ],
       "complexity": "complex"
     },
     {
@@ -1898,7 +1920,12 @@
       "name": "FriendsPanel.tsx",
       "filePath": "src/features/friends/components/FriendsPanel.tsx",
       "summary": "好友面板弹窗，管理好友列表、待处理申请和用户搜索添加好友。",
-      "tags": ["component", "friends", "social", "modal"],
+      "tags": [
+        "component",
+        "friends",
+        "social",
+        "modal"
+      ],
       "complexity": "moderate"
     },
     {
@@ -1907,8 +1934,43 @@
       "name": "ChatPanel.tsx",
       "filePath": "src/features/chat/components/ChatPanel.tsx",
       "summary": "聊天面板弹窗，展示会话列表和实时聊天窗口(5s轮询)，头像可跳转名片。",
-      "tags": ["component", "chat", "messages", "social", "modal"],
+      "tags": [
+        "component",
+        "chat",
+        "messages",
+        "social",
+        "modal"
+      ],
       "complexity": "complex"
+    },
+    {
+      "id": "file:server/routes/notifications.ts",
+      "type": "file",
+      "name": "notifications.ts",
+      "filePath": "server/routes/notifications.ts",
+      "summary": "通知系统 API 路由，提供用户通知查询、未读计数、标记已读、全局公告广播和评论删除通知功能。",
+      "tags": [
+        "api",
+        "notifications",
+        "express",
+        "announcements"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/features/ordering/components/NotificationPanel.tsx",
+      "type": "file",
+      "name": "NotificationPanel.tsx",
+      "filePath": "src/features/ordering/components/NotificationPanel.tsx",
+      "summary": "通知面板 UI 组件，支持通知/公告/好友申请的混合展示、展开详情、未读筛选和好友申请操作。",
+      "tags": [
+        "ui",
+        "notifications",
+        "friend-requests",
+        "announcements",
+        "panel"
+      ],
+      "complexity": "moderate"
     }
   ],
   "edges": [
