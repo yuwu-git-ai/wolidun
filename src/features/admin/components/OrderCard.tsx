@@ -1,4 +1,4 @@
-import { ChevronUp, ChevronDown, Trash2 } from 'lucide-react';
+import { ChevronUp, ChevronDown, Trash2, Edit3 } from 'lucide-react';
 import { Order } from '../../../shared/types';
 import { STATUS_LABELS, STATUS_COLORS, getItemUnitPrice } from '../../../shared/utils';
 
@@ -8,9 +8,10 @@ interface OrderCardProps {
   onToggle: () => void;
   onStatusChange: (id: string, status: string) => void;
   onDelete: (id: string) => void;
+  onEdit?: (id: string, isDelivery: boolean) => void;
 }
 
-export default function OrderCard({ order, expanded, onToggle, onStatusChange, onDelete }: OrderCardProps) {
+export default function OrderCard({ order, expanded, onToggle, onStatusChange, onDelete, onEdit }: OrderCardProps) {
   const nextStatus = order.status === 'pending' ? 'preparing' : order.status === 'preparing' ? 'delivered' : null;
 
   return (
@@ -53,7 +54,10 @@ export default function OrderCard({ order, expanded, onToggle, onStatusChange, o
       </div>
       {expanded && (
         <div className="px-4 pb-4 border-t border-slate-50 pt-3 space-y-2">
-          <p className="text-xs text-slate-400">订单号: {order.id}</p>
+          <div className="flex justify-between items-center">
+            <p className="text-xs text-slate-400">订单号: {order.id}</p>
+            <span className="text-xs text-slate-400">{order.isDelivery ? '配送' : '自提'}</span>
+          </div>
           {order.items.map((item, i: number) => (
             <div key={i} className="flex justify-between text-sm">
               <span>{item.name}{item.variantName ? ` · ${item.variantName}` : ''} x{item.quantity}</span>
@@ -64,6 +68,13 @@ export default function OrderCard({ order, expanded, onToggle, onStatusChange, o
             <span>总计</span>
             <span className="text-orange-600">¥{order.totalPrice}</span>
           </div>
+          {order.status === 'pending' && onEdit && (
+            <button
+              onClick={(e) => { e.stopPropagation(); onEdit(order.id, !order.isDelivery); }}
+              className="w-full mt-1 py-2 bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1">
+              <Edit3 size={12} /> {order.isDelivery ? '改为自提' : '补配送（+¥1，满20免）'}
+            </button>
+          )}
         </div>
       )}
     </div>

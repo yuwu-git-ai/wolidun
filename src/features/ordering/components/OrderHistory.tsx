@@ -1,7 +1,7 @@
 import { useState, useEffect, FormEvent } from 'react';
 import { ArrowLeft, Clock, Search, Trash2 } from 'lucide-react';
 import { Order, CartItem } from '../../../shared/types';
-import { fetchOrders, fetchOrderById, deleteOrder } from '../../../shared/api';
+import { fetchOrders, fetchOrderById, deleteOrder, updateOrder } from '../../../shared/api';
 import { STATUS_LABELS, STATUS_COLORS, getItemUnitPrice, getErrorMessage } from '../../../shared/utils';
 
 interface OrderHistoryProps {
@@ -180,12 +180,34 @@ export default function OrderHistory({ identity, onClose, onReorder }: OrderHist
                     <span>总计</span>
                     <span className="text-orange-600">¥{order.totalPrice.toFixed(2)}</span>
                   </div>
+                  {order.isDelivery && (
+                    <div className="text-[10px] text-slate-400">配送方式：配送到寝{order.totalPrice >= 20 ? '' : '（满¥20免配送费）'}</div>
+                  )}
+                  {!order.isDelivery && (
+                    <div className="text-[10px] text-slate-400">配送方式：自提</div>
+                  )}
                   <div className="flex gap-2 mt-2">
                     <button
                       onClick={() => onReorder(order.items)}
                       className="flex-1 py-2.5 bg-orange-500 text-white rounded-xl font-bold text-sm hover:bg-orange-600 transition-all active:scale-[0.98]">
                       再来一单
                     </button>
+                    {order.status === 'pending' && (
+                      <button
+                        onClick={async () => {
+                          const newDelivery = !order.isDelivery;
+                          const label = newDelivery ? '配送' : '自提';
+                          if (!confirm(`确定改为「${label}」？价格将重新计算。`)) return;
+                          try {
+                            const updated = await updateOrder(order.id, { isDelivery: newDelivery, nickname: identity.nickname });
+                            setOrders(prev => prev.map(o => o.id === order.id ? updated : o));
+                          } catch (err) { alert(getErrorMessage(err)); }
+                        }}
+                        className="px-3 py-2.5 bg-blue-50 text-blue-500 hover:bg-blue-100 rounded-xl font-bold text-xs transition-all"
+                        title={order.isDelivery ? '改为自提' : '补配送'}>
+                        {order.isDelivery ? '改自提' : '补配送'}
+                      </button>
+                    )}
                     <button
                       onClick={async () => {
                         if (!confirm('确定删除该订单？')) return;

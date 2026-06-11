@@ -1,7 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { v4 as uuid } from 'uuid';
 import { getDb } from '../db';
-import { requireAdmin } from '../middleware/auth';
+
 
 const router = Router();
 
@@ -159,10 +159,16 @@ router.get('/orders/:id', (req: Request, res: Response) => {
   res.json(serializeOrder(row));
 });
 
-// Update order status — admin only
-router.put('/orders/:id', requireAdmin, (req: Request, res: Response) => {
+function isAdminReq(req: Request): boolean {
+  const adminKey = req.headers['x-admin-key'] as string;
+  const expectedKey = process.env.ADMIN_KEY || 'admin123';
+  return adminKey === expectedKey;
+}
+
+// Update order — admin can change status; owner/admin can edit isDelivery
+router.put('/orders/:id', (req: Request, res: Response) => {
   const { id } = req.params;
-  const { status } = req.body;
+  const { status, isDelivery, nickname } = req.body;
 
   const db = getDb();
   const existing = db.prepare('SELECT * FROM orders WHERE id = ?').get(id) as any;
@@ -171,34 +177,75 @@ router.put('/orders/:id', requireAdmin, (req: Request, res: Response) => {
     return;
   }
 
-  if (status === 'cancelled' && existing.status !== 'cancelled') {
-    const items = JSON.parse(existing.items);
-    const restoreTx = db.transaction(() => {
-      for (const item of items) {
-        if (item.comboId) {
-          const combo = db.prepare('SELECT * FROM combos WHERE id = ?').get(item.comboId) as any;
-          if (combo) {
-            const comboItems: { productId: string; variantId?: string | null }[] =
-              typeof combo.items === 'string' ? JSON.parse(combo.items) : combo.items;
-            for (const ci of comboItems) {
-              if (ci.variantId) {
-                db.prepare('UPDATE product_variants SET stock = stock + ? WHERE id = ?').run(item.quantity, ci.variantId);
-              } else {
-                db.prepare('UPDATE products SET stock = stock + ? WHERE id = ?').run(item.quantity, ci.productId);
+  const admin = isAdminReq(req);
+  const isOwner = nickname && existing.nickname === nickname;
+
+  // ── Status change (admin only) ──
+  if (status) {
+    if (!admin) {
+      res.status(403).json({ error: '仅管理员可修改订单状态' });
+      return;
+    }
+
+    if (status === 'cancelled' && existing.status !== 'cancelled') {
+      const items = JSON.parse(existing.items);
+      const restoreTx = db.transaction(() => {
+        for (const item of items) {
+          if (item.comboId) {
+            const combo = db.prepare('SELECT * FROM combos WHERE id = ?').get(item.comboId) as any;
+            if (combo) {
+              const comboItems: { productId: string; variantId?: string | null }[] =
+                typeof combo.items === 'string' ? JSON.parse(combo.items) : combo.items;
+              for (const ci of comboItems) {
+                if (ci.variantId) {
+                  db.prepare('UPDATE product_variants SET stock = stock + ? WHERE id = ?').run(item.quantity, ci.variantId);
+                } else {
+                  db.prepare('UPDATE products SET stock = stock + ? WHERE id = ?').run(item.quantity, ci.productId);
+                }
               }
             }
+          } else if (item.variantId) {
+            db.prepare('UPDATE product_variants SET stock = stock + ? WHERE id = ?').run(item.quantity, item.variantId);
+          } else {
+            db.prepare('UPDATE products SET stock = stock + ? WHERE id = ?').run(item.quantity, item.id);
           }
-        } else if (item.variantId) {
-          db.prepare('UPDATE product_variants SET stock = stock + ? WHERE id = ?').run(item.quantity, item.variantId);
-        } else {
-          db.prepare('UPDATE products SET stock = stock + ? WHERE id = ?').run(item.quantity, item.id);
         }
-      }
+        db.prepare('UPDATE orders SET status = ? WHERE id = ?').run(status, id);
+      });
+      restoreTx();
+    } else {
       db.prepare('UPDATE orders SET status = ? WHERE id = ?').run(status, id);
-    });
-    restoreTx();
-  } else {
-    db.prepare('UPDATE orders SET status = ? WHERE id = ?').run(status, id);
+    }
+
+    const row = db.prepare('SELECT * FROM orders WHERE id = ?').get(id);
+    res.json(serializeOrder(row));
+    return;
+  }
+
+  // ── Edit order fields (owner or admin, pending only) ──
+  if (!admin && !isOwner) {
+    res.status(403).json({ error: '无权修改该订单' });
+    return;
+  }
+  if (existing.status !== 'pending') {
+    res.status(400).json({ error: '仅可修改待处理状态的订单' });
+    return;
+  }
+
+  if (typeof isDelivery === 'boolean') {
+    const items = JSON.parse(existing.items);
+    // Recalculate items total from stored items
+    let itemsTotal = 0;
+    for (const item of items) {
+      let unitPrice = item.price || 0;
+      if (item.isBrewingSelected) unitPrice += 1;
+      if (item.isFreezingSelected) unitPrice += 0.5;
+      itemsTotal += unitPrice * item.quantity;
+    }
+    const deliveryFee = isDelivery && itemsTotal < 20 ? 1 : 0;
+    const totalPrice = itemsTotal + deliveryFee;
+    db.prepare('UPDATE orders SET is_delivery = ?, total_price = ? WHERE id = ?')
+      .run(isDelivery ? 1 : 0, totalPrice, id);
   }
 
   const row = db.prepare('SELECT * FROM orders WHERE id = ?').get(id);
