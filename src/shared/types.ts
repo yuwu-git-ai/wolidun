@@ -34,6 +34,7 @@ export interface CartItem extends Product {
 export interface ComboItem {
   productId: string;
   variantId?: string | null;
+  variantName?: string;
   productName?: string;
   productPrice?: number;
   image?: string;

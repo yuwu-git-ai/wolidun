@@ -59,16 +59,41 @@ export default function OrderCard({ order, expanded, onToggle, onStatusChange, o
             <span className="text-xs text-slate-400">{order.isDelivery ? '配送' : '自提'}</span>
           </div>
           {order.items.map((item, i: number) => (
-            <div key={i} className="flex justify-between text-sm">
-              <span>{item.name}{item.variantName ? ` · ${item.variantName}` : ''} x{item.quantity}</span>
-              <span className="font-bold">¥{(getItemUnitPrice(item) * item.quantity).toFixed(2)}</span>
+            <div key={i} className={item.comboId ? 'p-2 bg-amber-50/50 rounded-lg border border-amber-100' : ''}>
+              {item.comboId ? (
+                <>
+                  <div className="flex justify-between text-sm font-bold">
+                    <span>🍱 {item.name}</span>
+                    <span className="text-amber-600">¥{(getItemUnitPrice(item) * item.quantity).toFixed(2)}</span>
+                  </div>
+                  {(item.comboItems || []).map((ci, si) => (
+                    <div key={si} className="ml-3 flex justify-between text-[11px] text-slate-500 mt-0.5">
+                      <span className="flex items-center gap-1">
+                        └ {ci.productName || ci.productId}
+                        {ci.variantName && <span className="text-[10px] text-slate-400">·{ci.variantName}</span>}
+                        {ci.selectedBrewing && <span className="text-[9px] bg-orange-100 text-orange-600 px-1 py-0.5 rounded font-black">帮泡+¥1</span>}
+                        {ci.selectedFreezing && <span className="text-[9px] bg-indigo-100 text-indigo-600 px-1 py-0.5 rounded font-black">冰镇+¥0.5</span>}
+                      </span>
+                    </div>
+                  ))}
+                </>
+              ) : (
+                <div className="flex justify-between text-sm">
+                  <span className="flex items-center gap-1 flex-wrap">
+                    {item.name}{item.variantName ? ` · ${item.variantName}` : ''} x{item.quantity}
+                    {item.isBrewingSelected && <span className="text-[9px] bg-orange-100 text-orange-600 px-1 py-0.5 rounded font-black">帮泡+¥1</span>}
+                    {item.isFreezingSelected && <span className="text-[9px] bg-indigo-100 text-indigo-600 px-1 py-0.5 rounded font-black">冰镇+¥0.5</span>}
+                  </span>
+                  <span className="font-bold">¥{(getItemUnitPrice(item) * item.quantity).toFixed(2)}</span>
+                </div>
+              )}
             </div>
           ))}
           <div className="flex justify-between font-bold text-sm pt-2 border-t border-slate-50">
             <span>总计</span>
             <span className="text-orange-600">¥{order.totalPrice}</span>
           </div>
-          {order.status === 'pending' && onEdit && (
+          {onEdit && (
             <button
               onClick={(e) => { e.stopPropagation(); onEdit(order.id, !order.isDelivery); }}
               className="w-full mt-1 py-2 bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1">

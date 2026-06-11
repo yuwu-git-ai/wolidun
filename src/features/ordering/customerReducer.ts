@@ -190,17 +190,21 @@ export function customerReducer(state: CustomerRawState, action: CustomerAction)
         const selectedVariantId = variantIds.get(ci.productId) || ci.variantId || null;
         // Recalculate price based on selected variant
         let price = ci.productPrice || 0;
+        let variantName: string | undefined;
         if (selectedVariantId) {
-          // Look up variant price from combo item data (if available) or use default
           const product = state.products.find(p => p.id === ci.productId);
           const variant = product?.variants?.find(v => v.id === selectedVariantId);
-          if (variant && variant.price != null) price = variant.price;
+          if (variant) {
+            if (variant.price != null) price = variant.price;
+            variantName = variant.name;
+          }
         }
         if (brewingIds.has(ci.productId)) price += 1;
         if (freezingIds.has(ci.productId)) price += 0.5;
         return {
           productId: ci.productId,
           variantId: selectedVariantId,
+          variantName,
           productName: ci.productName,
           productPrice: price,
           image: ci.image,

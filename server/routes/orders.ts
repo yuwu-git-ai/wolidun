@@ -165,10 +165,56 @@ function isAdminReq(req: Request): boolean {
   return adminKey === expectedKey;
 }
 
-// Update order — admin can change status; owner/admin can edit isDelivery
+/**
+ * Recalculate total price from items using DB prices (same logic as POST).
+ * Returns { itemsTotal, deliveryFee, totalPrice }.
+ */
+function recalcTotal(items: any[], isDelivery: boolean): { itemsTotal: number; deliveryFee: number; totalPrice: number } {
+  const db = getDb();
+  let itemsTotal = 0;
+
+  for (const item of items) {
+    if (item.comboId) {
+      const combo = db.prepare('SELECT * FROM combos WHERE id = ?').get(item.comboId) as any;
+      const comboDiscount: number = combo ? combo.discount : 0;
+      const subItems = item.comboItems || [];
+      let comboSubtotal = 0;
+      for (const ci of subItems) {
+        const cp = db.prepare('SELECT * FROM products WHERE id = ?').get(ci.productId) as any;
+        if (!cp) continue;
+        let unitPrice = cp.price;
+        if (ci.variantId) {
+          const v = db.prepare('SELECT * FROM product_variants WHERE id = ? AND product_id = ?').get(ci.variantId, ci.productId) as any;
+          if (v && v.price != null) unitPrice = v.price;
+        }
+        if (ci.selectedBrewing) unitPrice += 1;
+        if (ci.selectedFreezing) unitPrice += 0.5;
+        comboSubtotal += unitPrice;
+      }
+      itemsTotal += (comboSubtotal - comboDiscount) * item.quantity;
+      continue;
+    }
+
+    const product = db.prepare('SELECT * FROM products WHERE id = ?').get(item.id) as any;
+    if (!product) continue;
+    let unitPrice = product.price;
+    if (item.variantId) {
+      const variant = db.prepare('SELECT * FROM product_variants WHERE id = ? AND product_id = ?').get(item.variantId, item.id) as any;
+      if (variant && variant.price != null) unitPrice = variant.price;
+    }
+    if (item.isBrewingSelected) unitPrice += 1;
+    if (item.isFreezingSelected) unitPrice += 0.5;
+    itemsTotal += unitPrice * item.quantity;
+  }
+
+  const deliveryFee = isDelivery && itemsTotal < 20 ? 1 : 0;
+  return { itemsTotal, deliveryFee, totalPrice: itemsTotal + deliveryFee };
+}
+
+// Update order — admin can change status; owner/admin can edit fields
 router.put('/orders/:id', (req: Request, res: Response) => {
   const { id } = req.params;
-  const { status, isDelivery, nickname } = req.body;
+  const { status, isDelivery, items, nickname } = req.body;
 
   const db = getDb();
   const existing = db.prepare('SELECT * FROM orders WHERE id = ?').get(id) as any;
@@ -181,16 +227,16 @@ router.put('/orders/:id', (req: Request, res: Response) => {
   const isOwner = nickname && existing.nickname === nickname;
 
   // ── Status change (admin only) ──
-  if (status) {
+  if (status && !items && typeof isDelivery !== 'boolean') {
     if (!admin) {
       res.status(403).json({ error: '仅管理员可修改订单状态' });
       return;
     }
 
     if (status === 'cancelled' && existing.status !== 'cancelled') {
-      const items = JSON.parse(existing.items);
+      const existingItems = JSON.parse(existing.items);
       const restoreTx = db.transaction(() => {
-        for (const item of items) {
+        for (const item of existingItems) {
           if (item.comboId) {
             const combo = db.prepare('SELECT * FROM combos WHERE id = ?').get(item.comboId) as any;
             if (combo) {
@@ -222,30 +268,22 @@ router.put('/orders/:id', (req: Request, res: Response) => {
     return;
   }
 
-  // ── Edit order fields (owner or admin, pending only) ──
+  // ── Edit order fields (owner or admin) ──
   if (!admin && !isOwner) {
     res.status(403).json({ error: '无权修改该订单' });
     return;
   }
-  if (existing.status !== 'pending') {
-    res.status(400).json({ error: '仅可修改待处理状态的订单' });
-    return;
-  }
 
-  if (typeof isDelivery === 'boolean') {
-    const items = JSON.parse(existing.items);
-    // Recalculate items total from stored items
-    let itemsTotal = 0;
-    for (const item of items) {
-      let unitPrice = item.price || 0;
-      if (item.isBrewingSelected) unitPrice += 1;
-      if (item.isFreezingSelected) unitPrice += 0.5;
-      itemsTotal += unitPrice * item.quantity;
-    }
-    const deliveryFee = isDelivery && itemsTotal < 20 ? 1 : 0;
-    const totalPrice = itemsTotal + deliveryFee;
-    db.prepare('UPDATE orders SET is_delivery = ?, total_price = ? WHERE id = ?')
-      .run(isDelivery ? 1 : 0, totalPrice, id);
+  const currentDelivery: boolean = existing.is_delivery === 1;
+  const newDelivery = typeof isDelivery === 'boolean' ? isDelivery : currentDelivery;
+  const newItems = items || JSON.parse(existing.items);
+
+  // Recalculate total from DB prices
+  const { totalPrice } = recalcTotal(newItems, newDelivery);
+
+  if (typeof isDelivery === 'boolean' || items) {
+    db.prepare('UPDATE orders SET is_delivery = ?, items = ?, total_price = ? WHERE id = ?')
+      .run(newDelivery ? 1 : 0, JSON.stringify(newItems), totalPrice, id);
   }
 
   const row = db.prepare('SELECT * FROM orders WHERE id = ?').get(id);

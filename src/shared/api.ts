@@ -237,7 +237,7 @@ export async function updateOrderStatus(orderId: string, status: string, adminKe
   });
 }
 
-export async function updateOrder(orderId: string, data: { isDelivery?: boolean; nickname: string }): Promise<Order> {
+export async function updateOrder(orderId: string, data: { isDelivery?: boolean; items?: CartItem[]; nickname: string }): Promise<Order> {
   return request(`${BASE}/orders/${orderId}`, {
     method: 'PUT',
     body: JSON.stringify(data),
