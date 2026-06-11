@@ -1,35 +1,697 @@
 {
-  "version": "1.0.0",
-  "project": {
-    "name": "窝里蹲点单系统",
-    "languages": [
-      "css",
-      "dockerfile",
-      "html",
-      "javascript",
-      "json",
-      "markdown",
-      "typescript",
-      "yaml"
-    ],
-    "frameworks": [
-      "React",
-      "Vite",
-      "Tailwind CSS",
-      "Express",
-      "Vitest",
-      "Docker",
-      "Docker Compose",
-      "GitHub Actions",
-      "better-sqlite3",
-      "motion",
-      "react-router-dom"
-    ],
-    "description": "宿舍便利店点单小程序，支持商品浏览、购物车管理、一键复制订单、广场发帖组队、个人主页名片/好友/私聊、管理后台。React + Express + SQLite 全栈应用。",
-    "analyzedAt": "2026-06-09T14:32:22.155Z",
-    "gitCommitHash": "123aa4b92a673fb75e2ef6c3195763c76a8db346"
-  },
   "nodes": [
+    {
+      "id": "file:src/__tests__/IdentityForm.test.tsx",
+      "type": "file",
+      "name": "IdentityForm.test.tsx",
+      "filePath": "src/__tests__/IdentityForm.test.tsx",
+      "summary": "IdentityForm 组件的单元测试，验证表单输入和提交流程。",
+      "tags": [
+        "test",
+        "component-test",
+        "identity"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/__tests__/utils.test.ts",
+      "type": "file",
+      "name": "utils.test.ts",
+      "filePath": "src/__tests__/utils.test.ts",
+      "summary": "工具函数单元测试，覆盖购物车键生成、价格计算和本地存储操作。",
+      "tags": [
+        "test",
+        "unit-test",
+        "utils"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/__tests__/utils.test.ts:makeItem",
+      "type": "function",
+      "name": "makeItem",
+      "filePath": "src/__tests__/utils.test.ts",
+      "lineRange": [
+        90,
+        95
+      ],
+      "summary": "测试辅助函数，创建带默认值的 CartItem 对象用于测试断言。",
+      "tags": [
+        "test-helper",
+        "factory"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/features/admin/components/AdminGate.tsx",
+      "type": "file",
+      "name": "AdminGate.tsx",
+      "filePath": "src/features/admin/components/AdminGate.tsx",
+      "summary": "管理员入口守卫组件，提供密钥输入界面，验证通过后渲染后台面板。",
+      "tags": [
+        "component",
+        "admin",
+        "authentication"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/features/admin/components/AdminGate.tsx:AdminGate",
+      "type": "function",
+      "name": "AdminGate",
+      "filePath": "src/features/admin/components/AdminGate.tsx",
+      "lineRange": [
+        8,
+        67
+      ],
+      "summary": "管理员入口组件，提供密钥输入和自动验证功能。",
+      "tags": [
+        "component",
+        "admin",
+        "gate"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/features/admin/components/AdminPanel.tsx",
+      "type": "file",
+      "name": "AdminPanel.tsx",
+      "filePath": "src/features/admin/components/AdminPanel.tsx",
+      "summary": "管理员后台主面板，包含订单管理、商品管理、套餐管理、用户管理、广播通知、公告管理等多个 Tab，支持实时轮询新订单。",
+      "tags": [
+        "admin",
+        "dashboard",
+        "order-management",
+        "product-management",
+        "notification"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/features/admin/components/AdminPanel.tsx:AdminPanel",
+      "type": "function",
+      "name": "AdminPanel",
+      "filePath": "src/features/admin/components/AdminPanel.tsx",
+      "lineRange": [
+        18,
+        1006
+      ],
+      "summary": "管理后台核心组件，集成订单/商品/套餐/用户 CRUD、广播通知、公告管理、CSV 导出及新订单音频+桌面通知。",
+      "tags": [
+        "admin",
+        "dashboard",
+        "order-management",
+        "react-component",
+        "notification"
+      ],
+      "complexity": "complex",
+      "languageNotes": "942 行非空行，使用 20+ useState 和 5 个 useEffect，是全项目最复杂的组件。"
+    },
+    {
+      "id": "file:src/features/admin/components/OrderCard.tsx",
+      "type": "file",
+      "name": "OrderCard.tsx",
+      "filePath": "src/features/admin/components/OrderCard.tsx",
+      "summary": "管理后台订单卡片组件，支持展开/折叠、状态流转、编辑订单内容（变体/制作方式/配送方式）和删除操作。",
+      "tags": [
+        "admin",
+        "order-management",
+        "editable",
+        "react-component"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/features/admin/components/OrderCard.tsx:OrderCard",
+      "type": "function",
+      "name": "OrderCard",
+      "filePath": "src/features/admin/components/OrderCard.tsx",
+      "lineRange": [
+        16,
+        308
+      ],
+      "summary": "订单卡片组件，展示订单详情并支持内联编辑（变体选择、煮/冻状态、配送方式）和状态变更。",
+      "tags": [
+        "admin",
+        "order-management",
+        "editable",
+        "react-component"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/features/ordering/components/CartPanel.tsx",
+      "type": "file",
+      "name": "CartPanel.tsx",
+      "filePath": "src/features/ordering/components/CartPanel.tsx",
+      "summary": "购物车面板组件，展示商品列表、数量调整、配送选择和价格汇总。",
+      "tags": [
+        "component",
+        "cart",
+        "checkout"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/features/ordering/components/CartPanel.tsx:CartPanel",
+      "type": "function",
+      "name": "CartPanel",
+      "filePath": "src/features/ordering/components/CartPanel.tsx",
+      "lineRange": [
+        23,
+        119
+      ],
+      "summary": "购物车面板，展示商品、调整数量、选择配送方式并计算总价。",
+      "tags": [
+        "component",
+        "cart",
+        "checkout"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/features/ordering/components/IdentityForm.tsx",
+      "type": "file",
+      "name": "IdentityForm.tsx",
+      "filePath": "src/features/ordering/components/IdentityForm.tsx",
+      "summary": "身份表单组件，支持用户注册/登录，收集昵称、宿舍号和密码。",
+      "tags": [
+        "component",
+        "identity",
+        "authentication",
+        "tested"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/features/ordering/components/IdentityForm.tsx:IdentityForm",
+      "type": "function",
+      "name": "IdentityForm",
+      "filePath": "src/features/ordering/components/IdentityForm.tsx",
+      "lineRange": [
+        11,
+        120
+      ],
+      "summary": "身份表单，支持注册和登录模式切换，收集用户信息。",
+      "tags": [
+        "component",
+        "identity",
+        "form"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/features/ordering/components/ProfileForm.tsx",
+      "type": "file",
+      "name": "ProfileForm.tsx",
+      "filePath": "src/features/ordering/components/ProfileForm.tsx",
+      "summary": "个人资料编辑组件，支持修改宿舍号和密码。",
+      "tags": [
+        "component",
+        "profile",
+        "settings"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/features/ordering/components/ProfileForm.tsx:ProfileForm",
+      "type": "function",
+      "name": "ProfileForm",
+      "filePath": "src/features/ordering/components/ProfileForm.tsx",
+      "lineRange": [
+        12,
+        109
+      ],
+      "summary": "个人资料编辑表单，支持修改宿舍号和密码。",
+      "tags": [
+        "component",
+        "profile",
+        "form"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/features/ordering/customerReducer.ts",
+      "type": "file",
+      "name": "customerReducer.ts",
+      "filePath": "src/features/ordering/customerReducer.ts",
+      "summary": "客户端状态管理的 useReducer reducer 函数，处理购物车增删改、商品设置、套餐检测等所有状态变更。",
+      "tags": [
+        "state-management",
+        "reducer",
+        "cart-logic",
+        "core-logic"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/features/ordering/customerReducer.ts:createInitialState",
+      "type": "function",
+      "name": "createInitialState",
+      "filePath": "src/features/ordering/customerReducer.ts",
+      "lineRange": [
+        24,
+        41
+      ],
+      "summary": "创建 reducer 的初始状态，从 localStorage 读取身份信息和购物车数据。",
+      "tags": [
+        "state-management",
+        "initialization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/features/ordering/customerReducer.ts:customerReducer",
+      "type": "function",
+      "name": "customerReducer",
+      "filePath": "src/features/ordering/customerReducer.ts",
+      "lineRange": [
+        70,
+        246
+      ],
+      "summary": "核心 reducer 函数，处理 ADD_TO_CART、REMOVE_FROM_CART、SET_PRODUCTS、ADD_COMBO_TO_CART 等十几个 action 类型。",
+      "tags": [
+        "state-management",
+        "reducer",
+        "cart-logic",
+        "core-logic"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/features/ordering/hooks/useCustomerApp.ts",
+      "type": "file",
+      "name": "useCustomerApp.ts",
+      "filePath": "src/features/ordering/hooks/useCustomerApp.ts",
+      "summary": "顾客端核心 Hook，整合产品加载、购物车操作、订单创建和剪贴板复制等业务逻辑。",
+      "tags": [
+        "hook",
+        "business-logic",
+        "state-management"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/features/ordering/hooks/useCustomerApp.ts:useCustomerApp",
+      "type": "function",
+      "name": "useCustomerApp",
+      "filePath": "src/features/ordering/hooks/useCustomerApp.ts",
+      "lineRange": [
+        52,
+        288
+      ],
+      "summary": "顾客端核心 Hook，整合产品加载轮询、购物车操作、订单创建和剪贴板复制。",
+      "tags": [
+        "hook",
+        "business-logic",
+        "orchestration"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/features/square/components/SquarePanel.tsx",
+      "type": "file",
+      "name": "SquarePanel.tsx",
+      "filePath": "src/features/square/components/SquarePanel.tsx",
+      "summary": "广场面板组件，支持发帖组队（代购/求助等类型）、帖子浏览/搜索/筛选/排序、点赞、评论、加入/退出队伍、删除帖子等社交功能。",
+      "tags": [
+        "square",
+        "social",
+        "team-formation",
+        "react-component",
+        "post-management"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/features/square/components/SquarePanel.tsx:SquarePanel",
+      "type": "function",
+      "name": "SquarePanel",
+      "filePath": "src/features/square/components/SquarePanel.tsx",
+      "lineRange": [
+        22,
+        564
+      ],
+      "summary": "广场社交面板组件，集成发帖、浏览、组队、点赞、评论、搜索过滤等完整社交功能。",
+      "tags": [
+        "square",
+        "social",
+        "react-component",
+        "post-management"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/shared/api.ts",
+      "type": "file",
+      "name": "api.ts",
+      "filePath": "src/shared/api.ts",
+      "summary": "共享 API 层，封装所有后端 HTTP 请求（身份认证、商品/订单/套餐 CRUD、广场社交、用户管理、通知推送），含请求重试和错误处理。",
+      "tags": [
+        "api-layer",
+        "http-client",
+        "service",
+        "core-logic"
+      ],
+      "complexity": "complex",
+      "languageNotes": "60 个导出函数，涵盖认证、商品、订单、套餐、广场、用户、通知等全部 API 端点，含指数退避重试逻辑。"
+    },
+    {
+      "id": "function:src/shared/api.ts:request",
+      "type": "function",
+      "name": "request",
+      "filePath": "src/shared/api.ts",
+      "lineRange": [
+        100,
+        137
+      ],
+      "summary": "通用 HTTP 请求封装，支持指数退避重试（最多 3 次）、JSON 解析和错误处理。",
+      "tags": [
+        "http-client",
+        "retry",
+        "error-handling"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/shared/api.ts:createOrder",
+      "type": "function",
+      "name": "createOrder",
+      "filePath": "src/shared/api.ts",
+      "lineRange": [
+        182,
+        192
+      ],
+      "summary": "提交新订单到后端。",
+      "tags": [
+        "api",
+        "order"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/shared/api.ts:fetchOrders",
+      "type": "function",
+      "name": "fetchOrders",
+      "filePath": "src/shared/api.ts",
+      "lineRange": [
+        194,
+        201
+      ],
+      "summary": "查询订单列表，支持状态/昵称/宿舍筛选参数。",
+      "tags": [
+        "api",
+        "order"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/shared/api.ts:fetchProducts",
+      "type": "function",
+      "name": "fetchProducts",
+      "filePath": "src/shared/api.ts",
+      "lineRange": [
+        154,
+        156
+      ],
+      "summary": "获取全部商品列表。",
+      "tags": [
+        "api",
+        "product"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/shared/api.ts:fetchPosts",
+      "type": "function",
+      "name": "fetchPosts",
+      "filePath": "src/shared/api.ts",
+      "lineRange": [
+        282,
+        296
+      ],
+      "summary": "获取广场帖子列表，支持类型/状态/搜索/排序分页参数。",
+      "tags": [
+        "api",
+        "square",
+        "social"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/shared/api.ts:register",
+      "type": "function",
+      "name": "register",
+      "filePath": "src/shared/api.ts",
+      "lineRange": [
+        6,
+        11
+      ],
+      "summary": "用户注册 API。",
+      "tags": [
+        "api",
+        "authentication"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/shared/api.ts:login",
+      "type": "function",
+      "name": "login",
+      "filePath": "src/shared/api.ts",
+      "lineRange": [
+        13,
+        18
+      ],
+      "summary": "用户登录 API。",
+      "tags": [
+        "api",
+        "authentication"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/shared/api.ts:getIdentity",
+      "type": "function",
+      "name": "getIdentity",
+      "filePath": "src/shared/api.ts",
+      "lineRange": [
+        42,
+        46
+      ],
+      "summary": "从 localStorage 读取当前用户身份信息。",
+      "tags": [
+        "identity",
+        "storage"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/shared/api.ts:fetchCombos",
+      "type": "function",
+      "name": "fetchCombos",
+      "filePath": "src/shared/api.ts",
+      "lineRange": [
+        383,
+        385
+      ],
+      "summary": "获取全部套餐列表。",
+      "tags": [
+        "api",
+        "combo"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/shared/api.ts:fetchStats",
+      "type": "function",
+      "name": "fetchStats",
+      "filePath": "src/shared/api.ts",
+      "lineRange": [
+        218,
+        230
+      ],
+      "summary": "获取统计数据（今日营收、热门商品、订单数等）。",
+      "tags": [
+        "api",
+        "analytics"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/shared/api.ts:getErrorMessage",
+      "type": "function",
+      "name": "getErrorMessage",
+      "filePath": "src/shared/api.ts",
+      "lineRange": [
+        139,
+        143
+      ],
+      "summary": "统一错误消息提取，支持 Error 对象、含 message 字段对象和字符串。",
+      "tags": [
+        "utility",
+        "error-handling"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/shared/constants.ts",
+      "type": "file",
+      "name": "constants.ts",
+      "filePath": "src/shared/constants.ts",
+      "summary": "常量定义文件，包含默认分类列表和默认商品数据。",
+      "tags": [
+        "constants",
+        "configuration",
+        "data"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/shared/types.ts",
+      "type": "file",
+      "name": "types.ts",
+      "filePath": "src/shared/types.ts",
+      "summary": "共享 TypeScript 类型定义，包括 Product、CartItem、Order、Combo、Category 等核心数据模型。",
+      "tags": [
+        "type-definition",
+        "data-model",
+        "core-logic"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/shared/utils.ts",
+      "type": "file",
+      "name": "utils.ts",
+      "filePath": "src/shared/utils.ts",
+      "summary": "共享工具函数，包含购物车键生成、单品价格计算、购物车持久化、套餐自动检测和错误消息提取。",
+      "tags": [
+        "utility",
+        "cart-logic",
+        "combo-detection",
+        "storage",
+        "tested"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/shared/utils.ts:getCartKey",
+      "type": "function",
+      "name": "getCartKey",
+      "filePath": "src/shared/utils.ts",
+      "lineRange": [
+        22,
+        30
+      ],
+      "summary": "生成购物车项的唯一键，用于去重判断。",
+      "tags": [
+        "utility",
+        "cart-logic"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/shared/utils.ts:getItemUnitPrice",
+      "type": "function",
+      "name": "getItemUnitPrice",
+      "filePath": "src/shared/utils.ts",
+      "lineRange": [
+        32,
+        39
+      ],
+      "summary": "获取购物车项的单品单价，根据变体和售价规则计算。",
+      "tags": [
+        "utility",
+        "pricing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/shared/utils.ts:getCartStorageKey",
+      "type": "function",
+      "name": "getCartStorageKey",
+      "filePath": "src/shared/utils.ts",
+      "lineRange": [
+        43,
+        46
+      ],
+      "summary": "根据当前用户身份生成 localStorage 购物车存储键。",
+      "tags": [
+        "utility",
+        "storage"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/shared/utils.ts:loadCartFromStorage",
+      "type": "function",
+      "name": "loadCartFromStorage",
+      "filePath": "src/shared/utils.ts",
+      "lineRange": [
+        48,
+        53
+      ],
+      "summary": "从 localStorage 恢复购物车数据。",
+      "tags": [
+        "utility",
+        "storage",
+        "cart-logic"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/shared/utils.ts:saveCartToStorage",
+      "type": "function",
+      "name": "saveCartToStorage",
+      "filePath": "src/shared/utils.ts",
+      "lineRange": [
+        55,
+        63
+      ],
+      "summary": "将购物车数据持久化到 localStorage。",
+      "tags": [
+        "utility",
+        "storage",
+        "cart-logic"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/shared/utils.ts:detectCombos",
+      "type": "function",
+      "name": "detectCombos",
+      "filePath": "src/shared/utils.ts",
+      "lineRange": [
+        71,
+        173
+      ],
+      "summary": "核心套餐检测算法，扫描购物车内容匹配套餐规则，自动计算折扣并合并为套餐购物车项。",
+      "tags": [
+        "utility",
+        "combo-detection",
+        "core-logic",
+        "algorithm"
+      ],
+      "complexity": "complex",
+      "languageNotes": "100+ 行复杂算法，遍历所有套餐规则匹配购物车项目，处理部分匹配和重复组合。"
+    },
+    {
+      "id": "function:src/shared/utils.ts:getErrorMessage",
+      "type": "function",
+      "name": "getErrorMessage",
+      "filePath": "src/shared/utils.ts",
+      "lineRange": [
+        177,
+        180
+      ],
+      "summary": "统一错误消息提取函数。",
+      "tags": [
+        "utility",
+        "error-handling"
+      ],
+      "complexity": "simple"
+    },
     {
       "id": "file:server/__tests__/api.test.ts",
       "type": "file",
@@ -80,14 +742,15 @@
       "type": "file",
       "name": "db.ts",
       "filePath": "server/db.ts",
-      "summary": "SQLite 数据库初始化模块，管理连接、自动迁移、表创建和默认数据填充。",
+      "summary": "SQLite 数据库初始化与迁移模块，提供 getDb 单例访问、版本化 schema 迁移（14 个版本）、表初始化和默认数据填充。",
       "tags": [
         "database",
-        "sqlite",
         "migration",
-        "singleton"
+        "singleton",
+        "sqlite"
       ],
-      "complexity": "complex"
+      "complexity": "complex",
+      "languageNotes": "使用 better-sqlite3 同步 API，WAL 模式 + 外键约束，通过 schema_version 表实现渐进式迁移。"
     },
     {
       "id": "function:server/db.ts:getDb",
@@ -98,7 +761,7 @@
         7,
         25
       ],
-      "summary": "获取 SQLite 数据库单例，首次调用时初始化连接、迁移和默认数据。",
+      "summary": "获取 SQLite 数据库单例，首次调用时创建数据库文件、启用 WAL 模式和外键、执行迁移和初始化。",
       "tags": [
         "singleton",
         "database",
@@ -113,15 +776,15 @@
       "filePath": "server/db.ts",
       "lineRange": [
         27,
-        167
+        346
       ],
-      "summary": "执行数据库版本迁移，从 v1 到 v5 逐步升级表结构。",
+      "summary": "执行从版本 1 到 14 的渐进式数据库迁移，包括用户系统重构、社区帖子、套餐、通知、消息等功能表创建。",
       "tags": [
-        "migration",
         "database",
-        "schema"
+        "migration",
+        "schema-evolution"
       ],
-      "complexity": "moderate"
+      "complexity": "complex"
     },
     {
       "id": "function:server/db.ts:initTables",
@@ -129,16 +792,16 @@
       "name": "initTables",
       "filePath": "server/db.ts",
       "lineRange": [
-        169,
-        195
+        348,
+        375
       ],
-      "summary": "创建数据库核心表结构（products、orders、posts 等）。",
+      "summary": "创建应用核心表结构，包括 users、products、orders、posts、combos、notifications、messages 等表。",
       "tags": [
         "database",
-        "schema",
-        "ddl"
+        "schema-definition",
+        "initialization"
       ],
-      "complexity": "simple"
+      "complexity": "moderate"
     },
     {
       "id": "function:server/db.ts:seedDefaults",
@@ -146,10 +809,10 @@
       "name": "seedDefaults",
       "filePath": "server/db.ts",
       "lineRange": [
-        255,
-        269
+        440,
+        454
       ],
-      "summary": "首次运行时插入默认商品数据。",
+      "summary": "向空数据库插入默认商品数据（泡面、饮料、零食等），仅在 products 表为空时执行。",
       "tags": [
         "database",
         "seed",
@@ -261,17 +924,44 @@
       "complexity": "simple"
     },
     {
+      "id": "file:server/routes/combos.ts",
+      "type": "file",
+      "name": "combos.ts",
+      "filePath": "server/routes/combos.ts",
+      "summary": "套餐 API 路由，提供套餐的 CRUD 接口（列表公开、增删改需管理员权限），支持子商品组合和优惠计算。",
+      "tags": [
+        "api",
+        "combo",
+        "admin",
+        "route"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "TypeScript Express router with better-sqlite3"
+    },
+    {
+      "id": "function:server/routes/combos.ts:serializeCombo",
+      "type": "function",
+      "name": "serializeCombo",
+      "filePath": "server/routes/combos.ts",
+      "summary": "将 combo 数据库行序列化为前端格式，计算原价和套餐价并填充子商品详情。",
+      "tags": [
+        "serialization",
+        "combo"
+      ],
+      "complexity": "moderate"
+    },
+    {
       "id": "file:server/routes/orders.ts",
       "type": "file",
       "name": "orders.ts",
       "filePath": "server/routes/orders.ts",
-      "summary": "订单管理路由，处理订单创建（含库存事务）、查询和状态更新。",
+      "summary": "订单路由模块，提供下单（含库存扣减与套餐处理）、查询、修改状态、编辑订单、删除订单等完整订单管理接口。",
       "tags": [
         "api-handler",
-        "orders",
-        "transaction"
+        "route",
+        "inventory"
       ],
-      "complexity": "moderate"
+      "complexity": "complex"
     },
     {
       "id": "function:server/routes/orders.ts:serializeOrder",
@@ -280,27 +970,76 @@
       "filePath": "server/routes/orders.ts",
       "lineRange": [
         8,
-        19
+        39
       ],
-      "summary": "将数据库订单记录转换为 API 响应格式，解析 JSON 字段。",
+      "summary": "序列化订单数据，解析 JSON 格式的 items 字段，补全变体名称信息，转换 is_delivery 为布尔值。",
       "tags": [
         "serialization",
-        "transformation"
+        "utility"
       ],
-      "complexity": "simple"
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:server/routes/orders.ts:restoreStock",
+      "type": "function",
+      "name": "restoreStock",
+      "filePath": "server/routes/orders.ts",
+      "lineRange": [
+        183,
+        205
+      ],
+      "summary": "取消订单或编辑前恢复库存，处理普通商品、变体商品和套餐子商品三种情况。",
+      "tags": [
+        "inventory",
+        "utility"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:server/routes/orders.ts:deductStock",
+      "type": "function",
+      "name": "deductStock",
+      "filePath": "server/routes/orders.ts",
+      "lineRange": [
+        208,
+        246
+      ],
+      "summary": "扣减库存，在编辑订单时重新计算，支持普通商品、变体和套餐三种情况，库存不足时抛出异常。",
+      "tags": [
+        "inventory",
+        "utility"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:server/routes/orders.ts:recalcTotal",
+      "type": "function",
+      "name": "recalcTotal",
+      "filePath": "server/routes/orders.ts",
+      "lineRange": [
+        258,
+        298
+      ],
+      "summary": "根据数据库实时价格重新计算订单总价，支持套餐折扣、变体价格、泡面加价(+1)和冷冻加价(+0.5)。",
+      "tags": [
+        "pricing",
+        "utility",
+        "database"
+      ],
+      "complexity": "moderate"
     },
     {
       "id": "file:server/routes/posts.ts",
       "type": "file",
       "name": "posts.ts",
       "filePath": "server/routes/posts.ts",
-      "summary": "广场帖子路由，处理帖子的创建、查询、认领、完成和评论功能。",
+      "summary": "社区帖子路由模块，提供帖子 CRUD、评论管理、点赞切换、组队帖加入/退出等完整的社区功能接口。",
       "tags": [
         "api-handler",
-        "social",
-        "posts"
+        "route",
+        "social"
       ],
-      "complexity": "moderate"
+      "complexity": "complex"
     },
     {
       "id": "file:server/routes/products.ts",
@@ -314,6 +1053,22 @@
         "crud"
       ],
       "complexity": "moderate"
+    },
+    {
+      "id": "function:server/routes/products.ts:loadVariants",
+      "type": "function",
+      "name": "loadVariants",
+      "filePath": "server/routes/products.ts",
+      "lineRange": [
+        19,
+        28
+      ],
+      "summary": "从数据库加载指定商品的所有变体（规格），返回包含 id、name、price、stock 的数组。",
+      "tags": [
+        "database",
+        "utility"
+      ],
+      "complexity": "simple"
     },
     {
       "id": "function:server/routes/products.ts:serializeProduct",
@@ -332,6 +1087,22 @@
       "complexity": "simple"
     },
     {
+      "id": "function:server/routes/products.ts:upsertVariants",
+      "type": "function",
+      "name": "upsertVariants",
+      "filePath": "server/routes/products.ts",
+      "lineRange": [
+        48,
+        59
+      ],
+      "summary": "更新商品变体：先删除旧变体，再批量插入新变体（名称、价格、库存）。",
+      "tags": [
+        "database",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
       "id": "file:server/routes/stats.ts",
       "type": "file",
       "name": "stats.ts",
@@ -345,686 +1116,63 @@
       "complexity": "moderate"
     },
     {
-      "id": "function:server/routes/stats.ts:daysInMonth",
-      "type": "function",
-      "name": "daysInMonth",
-      "filePath": "server/routes/stats.ts",
-      "lineRange": [
-        6,
-        8
-      ],
-      "summary": "计算指定年月的天数。",
-      "tags": [
-        "utility",
-        "date"
-      ],
-      "complexity": "simple"
-    },
-    {
       "id": "file:src/App.tsx",
       "type": "file",
       "name": "App.tsx",
       "filePath": "src/App.tsx",
-      "summary": "应用根组件，实现顾客端完整 UI：身份认证、商品浏览、购物车、订单确认和历史追踪。",
+      "summary": "应用根组件，包含三个子视图：点单主页（CustomerApp）、广场社交页（SquareApp）和管理后台（AdminPage），根据导航状态切换渲染，并通过 ErrorBoundary 包裹容错。",
       "tags": [
         "entry-point",
+        "routing",
         "component",
-        "customer-app"
-      ],
-      "complexity": "complex"
-    },
-    {
-      "id": "function:src/App.tsx:CustomerApp",
-      "type": "function",
-      "name": "CustomerApp",
-      "filePath": "src/App.tsx",
-      "lineRange": [
-        23,
-        325
-      ],
-      "summary": "顾客端主组件，管理标签切换、商品浏览、购物车操作和订单确认流程。",
-      "tags": [
-        "component",
-        "main",
-        "customer"
-      ],
-      "complexity": "complex"
-    },
-    {
-      "id": "function:src/App.tsx:App",
-      "type": "function",
-      "name": "App",
-      "filePath": "src/App.tsx",
-      "lineRange": [
-        329,
-        338
-      ],
-      "summary": "应用根组件，根据路径分派顾客端或管理后台界面。",
-      "tags": [
-        "entry-point",
-        "router",
         "root"
       ],
-      "complexity": "simple"
+      "complexity": "complex",
+      "languageNotes": "React 函数组件，使用 useState/useEffect 管理导航状态，通过 ErrorBoundary 包裹整个应用提供错误隔离。"
     },
     {
-      "id": "file:src/__tests__/IdentityForm.test.tsx",
+      "id": "file:src/__tests__/ErrorBoundary.test.tsx",
       "type": "file",
-      "name": "IdentityForm.test.tsx",
-      "filePath": "src/__tests__/IdentityForm.test.tsx",
-      "summary": "IdentityForm 组件的单元测试，验证表单输入和提交流程。",
+      "name": "ErrorBoundary.test.tsx",
+      "filePath": "src/__tests__/ErrorBoundary.test.tsx",
+      "summary": "ErrorBoundary 组件测试，验证错误捕获和回退 UI 渲染逻辑。",
       "tags": [
         "test",
         "component-test",
-        "identity"
-      ],
-      "complexity": "moderate"
-    },
-    {
-      "id": "file:src/shared/api.ts",
-      "type": "file",
-      "name": "api.ts",
-      "filePath": "src/shared/api.ts",
-      "summary": "前端 API 客户端，封装所有后端请求（认证、商品、订单、统计、帖子），含重试逻辑和错误处理。",
-      "tags": [
-        "api-client",
-        "fetch",
-        "error-handling",
-        "retry",
-        "tested"
-      ],
-      "complexity": "complex"
-    },
-    {
-      "id": "function:src/shared/api.ts:register",
-      "type": "function",
-      "name": "register",
-      "filePath": "src/shared/api.ts",
-      "lineRange": [
-        6,
-        11
-      ],
-      "summary": "函数 register",
-      "tags": [
-        "function"
-      ],
-      "complexity": "simple"
-    },
-    {
-      "id": "function:src/shared/api.ts:login",
-      "type": "function",
-      "name": "login",
-      "filePath": "src/shared/api.ts",
-      "lineRange": [
-        13,
-        18
-      ],
-      "summary": "函数 login",
-      "tags": [
-        "function"
-      ],
-      "complexity": "simple"
-    },
-    {
-      "id": "function:src/shared/api.ts:updateProfile",
-      "type": "function",
-      "name": "updateProfile",
-      "filePath": "src/shared/api.ts",
-      "lineRange": [
-        20,
-        25
-      ],
-      "summary": "函数 updateProfile",
-      "tags": [
-        "function"
-      ],
-      "complexity": "simple"
-    },
-    {
-      "id": "function:src/shared/api.ts:changePassword",
-      "type": "function",
-      "name": "changePassword",
-      "filePath": "src/shared/api.ts",
-      "lineRange": [
-        27,
-        32
-      ],
-      "summary": "函数 changePassword",
-      "tags": [
-        "function"
-      ],
-      "complexity": "simple"
-    },
-    {
-      "id": "function:src/shared/api.ts:getIdentity",
-      "type": "function",
-      "name": "getIdentity",
-      "filePath": "src/shared/api.ts",
-      "lineRange": [
-        42,
-        46
-      ],
-      "summary": "函数 getIdentity",
-      "tags": [
-        "function"
-      ],
-      "complexity": "simple"
-    },
-    {
-      "id": "function:src/shared/api.ts:setIdentity",
-      "type": "function",
-      "name": "setIdentity",
-      "filePath": "src/shared/api.ts",
-      "lineRange": [
-        48,
-        50
-      ],
-      "summary": "函数 setIdentity",
-      "tags": [
-        "function"
-      ],
-      "complexity": "simple"
-    },
-    {
-      "id": "function:src/shared/api.ts:clearIdentity",
-      "type": "function",
-      "name": "clearIdentity",
-      "filePath": "src/shared/api.ts",
-      "lineRange": [
-        52,
-        54
-      ],
-      "summary": "函数 clearIdentity",
-      "tags": [
-        "function"
-      ],
-      "complexity": "simple"
-    },
-    {
-      "id": "function:src/shared/api.ts:getAdminKey",
-      "type": "function",
-      "name": "getAdminKey",
-      "filePath": "src/shared/api.ts",
-      "lineRange": [
-        59,
-        61
-      ],
-      "summary": "函数 getAdminKey",
-      "tags": [
-        "function"
-      ],
-      "complexity": "simple"
-    },
-    {
-      "id": "function:src/shared/api.ts:setAdminKey",
-      "type": "function",
-      "name": "setAdminKey",
-      "filePath": "src/shared/api.ts",
-      "lineRange": [
-        63,
-        65
-      ],
-      "summary": "函数 setAdminKey",
-      "tags": [
-        "function"
-      ],
-      "complexity": "simple"
-    },
-    {
-      "id": "function:src/shared/api.ts:isRetryableError",
-      "type": "function",
-      "name": "isRetryableError",
-      "filePath": "src/shared/api.ts",
-      "lineRange": [
-        69,
-        81
-      ],
-      "summary": "函数 isRetryableError",
-      "tags": [
-        "function"
-      ],
-      "complexity": "simple"
-    },
-    {
-      "id": "function:src/shared/api.ts:delay",
-      "type": "function",
-      "name": "delay",
-      "filePath": "src/shared/api.ts",
-      "lineRange": [
-        83,
-        85
-      ],
-      "summary": "函数 delay",
-      "tags": [
-        "function"
-      ],
-      "complexity": "simple"
-    },
-    {
-      "id": "function:src/shared/api.ts:request",
-      "type": "function",
-      "name": "request",
-      "filePath": "src/shared/api.ts",
-      "lineRange": [
-        87,
-        124
-      ],
-      "summary": "通用 HTTP 请求函数，支持指数退避重试和统一错误处理。",
-      "tags": [
-        "http",
-        "retry",
         "error-handling"
       ],
       "complexity": "simple"
     },
     {
-      "id": "function:src/shared/api.ts:getErrorMessage",
-      "type": "function",
-      "name": "getErrorMessage",
-      "filePath": "src/shared/api.ts",
-      "lineRange": [
-        126,
-        130
-      ],
-      "summary": "从错误对象中提取可读的错误消息。",
-      "tags": [
-        "utility",
-        "error-handling"
-      ],
-      "complexity": "simple"
-    },
-    {
-      "id": "function:src/shared/api.ts:verifyAdmin",
-      "type": "function",
-      "name": "verifyAdmin",
-      "filePath": "src/shared/api.ts",
-      "lineRange": [
-        133,
-        138
-      ],
-      "summary": "函数 verifyAdmin",
-      "tags": [
-        "function"
-      ],
-      "complexity": "simple"
-    },
-    {
-      "id": "function:src/shared/api.ts:fetchProducts",
-      "type": "function",
-      "name": "fetchProducts",
-      "filePath": "src/shared/api.ts",
-      "lineRange": [
-        141,
-        143
-      ],
-      "summary": "获取所有商品列表。",
-      "tags": [
-        "api-client",
-        "product"
-      ],
-      "complexity": "simple"
-    },
-    {
-      "id": "function:src/shared/api.ts:createProduct",
-      "type": "function",
-      "name": "createProduct",
-      "filePath": "src/shared/api.ts",
-      "lineRange": [
-        145,
-        151
-      ],
-      "summary": "函数 createProduct",
-      "tags": [
-        "function"
-      ],
-      "complexity": "simple"
-    },
-    {
-      "id": "function:src/shared/api.ts:updateProduct",
-      "type": "function",
-      "name": "updateProduct",
-      "filePath": "src/shared/api.ts",
-      "lineRange": [
-        153,
-        159
-      ],
-      "summary": "函数 updateProduct",
-      "tags": [
-        "function"
-      ],
-      "complexity": "simple"
-    },
-    {
-      "id": "function:src/shared/api.ts:deleteProduct",
-      "type": "function",
-      "name": "deleteProduct",
-      "filePath": "src/shared/api.ts",
-      "lineRange": [
-        161,
-        166
-      ],
-      "summary": "函数 deleteProduct",
-      "tags": [
-        "function"
-      ],
-      "complexity": "simple"
-    },
-    {
-      "id": "function:src/shared/api.ts:createOrder",
-      "type": "function",
-      "name": "createOrder",
-      "filePath": "src/shared/api.ts",
-      "lineRange": [
-        169,
-        179
-      ],
-      "summary": "创建订单 API，发送用户身份、商品列表和配送选项。",
-      "tags": [
-        "api-client",
-        "order"
-      ],
-      "complexity": "simple"
-    },
-    {
-      "id": "function:src/shared/api.ts:fetchOrders",
-      "type": "function",
-      "name": "fetchOrders",
-      "filePath": "src/shared/api.ts",
-      "lineRange": [
-        181,
-        188
-      ],
-      "summary": "函数 fetchOrders",
-      "tags": [
-        "function"
-      ],
-      "complexity": "simple"
-    },
-    {
-      "id": "function:src/shared/api.ts:fetchOrderById",
-      "type": "function",
-      "name": "fetchOrderById",
-      "filePath": "src/shared/api.ts",
-      "lineRange": [
-        190,
-        192
-      ],
-      "summary": "函数 fetchOrderById",
-      "tags": [
-        "function"
-      ],
-      "complexity": "simple"
-    },
-    {
-      "id": "function:src/shared/api.ts:fetchStats",
-      "type": "function",
-      "name": "fetchStats",
-      "filePath": "src/shared/api.ts",
-      "lineRange": [
-        195,
-        207
-      ],
-      "summary": "函数 fetchStats",
-      "tags": [
-        "function"
-      ],
-      "complexity": "simple"
-    },
-    {
-      "id": "function:src/shared/api.ts:updateOrderStatus",
-      "type": "function",
-      "name": "updateOrderStatus",
-      "filePath": "src/shared/api.ts",
-      "lineRange": [
-        209,
-        215
-      ],
-      "summary": "函数 updateOrderStatus",
-      "tags": [
-        "function"
-      ],
-      "complexity": "simple"
-    },
-    {
-      "id": "function:src/shared/api.ts:fetchPosts",
-      "type": "function",
-      "name": "fetchPosts",
-      "filePath": "src/shared/api.ts",
-      "lineRange": [
-        248,
-        261
-      ],
-      "summary": "函数 fetchPosts",
-      "tags": [
-        "function"
-      ],
-      "complexity": "simple"
-    },
-    {
-      "id": "function:src/shared/api.ts:fetchPostById",
-      "type": "function",
-      "name": "fetchPostById",
-      "filePath": "src/shared/api.ts",
-      "lineRange": [
-        263,
-        266
-      ],
-      "summary": "函数 fetchPostById",
-      "tags": [
-        "function"
-      ],
-      "complexity": "simple"
-    },
-    {
-      "id": "function:src/shared/api.ts:createPost",
-      "type": "function",
-      "name": "createPost",
-      "filePath": "src/shared/api.ts",
-      "lineRange": [
-        268,
-        283
-      ],
-      "summary": "函数 createPost",
-      "tags": [
-        "function"
-      ],
-      "complexity": "simple"
-    },
-    {
-      "id": "function:src/shared/api.ts:updatePost",
-      "type": "function",
-      "name": "updatePost",
-      "filePath": "src/shared/api.ts",
-      "lineRange": [
-        285,
-        290
-      ],
-      "summary": "函数 updatePost",
-      "tags": [
-        "function"
-      ],
-      "complexity": "simple"
-    },
-    {
-      "id": "function:src/shared/api.ts:addComment",
-      "type": "function",
-      "name": "addComment",
-      "filePath": "src/shared/api.ts",
-      "lineRange": [
-        292,
-        297
-      ],
-      "summary": "函数 addComment",
-      "tags": [
-        "function"
-      ],
-      "complexity": "simple"
-    },
-    {
-      "id": "function:src/shared/api.ts:toggleLike",
-      "type": "function",
-      "name": "toggleLike",
-      "filePath": "src/shared/api.ts",
-      "lineRange": [
-        299,
-        304
-      ],
-      "summary": "函数 toggleLike",
-      "tags": [
-        "function"
-      ],
-      "complexity": "simple"
-    },
-    {
-      "id": "function:src/shared/api.ts:fetchJoinedPostIds",
-      "type": "function",
-      "name": "fetchJoinedPostIds",
-      "filePath": "src/shared/api.ts",
-      "lineRange": [
-        306,
-        309
-      ],
-      "summary": "函数 fetchJoinedPostIds",
-      "tags": [
-        "function"
-      ],
-      "complexity": "simple"
-    },
-    {
-      "id": "function:src/shared/api.ts:joinPost",
-      "type": "function",
-      "name": "joinPost",
-      "filePath": "src/shared/api.ts",
-      "lineRange": [
-        311,
-        316
-      ],
-      "summary": "函数 joinPost",
-      "tags": [
-        "function"
-      ],
-      "complexity": "simple"
-    },
-    {
-      "id": "file:src/features/admin/components/AdminGate.tsx",
+      "id": "file:src/features/ordering/components/ComboCard.tsx",
       "type": "file",
-      "name": "AdminGate.tsx",
-      "filePath": "src/features/admin/components/AdminGate.tsx",
-      "summary": "管理员入口守卫组件，提供密钥输入界面，验证通过后渲染后台面板。",
+      "name": "ComboCard.tsx",
+      "filePath": "src/features/ordering/components/ComboCard.tsx",
+      "summary": "套餐卡片组件，展示套餐名称、优惠金额、子商品列表，支持帮泡/冰镇附加选项。",
       "tags": [
         "component",
-        "admin",
-        "authentication"
+        "combo",
+        "ui",
+        "ordering"
       ],
-      "complexity": "moderate"
-    },
-    {
-      "id": "function:src/features/admin/components/AdminGate.tsx:AdminGate",
-      "type": "function",
-      "name": "AdminGate",
-      "filePath": "src/features/admin/components/AdminGate.tsx",
-      "lineRange": [
-        8,
-        67
-      ],
-      "summary": "管理员入口组件，提供密钥输入和自动验证功能。",
-      "tags": [
-        "component",
-        "admin",
-        "gate"
-      ],
-      "complexity": "moderate"
-    },
-    {
-      "id": "file:src/features/ordering/components/CartPanel.tsx",
-      "type": "file",
-      "name": "CartPanel.tsx",
-      "filePath": "src/features/ordering/components/CartPanel.tsx",
-      "summary": "购物车面板组件，展示商品列表、数量调整、配送选择和价格汇总。",
-      "tags": [
-        "component",
-        "cart",
-        "checkout"
-      ],
-      "complexity": "moderate"
-    },
-    {
-      "id": "function:src/features/ordering/components/CartPanel.tsx:CartPanel",
-      "type": "function",
-      "name": "CartPanel",
-      "filePath": "src/features/ordering/components/CartPanel.tsx",
-      "lineRange": [
-        23,
-        119
-      ],
-      "summary": "购物车面板，展示商品、调整数量、选择配送方式并计算总价。",
-      "tags": [
-        "component",
-        "cart",
-        "checkout"
-      ],
-      "complexity": "moderate"
-    },
-    {
-      "id": "file:src/features/ordering/components/IdentityForm.tsx",
-      "type": "file",
-      "name": "IdentityForm.tsx",
-      "filePath": "src/features/ordering/components/IdentityForm.tsx",
-      "summary": "身份表单组件，支持用户注册/登录，收集昵称、宿舍号和密码。",
-      "tags": [
-        "component",
-        "identity",
-        "authentication",
-        "tested"
-      ],
-      "complexity": "moderate"
-    },
-    {
-      "id": "function:src/features/ordering/components/IdentityForm.tsx:IdentityForm",
-      "type": "function",
-      "name": "IdentityForm",
-      "filePath": "src/features/ordering/components/IdentityForm.tsx",
-      "lineRange": [
-        11,
-        120
-      ],
-      "summary": "身份表单，支持注册和登录模式切换，收集用户信息。",
-      "tags": [
-        "component",
-        "identity",
-        "form"
-      ],
-      "complexity": "moderate"
+      "complexity": "moderate",
+      "languageNotes": "React TypeScript component with Tailwind CSS"
     },
     {
       "id": "file:src/features/ordering/components/OrderHistory.tsx",
       "type": "file",
       "name": "OrderHistory.tsx",
       "filePath": "src/features/ordering/components/OrderHistory.tsx",
-      "summary": "订单历史组件，展示用户历史订单、订单追踪和状态变更实时高亮。",
+      "summary": "订单历史组件，展示用户历史订单列表，支持订单追踪（按 ID 查询）、复制订单文本、重新下单和删除订单，使用轮询自动刷新订单状态变化并高亮变更项。",
       "tags": [
         "component",
-        "orders",
-        "tracking"
+        "ordering",
+        "order-history",
+        "tracking",
+        "polling"
       ],
-      "complexity": "moderate"
-    },
-    {
-      "id": "function:src/features/ordering/components/OrderHistory.tsx:OrderHistory",
-      "type": "function",
-      "name": "OrderHistory",
-      "filePath": "src/features/ordering/components/OrderHistory.tsx",
-      "lineRange": [
-        13,
-        196
-      ],
-      "summary": "订单历史组件，支持订单列表、实时刷新和状态变更高亮。",
-      "tags": [
-        "component",
-        "orders",
-        "history"
-      ],
-      "complexity": "moderate"
+      "complexity": "complex",
+      "languageNotes": "React 函数组件，使用 useState/useEffect 管理订单状态轮询（5 秒间隔），内嵌 copyOrderText 和 handleTrack 子函数。"
     },
     {
       "id": "file:src/features/ordering/components/ProductCard.tsx",
@@ -1038,6 +1186,118 @@
         "ui"
       ],
       "complexity": "moderate"
+    },
+    {
+      "id": "file:src/main.tsx",
+      "type": "file",
+      "name": "main.tsx",
+      "filePath": "src/main.tsx",
+      "summary": "React 应用入口，挂载根组件到 DOM 并加载全局样式。",
+      "tags": [
+        "entry-point",
+        "bootstrap",
+        "react"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/shared/components/ErrorBoundary.tsx",
+      "type": "file",
+      "name": "ErrorBoundary.tsx",
+      "filePath": "src/shared/components/ErrorBoundary.tsx",
+      "summary": "React 错误边界组件，捕获子组件渲染异常并展示友好的错误回退界面。",
+      "tags": [
+        "component",
+        "error-handling",
+        "boundary",
+        "tested"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/App.tsx:SquareApp",
+      "type": "function",
+      "name": "SquareApp",
+      "filePath": "src/App.tsx",
+      "lineRange": [
+        41,
+        185
+      ],
+      "summary": "广场社交页面组件，管理通知、聊天、好友、个人资料等多个面板的显示状态，支持未读计数和定时轮询刷新。",
+      "tags": [
+        "component",
+        "social",
+        "square",
+        "navigation"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/App.tsx:CustomerApp",
+      "type": "function",
+      "name": "CustomerApp",
+      "filePath": "src/App.tsx",
+      "lineRange": [
+        201,
+        606
+      ],
+      "summary": "点单主页组件，渲染商品分类导航、商品/套餐卡片网格、购物车面板、确认订单弹窗和身份表单，集成 useCustomerApp hook 管理全部点单状态。",
+      "tags": [
+        "component",
+        "ordering",
+        "main-page",
+        "shopping"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/App.tsx:App",
+      "type": "function",
+      "name": "App",
+      "filePath": "src/App.tsx",
+      "lineRange": [
+        610,
+        622
+      ],
+      "summary": "应用顶层根组件，根据导航状态选择渲染 CustomerApp、SquareApp 或 AdminPage，并用 ErrorBoundary 包裹以捕获运行时错误。",
+      "tags": [
+        "entry-point",
+        "routing",
+        "root",
+        "error-boundary"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/features/ordering/components/ComboCard.tsx:ComboCard",
+      "type": "function",
+      "name": "ComboCard",
+      "filePath": "src/features/ordering/components/ComboCard.tsx",
+      "summary": "套餐卡片默认导出组件，渲染套餐信息和加购按钮。",
+      "tags": [
+        "component",
+        "combo",
+        "react"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/features/ordering/components/OrderHistory.tsx:OrderHistory",
+      "type": "function",
+      "name": "OrderHistory",
+      "filePath": "src/features/ordering/components/OrderHistory.tsx",
+      "lineRange": [
+        13,
+        275
+      ],
+      "summary": "订单历史列表组件，接收用户身份、关闭回调和重新下单回调，展示订单历史并支持追踪查询、复制文案、删除和重新下单操作。",
+      "tags": [
+        "component",
+        "order-history",
+        "tracking",
+        "crud"
+      ],
+      "complexity": "complex"
     },
     {
       "id": "function:src/features/ordering/components/ProductCard.tsx:ProductCard",
@@ -1057,366 +1317,35 @@
       "complexity": "moderate"
     },
     {
-      "id": "file:src/features/ordering/components/ProfileForm.tsx",
-      "type": "file",
-      "name": "ProfileForm.tsx",
-      "filePath": "src/features/ordering/components/ProfileForm.tsx",
-      "summary": "个人资料编辑组件，支持修改宿舍号和密码。",
-      "tags": [
-        "component",
-        "profile",
-        "settings"
-      ],
-      "complexity": "moderate"
-    },
-    {
-      "id": "function:src/features/ordering/components/ProfileForm.tsx:ProfileForm",
-      "type": "function",
-      "name": "ProfileForm",
-      "filePath": "src/features/ordering/components/ProfileForm.tsx",
+      "id": "class:src/shared/components/ErrorBoundary.tsx:ErrorBoundary",
+      "type": "class",
+      "name": "ErrorBoundary",
+      "filePath": "src/shared/components/ErrorBoundary.tsx",
       "lineRange": [
-        12,
-        109
-      ],
-      "summary": "个人资料编辑表单，支持修改宿舍号和密码。",
-      "tags": [
-        "component",
-        "profile",
-        "form"
-      ],
-      "complexity": "moderate"
-    },
-    {
-      "id": "file:src/features/square/components/SquarePanel.tsx",
-      "type": "file",
-      "name": "SquarePanel.tsx",
-      "filePath": "src/features/square/components/SquarePanel.tsx",
-      "summary": "广场面板组件，实现社区发帖、组队、评论、点赞和帖子详情功能。",
-      "tags": [
-        "component",
-        "social",
-        "community"
-      ],
-      "complexity": "complex"
-    },
-    {
-      "id": "function:src/features/square/components/SquarePanel.tsx:SquarePanel",
-      "type": "function",
-      "name": "SquarePanel",
-      "filePath": "src/features/square/components/SquarePanel.tsx",
-      "lineRange": [
-        20,
-        372
-      ],
-      "summary": "广场面板主组件，管理帖子列表、创建、互动和评论区。",
-      "tags": [
-        "component",
-        "social",
-        "community"
-      ],
-      "complexity": "complex"
-    },
-    {
-      "id": "file:src/main.tsx",
-      "type": "file",
-      "name": "main.tsx",
-      "filePath": "src/main.tsx",
-      "summary": "React 应用入口，挂载根组件到 DOM 并加载全局样式。",
-      "tags": [
-        "entry-point",
-        "bootstrap",
-        "react"
-      ],
-      "complexity": "simple"
-    },
-    {
-      "id": "file:src/__tests__/utils.test.ts",
-      "type": "file",
-      "name": "utils.test.ts",
-      "filePath": "src/__tests__/utils.test.ts",
-      "summary": "工具函数单元测试，覆盖购物车键生成、价格计算和本地存储操作。",
-      "tags": [
-        "test",
-        "unit-test",
-        "utils"
-      ],
-      "complexity": "moderate"
-    },
-    {
-      "id": "file:src/features/admin/components/AdminPanel.tsx",
-      "type": "file",
-      "name": "AdminPanel.tsx",
-      "filePath": "src/features/admin/components/AdminPanel.tsx",
-      "summary": "管理后台面板，提供订单管理（实时通知、状态流转、CSV导出）、商品CRUD和今日统计。",
-      "tags": [
-        "component",
-        "admin",
-        "dashboard",
-        "order-management"
-      ],
-      "complexity": "complex"
-    },
-    {
-      "id": "function:src/features/admin/components/AdminPanel.tsx:AdminPanel",
-      "type": "function",
-      "name": "AdminPanel",
-      "filePath": "src/features/admin/components/AdminPanel.tsx",
-      "lineRange": [
-        17,
-        439
-      ],
-      "summary": "管理后台主面板，整合订单管理（实时通知+状态流转）、商品CRUD和统计概览。",
-      "tags": [
-        "component",
-        "admin",
-        "dashboard"
-      ],
-      "complexity": "complex"
-    },
-    {
-      "id": "file:src/features/admin/components/OrderCard.tsx",
-      "type": "file",
-      "name": "OrderCard.tsx",
-      "filePath": "src/features/admin/components/OrderCard.tsx",
-      "summary": "订单卡片组件，可展开显示订单详情和提供状态操作按钮。",
-      "tags": [
-        "component",
-        "order",
-        "admin"
-      ],
-      "complexity": "moderate"
-    },
-    {
-      "id": "function:src/features/admin/components/OrderCard.tsx:OrderCard",
-      "type": "function",
-      "name": "OrderCard",
-      "filePath": "src/features/admin/components/OrderCard.tsx",
-      "lineRange": [
-        12,
+        14,
         66
       ],
-      "summary": "可展开的订单卡片，显示订单详情并提供备货/送达/取消操作按钮。",
+      "summary": "React 错误边界，捕获子组件异常并渲染友好的错误回退界面。",
       "tags": [
         "component",
-        "order",
-        "expandable"
+        "error-handling",
+        "boundary"
       ],
       "complexity": "moderate"
     },
     {
-      "id": "file:src/shared/constants.ts",
-      "type": "file",
-      "name": "constants.ts",
-      "filePath": "src/shared/constants.ts",
-      "summary": "常量定义文件，包含默认分类列表和默认商品数据。",
-      "tags": [
-        "constants",
-        "configuration",
-        "data"
-      ],
-      "complexity": "moderate"
-    },
-    {
-      "id": "file:src/features/ordering/customerReducer.ts",
-      "type": "file",
-      "name": "customerReducer.ts",
-      "filePath": "src/features/ordering/customerReducer.ts",
-      "summary": "顾客端状态管理 reducer，处理购物车、商品筛选和订单提交流程的状态转换。",
-      "tags": [
-        "state-management",
-        "reducer",
-        "cart"
-      ],
-      "complexity": "moderate"
-    },
-    {
-      "id": "function:src/features/ordering/customerReducer.ts:createInitialState",
+      "id": "function:server/routes/stats.ts:daysInMonth",
       "type": "function",
-      "name": "createInitialState",
-      "filePath": "src/features/ordering/customerReducer.ts",
+      "name": "daysInMonth",
+      "filePath": "server/routes/stats.ts",
       "lineRange": [
-        24,
-        41
+        6,
+        8
       ],
-      "summary": "创建顾客端初始状态，包含默认分类和空购物车。",
-      "tags": [
-        "factory",
-        "state",
-        "initialization"
-      ],
-      "complexity": "simple"
-    },
-    {
-      "id": "function:src/features/ordering/customerReducer.ts:customerReducer",
-      "type": "function",
-      "name": "customerReducer",
-      "filePath": "src/features/ordering/customerReducer.ts",
-      "lineRange": [
-        69,
-        180
-      ],
-      "summary": "顾客端核心 Reducer，处理购物车增删改、商品筛选和订单确认等 15+ 种 Action。",
-      "tags": [
-        "reducer",
-        "state-management",
-        "cart"
-      ],
-      "complexity": "moderate"
-    },
-    {
-      "id": "file:src/features/ordering/hooks/useCustomerApp.ts",
-      "type": "file",
-      "name": "useCustomerApp.ts",
-      "filePath": "src/features/ordering/hooks/useCustomerApp.ts",
-      "summary": "顾客端核心 Hook，整合产品加载、购物车操作、订单创建和剪贴板复制等业务逻辑。",
-      "tags": [
-        "hook",
-        "business-logic",
-        "state-management"
-      ],
-      "complexity": "complex"
-    },
-    {
-      "id": "function:src/features/ordering/hooks/useCustomerApp.ts:useCustomerApp",
-      "type": "function",
-      "name": "useCustomerApp",
-      "filePath": "src/features/ordering/hooks/useCustomerApp.ts",
-      "lineRange": [
-        52,
-        288
-      ],
-      "summary": "顾客端核心 Hook，整合产品加载轮询、购物车操作、订单创建和剪贴板复制。",
-      "tags": [
-        "hook",
-        "business-logic",
-        "orchestration"
-      ],
-      "complexity": "complex"
-    },
-    {
-      "id": "file:src/shared/types.ts",
-      "type": "file",
-      "name": "types.ts",
-      "filePath": "src/shared/types.ts",
-      "summary": "TypeScript 类型定义文件，声明 Product、CartItem、Order、Post 等核心数据类型。",
-      "tags": [
-        "type-definition",
-        "typescript",
-        "data-model"
-      ],
-      "complexity": "simple"
-    },
-    {
-      "id": "file:src/shared/utils.ts",
-      "type": "file",
-      "name": "utils.ts",
-      "filePath": "src/shared/utils.ts",
-      "summary": "通用工具函数，含购物车键生成、价格计算、本地存储读写和错误消息提取。",
+      "summary": "计算指定年月的天数。",
       "tags": [
         "utility",
-        "cart",
-        "local-storage",
-        "tested"
-      ],
-      "complexity": "simple"
-    },
-    {
-      "id": "function:src/shared/utils.ts:getCartKey",
-      "type": "function",
-      "name": "getCartKey",
-      "filePath": "src/shared/utils.ts",
-      "lineRange": [
-        22,
-        24
-      ],
-      "summary": "生成购物车项的唯一键（基于商品ID+冲泡/冷冻选项）。",
-      "tags": [
-        "utility",
-        "cart",
-        "key-generation"
-      ],
-      "complexity": "simple"
-    },
-    {
-      "id": "function:src/shared/utils.ts:getItemUnitPrice",
-      "type": "function",
-      "name": "getItemUnitPrice",
-      "filePath": "src/shared/utils.ts",
-      "lineRange": [
-        26,
-        28
-      ],
-      "summary": "计算单个购物车项的单价（含附加服务费）。",
-      "tags": [
-        "utility",
-        "pricing",
-        "cart"
-      ],
-      "complexity": "simple"
-    },
-    {
-      "id": "function:src/shared/utils.ts:getCartStorageKey",
-      "type": "function",
-      "name": "getCartStorageKey",
-      "filePath": "src/shared/utils.ts",
-      "lineRange": [
-        32,
-        35
-      ],
-      "summary": "获取当前用户购物车的 localStorage 键名。",
-      "tags": [
-        "utility",
-        "local-storage",
-        "cart"
-      ],
-      "complexity": "simple"
-    },
-    {
-      "id": "function:src/shared/utils.ts:loadCartFromStorage",
-      "type": "function",
-      "name": "loadCartFromStorage",
-      "filePath": "src/shared/utils.ts",
-      "lineRange": [
-        37,
-        42
-      ],
-      "summary": "从 localStorage 加载当前用户的购物车数据。",
-      "tags": [
-        "utility",
-        "local-storage",
-        "persistence"
-      ],
-      "complexity": "simple"
-    },
-    {
-      "id": "function:src/shared/utils.ts:saveCartToStorage",
-      "type": "function",
-      "name": "saveCartToStorage",
-      "filePath": "src/shared/utils.ts",
-      "lineRange": [
-        44,
-        52
-      ],
-      "summary": "将购物车数据持久化到 localStorage。",
-      "tags": [
-        "utility",
-        "local-storage",
-        "persistence"
-      ],
-      "complexity": "simple"
-    },
-    {
-      "id": "function:src/shared/utils.ts:getErrorMessage",
-      "type": "function",
-      "name": "getErrorMessage",
-      "filePath": "src/shared/utils.ts",
-      "lineRange": [
-        56,
-        59
-      ],
-      "summary": "函数 getErrorMessage",
-      "tags": [
-        "function"
+        "date"
       ],
       "complexity": "simple"
     },
@@ -1614,19 +1543,6 @@
       "complexity": "simple"
     },
     {
-      "id": "file:src/__tests__/ErrorBoundary.test.tsx",
-      "type": "file",
-      "name": "ErrorBoundary.test.tsx",
-      "filePath": "src/__tests__/ErrorBoundary.test.tsx",
-      "summary": "ErrorBoundary 组件测试，验证错误捕获和回退 UI 渲染逻辑。",
-      "tags": [
-        "test",
-        "component-test",
-        "error-handling"
-      ],
-      "complexity": "simple"
-    },
-    {
       "id": "function:src/__tests__/ErrorBoundary.test.tsx:BrokenComponent",
       "type": "function",
       "name": "BrokenComponent",
@@ -1704,37 +1620,6 @@
       "complexity": "moderate"
     },
     {
-      "id": "file:src/shared/components/ErrorBoundary.tsx",
-      "type": "file",
-      "name": "ErrorBoundary.tsx",
-      "filePath": "src/shared/components/ErrorBoundary.tsx",
-      "summary": "React 错误边界组件，捕获子组件渲染异常并展示友好的错误回退界面。",
-      "tags": [
-        "component",
-        "error-handling",
-        "boundary",
-        "tested"
-      ],
-      "complexity": "moderate"
-    },
-    {
-      "id": "class:src/shared/components/ErrorBoundary.tsx:ErrorBoundary",
-      "type": "class",
-      "name": "ErrorBoundary",
-      "filePath": "src/shared/components/ErrorBoundary.tsx",
-      "lineRange": [
-        14,
-        66
-      ],
-      "summary": "React 错误边界，捕获子组件异常并渲染友好的错误回退界面。",
-      "tags": [
-        "component",
-        "error-handling",
-        "boundary"
-      ],
-      "complexity": "moderate"
-    },
-    {
       "id": "file:src/index.css",
       "type": "file",
       "name": "index.css",
@@ -1770,61 +1655,6 @@
         "configuration",
         "testing",
         "vitest"
-      ],
-      "complexity": "simple"
-    },
-    {
-      "id": "file:server/routes/combos.ts",
-      "type": "file",
-      "name": "combos.ts",
-      "filePath": "server/routes/combos.ts",
-      "summary": "套餐 API 路由，提供套餐的 CRUD 接口（列表公开、增删改需管理员权限），支持子商品组合和优惠计算。",
-      "tags": [
-        "api",
-        "combo",
-        "admin",
-        "route"
-      ],
-      "complexity": "moderate",
-      "languageNotes": "TypeScript Express router with better-sqlite3"
-    },
-    {
-      "id": "function:server/routes/combos.ts:serializeCombo",
-      "type": "function",
-      "name": "serializeCombo",
-      "filePath": "server/routes/combos.ts",
-      "summary": "将 combo 数据库行序列化为前端格式，计算原价和套餐价并填充子商品详情。",
-      "tags": [
-        "serialization",
-        "combo"
-      ],
-      "complexity": "moderate"
-    },
-    {
-      "id": "file:src/features/ordering/components/ComboCard.tsx",
-      "type": "file",
-      "name": "ComboCard.tsx",
-      "filePath": "src/features/ordering/components/ComboCard.tsx",
-      "summary": "套餐卡片组件，展示套餐名称、优惠金额、子商品列表，支持帮泡/冰镇附加选项。",
-      "tags": [
-        "component",
-        "combo",
-        "ui",
-        "ordering"
-      ],
-      "complexity": "moderate",
-      "languageNotes": "React TypeScript component with Tailwind CSS"
-    },
-    {
-      "id": "function:src/features/ordering/components/ComboCard.tsx:ComboCard",
-      "type": "function",
-      "name": "ComboCard",
-      "filePath": "src/features/ordering/components/ComboCard.tsx",
-      "summary": "套餐卡片默认导出组件，渲染套餐信息和加购按钮。",
-      "tags": [
-        "component",
-        "combo",
-        "react"
       ],
       "complexity": "simple"
     },
@@ -1942,38 +1772,851 @@
         "modal"
       ],
       "complexity": "complex"
-    },
-    {
-      "id": "file:server/routes/notifications.ts",
-      "type": "file",
-      "name": "notifications.ts",
-      "filePath": "server/routes/notifications.ts",
-      "summary": "通知系统 API 路由，提供用户通知查询、未读计数、标记已读、全局公告广播和评论删除通知功能。",
-      "tags": [
-        "api",
-        "notifications",
-        "express",
-        "announcements"
-      ],
-      "complexity": "simple"
-    },
-    {
-      "id": "file:src/features/ordering/components/NotificationPanel.tsx",
-      "type": "file",
-      "name": "NotificationPanel.tsx",
-      "filePath": "src/features/ordering/components/NotificationPanel.tsx",
-      "summary": "通知面板 UI 组件，支持通知/公告/好友申请的混合展示、展开详情、未读筛选和好友申请操作。",
-      "tags": [
-        "ui",
-        "notifications",
-        "friend-requests",
-        "announcements",
-        "panel"
-      ],
-      "complexity": "moderate"
     }
   ],
   "edges": [
+    {
+      "source": "file:src/__tests__/IdentityForm.test.tsx",
+      "target": "file:src/features/ordering/components/IdentityForm.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/__tests__/IdentityForm.test.tsx",
+      "target": "file:src/shared/api.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/__tests__/utils.test.ts",
+      "target": "file:src/shared/utils.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/__tests__/utils.test.ts",
+      "target": "file:src/shared/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/__tests__/utils.test.ts",
+      "target": "function:src/__tests__/utils.test.ts:makeItem",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/features/admin/components/AdminGate.tsx",
+      "target": "file:src/features/admin/components/AdminPanel.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/features/admin/components/AdminGate.tsx",
+      "target": "file:src/shared/api.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/features/admin/components/AdminGate.tsx",
+      "target": "function:src/features/admin/components/AdminGate.tsx:AdminGate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/features/admin/components/AdminGate.tsx",
+      "target": "function:src/features/admin/components/AdminGate.tsx:AdminGate",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/features/admin/components/AdminPanel.tsx",
+      "target": "file:src/features/admin/components/OrderCard.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/features/admin/components/AdminPanel.tsx",
+      "target": "file:src/shared/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/features/admin/components/AdminPanel.tsx",
+      "target": "file:src/shared/api.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/features/admin/components/AdminPanel.tsx",
+      "target": "file:src/shared/constants.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/features/admin/components/AdminPanel.tsx",
+      "target": "file:src/shared/utils.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/features/admin/components/AdminPanel.tsx",
+      "target": "function:src/features/admin/components/AdminPanel.tsx:AdminPanel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/features/admin/components/AdminPanel.tsx",
+      "target": "function:src/features/admin/components/AdminPanel.tsx:AdminPanel",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/features/admin/components/OrderCard.tsx",
+      "target": "file:src/shared/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/features/admin/components/OrderCard.tsx",
+      "target": "file:src/shared/utils.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/features/admin/components/OrderCard.tsx",
+      "target": "function:src/features/admin/components/OrderCard.tsx:OrderCard",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/features/admin/components/OrderCard.tsx",
+      "target": "function:src/features/admin/components/OrderCard.tsx:OrderCard",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/features/ordering/components/CartPanel.tsx",
+      "target": "file:src/shared/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/features/ordering/components/CartPanel.tsx",
+      "target": "file:src/shared/utils.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/features/ordering/components/CartPanel.tsx",
+      "target": "function:src/features/ordering/components/CartPanel.tsx:CartPanel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/features/ordering/components/CartPanel.tsx",
+      "target": "function:src/features/ordering/components/CartPanel.tsx:CartPanel",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/features/ordering/components/IdentityForm.tsx",
+      "target": "file:src/shared/api.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/features/ordering/components/IdentityForm.tsx",
+      "target": "file:src/shared/utils.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/features/ordering/components/IdentityForm.tsx",
+      "target": "function:src/features/ordering/components/IdentityForm.tsx:IdentityForm",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/features/ordering/components/IdentityForm.tsx",
+      "target": "function:src/features/ordering/components/IdentityForm.tsx:IdentityForm",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/features/ordering/components/ProfileForm.tsx",
+      "target": "file:src/shared/api.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/features/ordering/components/ProfileForm.tsx",
+      "target": "file:src/shared/utils.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/features/ordering/components/ProfileForm.tsx",
+      "target": "function:src/features/ordering/components/ProfileForm.tsx:ProfileForm",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/features/ordering/components/ProfileForm.tsx",
+      "target": "function:src/features/ordering/components/ProfileForm.tsx:ProfileForm",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/features/ordering/components/IdentityForm.tsx",
+      "target": "file:src/__tests__/IdentityForm.test.tsx",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5,
+      "description": "Direction corrected (was test → production)"
+    },
+    {
+      "source": "file:src/shared/utils.ts",
+      "target": "file:src/__tests__/utils.test.ts",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5,
+      "description": "Direction corrected (was test → production)"
+    },
+    {
+      "source": "function:src/features/ordering/components/CartPanel.tsx:CartPanel",
+      "target": "function:src/shared/utils.ts:getCartKey",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/features/ordering/components/CartPanel.tsx:CartPanel",
+      "target": "function:src/shared/utils.ts:getItemUnitPrice",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/features/ordering/components/IdentityForm.tsx:IdentityForm",
+      "target": "function:src/shared/api.ts:register",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/features/ordering/components/IdentityForm.tsx:IdentityForm",
+      "target": "function:src/shared/api.ts:login",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/features/ordering/components/IdentityForm.tsx:IdentityForm",
+      "target": "function:src/shared/utils.ts:getErrorMessage",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/features/ordering/components/ProfileForm.tsx:ProfileForm",
+      "target": "function:src/shared/utils.ts:getErrorMessage",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/features/admin/components/OrderCard.tsx:OrderCard",
+      "target": "function:src/shared/utils.ts:getItemUnitPrice",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/features/admin/components/AdminPanel.tsx:AdminPanel",
+      "target": "function:src/shared/api.ts:fetchOrders",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/features/admin/components/AdminPanel.tsx:AdminPanel",
+      "target": "function:src/shared/api.ts:fetchProducts",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/features/admin/components/AdminPanel.tsx:AdminPanel",
+      "target": "function:src/shared/api.ts:fetchCombos",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/features/admin/components/AdminPanel.tsx:AdminPanel",
+      "target": "function:src/shared/api.ts:fetchStats",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/features/admin/components/AdminPanel.tsx:AdminPanel",
+      "target": "function:src/shared/utils.ts:getErrorMessage",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/features/admin/components/AdminGate.tsx:AdminGate",
+      "target": "function:src/shared/api.ts:getIdentity",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/features/ordering/customerReducer.ts",
+      "target": "file:src/shared/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/features/ordering/customerReducer.ts",
+      "target": "file:src/shared/utils.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/features/ordering/customerReducer.ts",
+      "target": "file:src/shared/api.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/features/ordering/customerReducer.ts",
+      "target": "function:src/features/ordering/customerReducer.ts:createInitialState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/features/ordering/customerReducer.ts",
+      "target": "function:src/features/ordering/customerReducer.ts:customerReducer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/features/ordering/customerReducer.ts",
+      "target": "function:src/features/ordering/customerReducer.ts:createInitialState",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/features/ordering/customerReducer.ts",
+      "target": "function:src/features/ordering/customerReducer.ts:customerReducer",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/features/ordering/hooks/useCustomerApp.ts",
+      "target": "file:src/shared/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/features/ordering/hooks/useCustomerApp.ts",
+      "target": "file:src/shared/constants.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/features/ordering/hooks/useCustomerApp.ts",
+      "target": "file:src/shared/utils.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/features/ordering/hooks/useCustomerApp.ts",
+      "target": "file:src/shared/api.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/features/ordering/hooks/useCustomerApp.ts",
+      "target": "file:src/features/ordering/customerReducer.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/features/ordering/hooks/useCustomerApp.ts",
+      "target": "function:src/features/ordering/hooks/useCustomerApp.ts:useCustomerApp",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/features/ordering/hooks/useCustomerApp.ts",
+      "target": "function:src/features/ordering/hooks/useCustomerApp.ts:useCustomerApp",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/features/square/components/SquarePanel.tsx",
+      "target": "file:src/shared/api.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/features/square/components/SquarePanel.tsx",
+      "target": "file:src/shared/utils.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/features/square/components/SquarePanel.tsx",
+      "target": "function:src/features/square/components/SquarePanel.tsx:SquarePanel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/features/square/components/SquarePanel.tsx",
+      "target": "function:src/features/square/components/SquarePanel.tsx:SquarePanel",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/shared/api.ts",
+      "target": "file:src/shared/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/shared/api.ts",
+      "target": "function:src/shared/api.ts:request",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/shared/api.ts",
+      "target": "function:src/shared/api.ts:register",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/shared/api.ts",
+      "target": "function:src/shared/api.ts:login",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/shared/api.ts",
+      "target": "function:src/shared/api.ts:getIdentity",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/shared/api.ts",
+      "target": "function:src/shared/api.ts:createOrder",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/shared/api.ts",
+      "target": "function:src/shared/api.ts:fetchOrders",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/shared/api.ts",
+      "target": "function:src/shared/api.ts:fetchProducts",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/shared/api.ts",
+      "target": "function:src/shared/api.ts:fetchPosts",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/shared/api.ts",
+      "target": "function:src/shared/api.ts:fetchCombos",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/shared/api.ts",
+      "target": "function:src/shared/api.ts:fetchStats",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/shared/api.ts",
+      "target": "function:src/shared/api.ts:getErrorMessage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/shared/api.ts",
+      "target": "function:src/shared/api.ts:register",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/shared/api.ts",
+      "target": "function:src/shared/api.ts:login",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/shared/api.ts",
+      "target": "function:src/shared/api.ts:getIdentity",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/shared/api.ts",
+      "target": "function:src/shared/api.ts:createOrder",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/shared/api.ts",
+      "target": "function:src/shared/api.ts:fetchOrders",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/shared/api.ts",
+      "target": "function:src/shared/api.ts:fetchProducts",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/shared/api.ts",
+      "target": "function:src/shared/api.ts:fetchPosts",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/shared/api.ts",
+      "target": "function:src/shared/api.ts:fetchCombos",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/shared/api.ts",
+      "target": "function:src/shared/api.ts:fetchStats",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/shared/api.ts",
+      "target": "function:src/shared/api.ts:getErrorMessage",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/shared/constants.ts",
+      "target": "file:src/shared/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/shared/utils.ts",
+      "target": "file:src/shared/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/shared/utils.ts",
+      "target": "file:src/shared/api.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/shared/utils.ts",
+      "target": "function:src/shared/utils.ts:getCartKey",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/shared/utils.ts",
+      "target": "function:src/shared/utils.ts:getItemUnitPrice",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/shared/utils.ts",
+      "target": "function:src/shared/utils.ts:getCartStorageKey",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/shared/utils.ts",
+      "target": "function:src/shared/utils.ts:loadCartFromStorage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/shared/utils.ts",
+      "target": "function:src/shared/utils.ts:saveCartToStorage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/shared/utils.ts",
+      "target": "function:src/shared/utils.ts:detectCombos",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/shared/utils.ts",
+      "target": "function:src/shared/utils.ts:getErrorMessage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/shared/utils.ts",
+      "target": "function:src/shared/utils.ts:getCartKey",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/shared/utils.ts",
+      "target": "function:src/shared/utils.ts:getItemUnitPrice",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/shared/utils.ts",
+      "target": "function:src/shared/utils.ts:getCartStorageKey",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/shared/utils.ts",
+      "target": "function:src/shared/utils.ts:loadCartFromStorage",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/shared/utils.ts",
+      "target": "function:src/shared/utils.ts:saveCartToStorage",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/shared/utils.ts",
+      "target": "function:src/shared/utils.ts:detectCombos",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/shared/utils.ts",
+      "target": "function:src/shared/utils.ts:getErrorMessage",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/shared/utils.ts:loadCartFromStorage",
+      "target": "function:src/shared/api.ts:getIdentity",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/shared/utils.ts:saveCartToStorage",
+      "target": "function:src/shared/utils.ts:getCartStorageKey",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/shared/utils.ts:loadCartFromStorage",
+      "target": "function:src/shared/utils.ts:getCartStorageKey",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/features/ordering/customerReducer.ts:customerReducer",
+      "target": "function:src/shared/utils.ts:getCartKey",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/features/ordering/customerReducer.ts:customerReducer",
+      "target": "function:src/shared/utils.ts:detectCombos",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/features/ordering/hooks/useCustomerApp.ts:useCustomerApp",
+      "target": "function:src/features/ordering/customerReducer.ts:createInitialState",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/features/ordering/hooks/useCustomerApp.ts:useCustomerApp",
+      "target": "function:src/shared/api.ts:fetchProducts",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/features/ordering/hooks/useCustomerApp.ts:useCustomerApp",
+      "target": "function:src/shared/api.ts:fetchCombos",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/features/ordering/hooks/useCustomerApp.ts:useCustomerApp",
+      "target": "function:src/shared/api.ts:fetchStats",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/features/ordering/hooks/useCustomerApp.ts:useCustomerApp",
+      "target": "function:src/shared/api.ts:createOrder",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/features/ordering/hooks/useCustomerApp.ts:useCustomerApp",
+      "target": "function:src/shared/utils.ts:loadCartFromStorage",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/features/ordering/hooks/useCustomerApp.ts:useCustomerApp",
+      "target": "function:src/shared/utils.ts:saveCartToStorage",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/features/ordering/hooks/useCustomerApp.ts:useCustomerApp",
+      "target": "function:src/shared/utils.ts:getItemUnitPrice",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/features/ordering/hooks/useCustomerApp.ts:useCustomerApp",
+      "target": "function:src/shared/utils.ts:getErrorMessage",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/features/square/components/SquarePanel.tsx:SquarePanel",
+      "target": "function:src/shared/api.ts:fetchPosts",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/features/square/components/SquarePanel.tsx:SquarePanel",
+      "target": "function:src/shared/utils.ts:getErrorMessage",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
     {
       "source": "file:server/__tests__/api.test.ts",
       "target": "file:server/app.ts",
@@ -1982,25 +2625,19 @@
       "weight": 0.7
     },
     {
+      "source": "file:server/__tests__/api.test.ts",
+      "target": "function:server/app.ts:createApp",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
       "source": "file:server/app.ts",
       "target": "file:server/__tests__/api.test.ts",
       "type": "tested_by",
       "direction": "forward",
-      "weight": 0.5
-    },
-    {
-      "source": "file:server/app.ts",
-      "target": "function:server/app.ts:createApp",
-      "type": "contains",
-      "direction": "forward",
-      "weight": 1
-    },
-    {
-      "source": "file:server/app.ts",
-      "target": "function:server/app.ts:createApp",
-      "type": "exports",
-      "direction": "forward",
-      "weight": 0.8
+      "weight": 0.5,
+      "description": "Direction corrected (was test → production)"
     },
     {
       "source": "file:server/app.ts",
@@ -2019,6 +2656,13 @@
     {
       "source": "file:server/app.ts",
       "target": "file:server/routes/auth.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:server/app.ts",
+      "target": "file:server/routes/combos.ts",
       "type": "imports",
       "direction": "forward",
       "weight": 0.7
@@ -2052,18 +2696,39 @@
       "weight": 0.7
     },
     {
-      "source": "file:server/db.ts",
-      "target": "function:server/db.ts:getDb",
+      "source": "file:server/app.ts",
+      "target": "function:server/app.ts:createApp",
       "type": "contains",
       "direction": "forward",
       "weight": 1
     },
     {
-      "source": "file:server/db.ts",
-      "target": "function:server/db.ts:getDb",
+      "source": "file:server/app.ts",
+      "target": "function:server/app.ts:createApp",
       "type": "exports",
       "direction": "forward",
       "weight": 0.8
+    },
+    {
+      "source": "function:server/app.ts:createApp",
+      "target": "function:server/db.ts:getDb",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:server/app.ts:createApp",
+      "target": "function:server/middleware/rateLimit.ts:rateLimit",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:server/db.ts",
+      "target": "function:server/db.ts:getDb",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
     },
     {
       "source": "file:server/db.ts",
@@ -2087,6 +2752,34 @@
       "weight": 1
     },
     {
+      "source": "file:server/db.ts",
+      "target": "function:server/db.ts:getDb",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:server/db.ts:getDb",
+      "target": "function:server/db.ts:runMigrations",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:server/db.ts:getDb",
+      "target": "function:server/db.ts:initTables",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:server/db.ts:getDb",
+      "target": "function:server/db.ts:seedDefaults",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
       "source": "file:server/index.ts",
       "target": "file:server/app.ts",
       "type": "imports",
@@ -2094,6 +2787,13 @@
       "weight": 0.7
     },
     {
+      "source": "file:server/index.ts",
+      "target": "function:server/app.ts:createApp",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
       "source": "file:server/middleware/auth.ts",
       "target": "function:server/middleware/auth.ts:requireAdmin",
       "type": "contains",
@@ -2104,6 +2804,13 @@
       "source": "file:server/middleware/auth.ts",
       "target": "function:server/middleware/auth.ts:requireAdmin",
       "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:server/middleware/auth.ts:requireAdmin",
+      "target": "function:server/db.ts:getDb",
+      "type": "calls",
       "direction": "forward",
       "weight": 0.8
     },
@@ -2120,6 +2827,13 @@
       "type": "exports",
       "direction": "forward",
       "weight": 0.8
+    },
+    {
+      "source": "file:server/routes/auth.ts",
+      "target": "file:server/db.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
     },
     {
       "source": "file:server/routes/auth.ts",
@@ -2129,8 +2843,50 @@
       "weight": 1
     },
     {
-      "source": "file:server/routes/auth.ts",
+      "source": "file:server/routes/combos.ts",
       "target": "file:server/db.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:server/routes/combos.ts",
+      "target": "file:server/middleware/auth.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:server/routes/combos.ts",
+      "target": "function:server/routes/combos.ts:serializeCombo",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:server/routes/combos.ts",
+      "target": "function:server/middleware/auth.ts:requireAdmin",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "function:server/routes/combos.ts:serializeCombo",
+      "target": "function:server/db.ts:getDb",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:server/routes/orders.ts",
+      "target": "file:server/db.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:server/routes/orders.ts",
+      "target": "file:server/middleware/auth.ts",
       "type": "imports",
       "direction": "forward",
       "weight": 0.7
@@ -2144,17 +2900,24 @@
     },
     {
       "source": "file:server/routes/orders.ts",
-      "target": "file:server/db.ts",
-      "type": "imports",
+      "target": "function:server/routes/orders.ts:restoreStock",
+      "type": "contains",
       "direction": "forward",
-      "weight": 0.7
+      "weight": 1
     },
     {
       "source": "file:server/routes/orders.ts",
-      "target": "file:server/middleware/auth.ts",
-      "type": "imports",
+      "target": "function:server/routes/orders.ts:deductStock",
+      "type": "contains",
       "direction": "forward",
-      "weight": 0.7
+      "weight": 1
+    },
+    {
+      "source": "file:server/routes/orders.ts",
+      "target": "function:server/routes/orders.ts:recalcTotal",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
     },
     {
       "source": "file:server/routes/posts.ts",
@@ -2165,13 +2928,6 @@
     },
     {
       "source": "file:server/routes/products.ts",
-      "target": "function:server/routes/products.ts:serializeProduct",
-      "type": "contains",
-      "direction": "forward",
-      "weight": 1
-    },
-    {
-      "source": "file:server/routes/products.ts",
       "target": "file:server/db.ts",
       "type": "imports",
       "direction": "forward",
@@ -2185,43 +2941,57 @@
       "weight": 0.7
     },
     {
-      "source": "file:server/routes/stats.ts",
-      "target": "function:server/routes/stats.ts:daysInMonth",
+      "source": "file:server/routes/products.ts",
+      "target": "function:server/routes/products.ts:loadVariants",
       "type": "contains",
       "direction": "forward",
       "weight": 1
     },
     {
-      "source": "file:server/routes/stats.ts",
-      "target": "file:server/db.ts",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
-    },
-    {
-      "source": "file:src/App.tsx",
-      "target": "function:src/App.tsx:CustomerApp",
+      "source": "file:server/routes/products.ts",
+      "target": "function:server/routes/products.ts:serializeProduct",
       "type": "contains",
       "direction": "forward",
       "weight": 1
     },
     {
-      "source": "file:src/App.tsx",
-      "target": "function:src/App.tsx:App",
+      "source": "file:server/routes/products.ts",
+      "target": "function:server/routes/products.ts:upsertVariants",
       "type": "contains",
       "direction": "forward",
       "weight": 1
     },
     {
-      "source": "file:src/App.tsx",
-      "target": "function:src/App.tsx:App",
-      "type": "exports",
+      "source": "file:server/routes/products.ts",
+      "target": "function:server/middleware/auth.ts:requireAdmin",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "function:server/routes/products.ts:serializeProduct",
+      "target": "function:server/routes/products.ts:loadVariants",
+      "type": "calls",
       "direction": "forward",
       "weight": 0.8
     },
     {
-      "source": "file:src/App.tsx",
-      "target": "file:src/features/admin/components/AdminGate.tsx",
+      "source": "function:server/routes/products.ts:loadVariants",
+      "target": "function:server/db.ts:getDb",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:server/routes/products.ts:upsertVariants",
+      "target": "function:server/db.ts:getDb",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:server/routes/stats.ts",
+      "target": "file:server/db.ts",
       "type": "imports",
       "direction": "forward",
       "weight": 0.7
@@ -2235,7 +3005,7 @@
     },
     {
       "source": "file:src/App.tsx",
-      "target": "file:src/shared/components/ErrorBoundary.tsx",
+      "target": "file:src/features/ordering/components/ComboCard.tsx",
       "type": "imports",
       "direction": "forward",
       "weight": 0.7
@@ -2270,7 +3040,21 @@
     },
     {
       "source": "file:src/App.tsx",
-      "target": "file:src/features/square/components/SquarePanel.tsx",
+      "target": "file:src/features/ordering/hooks/useCustomerApp.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/App.tsx",
+      "target": "file:src/shared/api.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/App.tsx",
+      "target": "file:src/shared/components/ErrorBoundary.tsx",
       "type": "imports",
       "direction": "forward",
       "weight": 0.7
@@ -2284,556 +3068,24 @@
     },
     {
       "source": "file:src/App.tsx",
-      "target": "file:src/features/ordering/hooks/useCustomerApp.ts",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
-    },
-    {
-      "source": "file:src/App.tsx",
       "target": "file:src/shared/utils.ts",
       "type": "imports",
       "direction": "forward",
       "weight": 0.7
     },
     {
-      "source": "file:src/__tests__/IdentityForm.test.tsx",
-      "target": "file:src/shared/api.ts",
+      "source": "file:src/__tests__/ErrorBoundary.test.tsx",
+      "target": "file:src/shared/components/ErrorBoundary.tsx",
       "type": "imports",
       "direction": "forward",
       "weight": 0.7
     },
     {
-      "source": "file:src/__tests__/IdentityForm.test.tsx",
-      "target": "file:src/features/ordering/components/IdentityForm.tsx",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
-    },
-    {
-      "source": "file:src/shared/api.ts",
-      "target": "file:src/__tests__/IdentityForm.test.tsx",
-      "type": "tested_by",
-      "direction": "forward",
-      "weight": 0.5
-    },
-    {
-      "source": "file:src/features/ordering/components/IdentityForm.tsx",
-      "target": "file:src/__tests__/IdentityForm.test.tsx",
-      "type": "tested_by",
-      "direction": "forward",
-      "weight": 0.5
-    },
-    {
-      "source": "file:src/shared/api.ts",
-      "target": "function:src/shared/api.ts:register",
-      "type": "contains",
-      "direction": "forward",
-      "weight": 1
-    },
-    {
-      "source": "file:src/shared/api.ts",
-      "target": "function:src/shared/api.ts:register",
-      "type": "exports",
-      "direction": "forward",
-      "weight": 0.8
-    },
-    {
-      "source": "file:src/shared/api.ts",
-      "target": "function:src/shared/api.ts:login",
-      "type": "contains",
-      "direction": "forward",
-      "weight": 1
-    },
-    {
-      "source": "file:src/shared/api.ts",
-      "target": "function:src/shared/api.ts:login",
-      "type": "exports",
-      "direction": "forward",
-      "weight": 0.8
-    },
-    {
-      "source": "file:src/shared/api.ts",
-      "target": "function:src/shared/api.ts:updateProfile",
-      "type": "contains",
-      "direction": "forward",
-      "weight": 1
-    },
-    {
-      "source": "file:src/shared/api.ts",
-      "target": "function:src/shared/api.ts:updateProfile",
-      "type": "exports",
-      "direction": "forward",
-      "weight": 0.8
-    },
-    {
-      "source": "file:src/shared/api.ts",
-      "target": "function:src/shared/api.ts:changePassword",
-      "type": "contains",
-      "direction": "forward",
-      "weight": 1
-    },
-    {
-      "source": "file:src/shared/api.ts",
-      "target": "function:src/shared/api.ts:changePassword",
-      "type": "exports",
-      "direction": "forward",
-      "weight": 0.8
-    },
-    {
-      "source": "file:src/shared/api.ts",
-      "target": "function:src/shared/api.ts:getIdentity",
-      "type": "contains",
-      "direction": "forward",
-      "weight": 1
-    },
-    {
-      "source": "file:src/shared/api.ts",
-      "target": "function:src/shared/api.ts:getIdentity",
-      "type": "exports",
-      "direction": "forward",
-      "weight": 0.8
-    },
-    {
-      "source": "file:src/shared/api.ts",
-      "target": "function:src/shared/api.ts:setIdentity",
-      "type": "contains",
-      "direction": "forward",
-      "weight": 1
-    },
-    {
-      "source": "file:src/shared/api.ts",
-      "target": "function:src/shared/api.ts:setIdentity",
-      "type": "exports",
-      "direction": "forward",
-      "weight": 0.8
-    },
-    {
-      "source": "file:src/shared/api.ts",
-      "target": "function:src/shared/api.ts:clearIdentity",
-      "type": "contains",
-      "direction": "forward",
-      "weight": 1
-    },
-    {
-      "source": "file:src/shared/api.ts",
-      "target": "function:src/shared/api.ts:clearIdentity",
-      "type": "exports",
-      "direction": "forward",
-      "weight": 0.8
-    },
-    {
-      "source": "file:src/shared/api.ts",
-      "target": "function:src/shared/api.ts:getAdminKey",
-      "type": "contains",
-      "direction": "forward",
-      "weight": 1
-    },
-    {
-      "source": "file:src/shared/api.ts",
-      "target": "function:src/shared/api.ts:getAdminKey",
-      "type": "exports",
-      "direction": "forward",
-      "weight": 0.8
-    },
-    {
-      "source": "file:src/shared/api.ts",
-      "target": "function:src/shared/api.ts:setAdminKey",
-      "type": "contains",
-      "direction": "forward",
-      "weight": 1
-    },
-    {
-      "source": "file:src/shared/api.ts",
-      "target": "function:src/shared/api.ts:setAdminKey",
-      "type": "exports",
-      "direction": "forward",
-      "weight": 0.8
-    },
-    {
-      "source": "file:src/shared/api.ts",
-      "target": "function:src/shared/api.ts:isRetryableError",
-      "type": "contains",
-      "direction": "forward",
-      "weight": 1
-    },
-    {
-      "source": "file:src/shared/api.ts",
-      "target": "function:src/shared/api.ts:delay",
-      "type": "contains",
-      "direction": "forward",
-      "weight": 1
-    },
-    {
-      "source": "file:src/shared/api.ts",
-      "target": "function:src/shared/api.ts:request",
-      "type": "contains",
-      "direction": "forward",
-      "weight": 1
-    },
-    {
-      "source": "file:src/shared/api.ts",
-      "target": "function:src/shared/api.ts:getErrorMessage",
-      "type": "contains",
-      "direction": "forward",
-      "weight": 1
-    },
-    {
-      "source": "file:src/shared/api.ts",
-      "target": "function:src/shared/api.ts:verifyAdmin",
-      "type": "contains",
-      "direction": "forward",
-      "weight": 1
-    },
-    {
-      "source": "file:src/shared/api.ts",
-      "target": "function:src/shared/api.ts:verifyAdmin",
-      "type": "exports",
-      "direction": "forward",
-      "weight": 0.8
-    },
-    {
-      "source": "file:src/shared/api.ts",
-      "target": "function:src/shared/api.ts:fetchProducts",
-      "type": "contains",
-      "direction": "forward",
-      "weight": 1
-    },
-    {
-      "source": "file:src/shared/api.ts",
-      "target": "function:src/shared/api.ts:fetchProducts",
-      "type": "exports",
-      "direction": "forward",
-      "weight": 0.8
-    },
-    {
-      "source": "file:src/shared/api.ts",
-      "target": "function:src/shared/api.ts:createProduct",
-      "type": "contains",
-      "direction": "forward",
-      "weight": 1
-    },
-    {
-      "source": "file:src/shared/api.ts",
-      "target": "function:src/shared/api.ts:createProduct",
-      "type": "exports",
-      "direction": "forward",
-      "weight": 0.8
-    },
-    {
-      "source": "file:src/shared/api.ts",
-      "target": "function:src/shared/api.ts:updateProduct",
-      "type": "contains",
-      "direction": "forward",
-      "weight": 1
-    },
-    {
-      "source": "file:src/shared/api.ts",
-      "target": "function:src/shared/api.ts:updateProduct",
-      "type": "exports",
-      "direction": "forward",
-      "weight": 0.8
-    },
-    {
-      "source": "file:src/shared/api.ts",
-      "target": "function:src/shared/api.ts:deleteProduct",
-      "type": "contains",
-      "direction": "forward",
-      "weight": 1
-    },
-    {
-      "source": "file:src/shared/api.ts",
-      "target": "function:src/shared/api.ts:deleteProduct",
-      "type": "exports",
-      "direction": "forward",
-      "weight": 0.8
-    },
-    {
-      "source": "file:src/shared/api.ts",
-      "target": "function:src/shared/api.ts:createOrder",
-      "type": "contains",
-      "direction": "forward",
-      "weight": 1
-    },
-    {
-      "source": "file:src/shared/api.ts",
-      "target": "function:src/shared/api.ts:createOrder",
-      "type": "exports",
-      "direction": "forward",
-      "weight": 0.8
-    },
-    {
-      "source": "file:src/shared/api.ts",
-      "target": "function:src/shared/api.ts:fetchOrders",
-      "type": "contains",
-      "direction": "forward",
-      "weight": 1
-    },
-    {
-      "source": "file:src/shared/api.ts",
-      "target": "function:src/shared/api.ts:fetchOrders",
-      "type": "exports",
-      "direction": "forward",
-      "weight": 0.8
-    },
-    {
-      "source": "file:src/shared/api.ts",
-      "target": "function:src/shared/api.ts:fetchOrderById",
-      "type": "contains",
-      "direction": "forward",
-      "weight": 1
-    },
-    {
-      "source": "file:src/shared/api.ts",
-      "target": "function:src/shared/api.ts:fetchOrderById",
-      "type": "exports",
-      "direction": "forward",
-      "weight": 0.8
-    },
-    {
-      "source": "file:src/shared/api.ts",
-      "target": "function:src/shared/api.ts:fetchStats",
-      "type": "contains",
-      "direction": "forward",
-      "weight": 1
-    },
-    {
-      "source": "file:src/shared/api.ts",
-      "target": "function:src/shared/api.ts:fetchStats",
-      "type": "exports",
-      "direction": "forward",
-      "weight": 0.8
-    },
-    {
-      "source": "file:src/shared/api.ts",
-      "target": "function:src/shared/api.ts:updateOrderStatus",
-      "type": "contains",
-      "direction": "forward",
-      "weight": 1
-    },
-    {
-      "source": "file:src/shared/api.ts",
-      "target": "function:src/shared/api.ts:updateOrderStatus",
-      "type": "exports",
-      "direction": "forward",
-      "weight": 0.8
-    },
-    {
-      "source": "file:src/shared/api.ts",
-      "target": "function:src/shared/api.ts:fetchPosts",
-      "type": "contains",
-      "direction": "forward",
-      "weight": 1
-    },
-    {
-      "source": "file:src/shared/api.ts",
-      "target": "function:src/shared/api.ts:fetchPosts",
-      "type": "exports",
-      "direction": "forward",
-      "weight": 0.8
-    },
-    {
-      "source": "file:src/shared/api.ts",
-      "target": "function:src/shared/api.ts:fetchPostById",
-      "type": "contains",
-      "direction": "forward",
-      "weight": 1
-    },
-    {
-      "source": "file:src/shared/api.ts",
-      "target": "function:src/shared/api.ts:fetchPostById",
-      "type": "exports",
-      "direction": "forward",
-      "weight": 0.8
-    },
-    {
-      "source": "file:src/shared/api.ts",
-      "target": "function:src/shared/api.ts:createPost",
-      "type": "contains",
-      "direction": "forward",
-      "weight": 1
-    },
-    {
-      "source": "file:src/shared/api.ts",
-      "target": "function:src/shared/api.ts:createPost",
-      "type": "exports",
-      "direction": "forward",
-      "weight": 0.8
-    },
-    {
-      "source": "file:src/shared/api.ts",
-      "target": "function:src/shared/api.ts:updatePost",
-      "type": "contains",
-      "direction": "forward",
-      "weight": 1
-    },
-    {
-      "source": "file:src/shared/api.ts",
-      "target": "function:src/shared/api.ts:updatePost",
-      "type": "exports",
-      "direction": "forward",
-      "weight": 0.8
-    },
-    {
-      "source": "file:src/shared/api.ts",
-      "target": "function:src/shared/api.ts:addComment",
-      "type": "contains",
-      "direction": "forward",
-      "weight": 1
-    },
-    {
-      "source": "file:src/shared/api.ts",
-      "target": "function:src/shared/api.ts:addComment",
-      "type": "exports",
-      "direction": "forward",
-      "weight": 0.8
-    },
-    {
-      "source": "file:src/shared/api.ts",
-      "target": "function:src/shared/api.ts:toggleLike",
-      "type": "contains",
-      "direction": "forward",
-      "weight": 1
-    },
-    {
-      "source": "file:src/shared/api.ts",
-      "target": "function:src/shared/api.ts:toggleLike",
-      "type": "exports",
-      "direction": "forward",
-      "weight": 0.8
-    },
-    {
-      "source": "file:src/shared/api.ts",
-      "target": "function:src/shared/api.ts:fetchJoinedPostIds",
-      "type": "contains",
-      "direction": "forward",
-      "weight": 1
-    },
-    {
-      "source": "file:src/shared/api.ts",
-      "target": "function:src/shared/api.ts:fetchJoinedPostIds",
-      "type": "exports",
-      "direction": "forward",
-      "weight": 0.8
-    },
-    {
-      "source": "file:src/shared/api.ts",
-      "target": "function:src/shared/api.ts:joinPost",
-      "type": "contains",
-      "direction": "forward",
-      "weight": 1
-    },
-    {
-      "source": "file:src/shared/api.ts",
-      "target": "function:src/shared/api.ts:joinPost",
-      "type": "exports",
-      "direction": "forward",
-      "weight": 0.8
-    },
-    {
-      "source": "file:src/shared/api.ts",
+      "source": "file:src/features/ordering/components/ComboCard.tsx",
       "target": "file:src/shared/types.ts",
       "type": "imports",
       "direction": "forward",
       "weight": 0.7
-    },
-    {
-      "source": "file:src/features/admin/components/AdminGate.tsx",
-      "target": "function:src/features/admin/components/AdminGate.tsx:AdminGate",
-      "type": "contains",
-      "direction": "forward",
-      "weight": 1
-    },
-    {
-      "source": "file:src/features/admin/components/AdminGate.tsx",
-      "target": "function:src/features/admin/components/AdminGate.tsx:AdminGate",
-      "type": "exports",
-      "direction": "forward",
-      "weight": 0.8
-    },
-    {
-      "source": "file:src/features/admin/components/AdminGate.tsx",
-      "target": "file:src/shared/api.ts",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
-    },
-    {
-      "source": "file:src/features/admin/components/AdminGate.tsx",
-      "target": "file:src/features/admin/components/AdminPanel.tsx",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
-    },
-    {
-      "source": "file:src/features/ordering/components/CartPanel.tsx",
-      "target": "function:src/features/ordering/components/CartPanel.tsx:CartPanel",
-      "type": "contains",
-      "direction": "forward",
-      "weight": 1
-    },
-    {
-      "source": "file:src/features/ordering/components/CartPanel.tsx",
-      "target": "function:src/features/ordering/components/CartPanel.tsx:CartPanel",
-      "type": "exports",
-      "direction": "forward",
-      "weight": 0.8
-    },
-    {
-      "source": "file:src/features/ordering/components/CartPanel.tsx",
-      "target": "file:src/shared/types.ts",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
-    },
-    {
-      "source": "file:src/features/ordering/components/CartPanel.tsx",
-      "target": "file:src/shared/utils.ts",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
-    },
-    {
-      "source": "file:src/features/ordering/components/IdentityForm.tsx",
-      "target": "function:src/features/ordering/components/IdentityForm.tsx:IdentityForm",
-      "type": "contains",
-      "direction": "forward",
-      "weight": 1
-    },
-    {
-      "source": "file:src/features/ordering/components/IdentityForm.tsx",
-      "target": "function:src/features/ordering/components/IdentityForm.tsx:IdentityForm",
-      "type": "exports",
-      "direction": "forward",
-      "weight": 0.8
-    },
-    {
-      "source": "file:src/features/ordering/components/IdentityForm.tsx",
-      "target": "file:src/shared/api.ts",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
-    },
-    {
-      "source": "file:src/features/ordering/components/IdentityForm.tsx",
-      "target": "file:src/shared/utils.ts",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
-    },
-    {
-      "source": "file:src/features/ordering/components/OrderHistory.tsx",
-      "target": "function:src/features/ordering/components/OrderHistory.tsx:OrderHistory",
-      "type": "contains",
-      "direction": "forward",
-      "weight": 1
-    },
-    {
-      "source": "file:src/features/ordering/components/OrderHistory.tsx",
-      "target": "function:src/features/ordering/components/OrderHistory.tsx:OrderHistory",
-      "type": "exports",
-      "direction": "forward",
-      "weight": 0.8
     },
     {
       "source": "file:src/features/ordering/components/OrderHistory.tsx",
@@ -2858,77 +3110,7 @@
     },
     {
       "source": "file:src/features/ordering/components/ProductCard.tsx",
-      "target": "function:src/features/ordering/components/ProductCard.tsx:ProductCard",
-      "type": "contains",
-      "direction": "forward",
-      "weight": 1
-    },
-    {
-      "source": "file:src/features/ordering/components/ProductCard.tsx",
-      "target": "function:src/features/ordering/components/ProductCard.tsx:ProductCard",
-      "type": "exports",
-      "direction": "forward",
-      "weight": 0.8
-    },
-    {
-      "source": "file:src/features/ordering/components/ProductCard.tsx",
       "target": "file:src/shared/types.ts",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
-    },
-    {
-      "source": "file:src/features/ordering/components/ProfileForm.tsx",
-      "target": "function:src/features/ordering/components/ProfileForm.tsx:ProfileForm",
-      "type": "contains",
-      "direction": "forward",
-      "weight": 1
-    },
-    {
-      "source": "file:src/features/ordering/components/ProfileForm.tsx",
-      "target": "function:src/features/ordering/components/ProfileForm.tsx:ProfileForm",
-      "type": "exports",
-      "direction": "forward",
-      "weight": 0.8
-    },
-    {
-      "source": "file:src/features/ordering/components/ProfileForm.tsx",
-      "target": "file:src/shared/api.ts",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
-    },
-    {
-      "source": "file:src/features/ordering/components/ProfileForm.tsx",
-      "target": "file:src/shared/utils.ts",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
-    },
-    {
-      "source": "file:src/features/square/components/SquarePanel.tsx",
-      "target": "function:src/features/square/components/SquarePanel.tsx:SquarePanel",
-      "type": "contains",
-      "direction": "forward",
-      "weight": 1
-    },
-    {
-      "source": "file:src/features/square/components/SquarePanel.tsx",
-      "target": "function:src/features/square/components/SquarePanel.tsx:SquarePanel",
-      "type": "exports",
-      "direction": "forward",
-      "weight": 0.8
-    },
-    {
-      "source": "file:src/features/square/components/SquarePanel.tsx",
-      "target": "file:src/shared/api.ts",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
-    },
-    {
-      "source": "file:src/features/square/components/SquarePanel.tsx",
-      "target": "file:src/shared/utils.ts",
       "type": "imports",
       "direction": "forward",
       "weight": 0.7
@@ -2948,305 +3130,194 @@
       "weight": 0.7
     },
     {
-      "source": "file:src/__tests__/utils.test.ts",
-      "target": "file:src/shared/utils.ts",
-      "type": "imports",
+      "source": "file:src/App.tsx",
+      "target": "function:src/App.tsx:SquareApp",
+      "type": "contains",
       "direction": "forward",
-      "weight": 0.7
+      "weight": 1
     },
     {
-      "source": "file:src/shared/utils.ts",
-      "target": "file:src/__tests__/utils.test.ts",
+      "source": "file:src/App.tsx",
+      "target": "function:src/App.tsx:CustomerApp",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/App.tsx",
+      "target": "function:src/App.tsx:App",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/App.tsx",
+      "target": "function:src/App.tsx:App",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/features/ordering/components/ComboCard.tsx",
+      "target": "function:src/features/ordering/components/ComboCard.tsx:ComboCard",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/features/ordering/components/ComboCard.tsx",
+      "target": "function:src/features/ordering/components/ComboCard.tsx:ComboCard",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/features/ordering/components/OrderHistory.tsx",
+      "target": "function:src/features/ordering/components/OrderHistory.tsx:OrderHistory",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/features/ordering/components/OrderHistory.tsx",
+      "target": "function:src/features/ordering/components/OrderHistory.tsx:OrderHistory",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/features/ordering/components/ProductCard.tsx",
+      "target": "function:src/features/ordering/components/ProductCard.tsx:ProductCard",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/features/ordering/components/ProductCard.tsx",
+      "target": "function:src/features/ordering/components/ProductCard.tsx:ProductCard",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/shared/components/ErrorBoundary.tsx",
+      "target": "class:src/shared/components/ErrorBoundary.tsx:ErrorBoundary",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/shared/components/ErrorBoundary.tsx",
+      "target": "class:src/shared/components/ErrorBoundary.tsx:ErrorBoundary",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/App.tsx:CustomerApp",
+      "target": "function:src/features/ordering/hooks/useCustomerApp.ts:useCustomerApp",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/App.tsx:SquareApp",
+      "target": "function:src/shared/api.ts:getIdentity",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/App.tsx:CustomerApp",
+      "target": "function:src/shared/utils.ts:getItemUnitPrice",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/features/ordering/components/OrderHistory.tsx:OrderHistory",
+      "target": "function:src/shared/api.ts:fetchOrders",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/features/ordering/components/OrderHistory.tsx:OrderHistory",
+      "target": "function:src/shared/utils.ts:getItemUnitPrice",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/features/ordering/components/OrderHistory.tsx:OrderHistory",
+      "target": "function:src/shared/utils.ts:getErrorMessage",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/shared/components/ErrorBoundary.tsx",
+      "target": "file:src/__tests__/ErrorBoundary.test.tsx",
       "type": "tested_by",
       "direction": "forward",
-      "weight": 0.5
+      "weight": 0.5,
+      "description": "Direction corrected (was test → production)"
     },
     {
-      "source": "file:src/features/admin/components/AdminPanel.tsx",
-      "target": "function:src/features/admin/components/AdminPanel.tsx:AdminPanel",
-      "type": "contains",
+      "source": "file:src/main.tsx",
+      "target": "file:src/App.tsx",
+      "type": "depends_on",
       "direction": "forward",
-      "weight": 1
+      "weight": 0.6
     },
     {
-      "source": "file:src/features/admin/components/AdminPanel.tsx",
-      "target": "function:src/features/admin/components/AdminPanel.tsx:AdminPanel",
-      "type": "exports",
-      "direction": "forward",
-      "weight": 0.8
-    },
-    {
-      "source": "file:src/features/admin/components/AdminPanel.tsx",
-      "target": "file:src/shared/api.ts",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
-    },
-    {
-      "source": "file:src/features/admin/components/AdminPanel.tsx",
-      "target": "file:src/features/admin/components/AnalyticsPanel.tsx",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
-    },
-    {
-      "source": "file:src/features/admin/components/AdminPanel.tsx",
-      "target": "file:src/features/admin/components/OrderCard.tsx",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
-    },
-    {
-      "source": "file:src/features/admin/components/AdminPanel.tsx",
-      "target": "file:src/shared/constants.ts",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
-    },
-    {
-      "source": "file:src/features/admin/components/AdminPanel.tsx",
-      "target": "file:src/shared/types.ts",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
-    },
-    {
-      "source": "file:src/features/admin/components/AdminPanel.tsx",
-      "target": "file:src/shared/utils.ts",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
-    },
-    {
-      "source": "file:src/features/admin/components/OrderCard.tsx",
-      "target": "function:src/features/admin/components/OrderCard.tsx:OrderCard",
-      "type": "contains",
-      "direction": "forward",
-      "weight": 1
-    },
-    {
-      "source": "file:src/features/admin/components/OrderCard.tsx",
-      "target": "function:src/features/admin/components/OrderCard.tsx:OrderCard",
-      "type": "exports",
+      "source": "function:src/App.tsx:App",
+      "target": "class:src/shared/components/ErrorBoundary.tsx:ErrorBoundary",
+      "type": "calls",
       "direction": "forward",
       "weight": 0.8
     },
     {
-      "source": "file:src/features/admin/components/OrderCard.tsx",
-      "target": "file:src/shared/types.ts",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
-    },
-    {
-      "source": "file:src/features/admin/components/OrderCard.tsx",
-      "target": "file:src/shared/utils.ts",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
-    },
-    {
-      "source": "file:src/shared/constants.ts",
-      "target": "file:src/shared/types.ts",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
-    },
-    {
-      "source": "file:src/features/ordering/customerReducer.ts",
-      "target": "function:src/features/ordering/customerReducer.ts:createInitialState",
-      "type": "contains",
-      "direction": "forward",
-      "weight": 1
-    },
-    {
-      "source": "file:src/features/ordering/customerReducer.ts",
-      "target": "function:src/features/ordering/customerReducer.ts:createInitialState",
-      "type": "exports",
+      "source": "function:src/App.tsx:App",
+      "target": "function:src/App.tsx:CustomerApp",
+      "type": "calls",
       "direction": "forward",
       "weight": 0.8
     },
     {
-      "source": "file:src/features/ordering/customerReducer.ts",
-      "target": "function:src/features/ordering/customerReducer.ts:customerReducer",
-      "type": "contains",
-      "direction": "forward",
-      "weight": 1
-    },
-    {
-      "source": "file:src/features/ordering/customerReducer.ts",
-      "target": "function:src/features/ordering/customerReducer.ts:customerReducer",
-      "type": "exports",
+      "source": "function:src/App.tsx:App",
+      "target": "function:src/App.tsx:SquareApp",
+      "type": "calls",
       "direction": "forward",
       "weight": 0.8
     },
     {
-      "source": "file:src/features/ordering/customerReducer.ts",
-      "target": "file:src/shared/api.ts",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
-    },
-    {
-      "source": "file:src/features/ordering/customerReducer.ts",
-      "target": "file:src/shared/types.ts",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
-    },
-    {
-      "source": "file:src/features/ordering/customerReducer.ts",
-      "target": "file:src/shared/utils.ts",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
-    },
-    {
-      "source": "file:src/features/ordering/hooks/useCustomerApp.ts",
-      "target": "function:src/features/ordering/hooks/useCustomerApp.ts:useCustomerApp",
-      "type": "contains",
-      "direction": "forward",
-      "weight": 1
-    },
-    {
-      "source": "file:src/features/ordering/hooks/useCustomerApp.ts",
-      "target": "function:src/features/ordering/hooks/useCustomerApp.ts:useCustomerApp",
-      "type": "exports",
+      "source": "function:src/App.tsx:CustomerApp",
+      "target": "file:src/features/ordering/components/ComboCard.tsx",
+      "type": "calls",
       "direction": "forward",
       "weight": 0.8
     },
     {
-      "source": "file:src/features/ordering/hooks/useCustomerApp.ts",
-      "target": "file:src/shared/api.ts",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
-    },
-    {
-      "source": "file:src/features/ordering/hooks/useCustomerApp.ts",
-      "target": "file:src/shared/constants.ts",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
-    },
-    {
-      "source": "file:src/features/ordering/hooks/useCustomerApp.ts",
-      "target": "file:src/features/ordering/customerReducer.ts",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
-    },
-    {
-      "source": "file:src/features/ordering/hooks/useCustomerApp.ts",
-      "target": "file:src/shared/types.ts",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
-    },
-    {
-      "source": "file:src/features/ordering/hooks/useCustomerApp.ts",
-      "target": "file:src/shared/utils.ts",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
-    },
-    {
-      "source": "file:src/shared/utils.ts",
-      "target": "function:src/shared/utils.ts:getCartKey",
-      "type": "contains",
-      "direction": "forward",
-      "weight": 1
-    },
-    {
-      "source": "file:src/shared/utils.ts",
-      "target": "function:src/shared/utils.ts:getCartKey",
-      "type": "exports",
+      "source": "function:src/App.tsx:CustomerApp",
+      "target": "file:src/features/ordering/components/ProductCard.tsx",
+      "type": "calls",
       "direction": "forward",
       "weight": 0.8
     },
     {
-      "source": "file:src/shared/utils.ts",
-      "target": "function:src/shared/utils.ts:getItemUnitPrice",
-      "type": "contains",
-      "direction": "forward",
-      "weight": 1
-    },
-    {
-      "source": "file:src/shared/utils.ts",
-      "target": "function:src/shared/utils.ts:getItemUnitPrice",
-      "type": "exports",
+      "source": "function:src/App.tsx:CustomerApp",
+      "target": "file:src/features/ordering/components/OrderHistory.tsx",
+      "type": "calls",
       "direction": "forward",
       "weight": 0.8
     },
     {
-      "source": "file:src/shared/utils.ts",
-      "target": "function:src/shared/utils.ts:getCartStorageKey",
+      "source": "file:server/routes/stats.ts",
+      "target": "function:server/routes/stats.ts:daysInMonth",
       "type": "contains",
       "direction": "forward",
       "weight": 1
-    },
-    {
-      "source": "file:src/shared/utils.ts",
-      "target": "function:src/shared/utils.ts:getCartStorageKey",
-      "type": "exports",
-      "direction": "forward",
-      "weight": 0.8
-    },
-    {
-      "source": "file:src/shared/utils.ts",
-      "target": "function:src/shared/utils.ts:loadCartFromStorage",
-      "type": "contains",
-      "direction": "forward",
-      "weight": 1
-    },
-    {
-      "source": "file:src/shared/utils.ts",
-      "target": "function:src/shared/utils.ts:loadCartFromStorage",
-      "type": "exports",
-      "direction": "forward",
-      "weight": 0.8
-    },
-    {
-      "source": "file:src/shared/utils.ts",
-      "target": "function:src/shared/utils.ts:saveCartToStorage",
-      "type": "contains",
-      "direction": "forward",
-      "weight": 1
-    },
-    {
-      "source": "file:src/shared/utils.ts",
-      "target": "function:src/shared/utils.ts:saveCartToStorage",
-      "type": "exports",
-      "direction": "forward",
-      "weight": 0.8
-    },
-    {
-      "source": "file:src/shared/utils.ts",
-      "target": "function:src/shared/utils.ts:getErrorMessage",
-      "type": "contains",
-      "direction": "forward",
-      "weight": 1
-    },
-    {
-      "source": "file:src/shared/utils.ts",
-      "target": "function:src/shared/utils.ts:getErrorMessage",
-      "type": "exports",
-      "direction": "forward",
-      "weight": 0.8
-    },
-    {
-      "source": "file:src/shared/utils.ts",
-      "target": "file:src/shared/api.ts",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
-    },
-    {
-      "source": "file:src/shared/utils.ts",
-      "target": "file:src/shared/types.ts",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
     },
     {
       "source": "service:docker-compose.yml",
@@ -3305,20 +3376,6 @@
       "weight": 0.6
     },
     {
-      "source": "document:CLAUDE.md",
-      "target": "file:src/App.tsx",
-      "type": "documents",
-      "direction": "forward",
-      "weight": 0.5
-    },
-    {
-      "source": "document:README.md",
-      "target": "file:src/App.tsx",
-      "type": "documents",
-      "direction": "forward",
-      "weight": 0.5
-    },
-    {
       "source": "document:README.md",
       "target": "file:server/index.ts",
       "type": "documents",
@@ -3340,13 +3397,6 @@
       "weight": 0.6
     },
     {
-      "source": "config:tsconfig.json",
-      "target": "file:src/App.tsx",
-      "type": "configures",
-      "direction": "forward",
-      "weight": 0.6
-    },
-    {
       "source": "config:tsconfig.server.json",
       "target": "file:server/index.ts",
       "type": "configures",
@@ -3361,20 +3411,6 @@
       "weight": 1
     },
     {
-      "source": "file:src/__tests__/ErrorBoundary.test.tsx",
-      "target": "file:src/shared/components/ErrorBoundary.tsx",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
-    },
-    {
-      "source": "file:src/shared/components/ErrorBoundary.tsx",
-      "target": "file:src/__tests__/ErrorBoundary.test.tsx",
-      "type": "tested_by",
-      "direction": "forward",
-      "weight": 0.5
-    },
-    {
       "source": "file:src/features/admin/components/AnalyticsPanel.tsx",
       "target": "function:src/features/admin/components/AnalyticsPanel.tsx:AnalyticsPanel",
       "type": "contains",
@@ -3387,13 +3423,6 @@
       "type": "exports",
       "direction": "forward",
       "weight": 0.8
-    },
-    {
-      "source": "file:src/features/admin/components/AnalyticsPanel.tsx",
-      "target": "file:src/shared/api.ts",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
     },
     {
       "source": "file:src/features/admin/components/AnalyticsPanel.tsx",
@@ -3417,91 +3446,25 @@
       "weight": 0.8
     },
     {
-      "source": "file:src/shared/components/ErrorBoundary.tsx",
-      "target": "class:src/shared/components/ErrorBoundary.tsx:ErrorBoundary",
-      "type": "contains",
-      "direction": "forward",
-      "weight": 1
-    },
-    {
-      "source": "file:server/routes/combos.ts",
-      "target": "file:server/db.ts",
-      "type": "imports",
-      "weight": 0.7
-    },
-    {
-      "source": "file:server/routes/combos.ts",
-      "target": "file:server/middleware/auth.ts",
-      "type": "imports",
-      "weight": 0.7
-    },
-    {
-      "source": "file:server/routes/combos.ts",
-      "target": "function:server/routes/combos.ts:serializeCombo",
-      "type": "contains",
-      "weight": 1
-    },
-    {
-      "source": "file:server/app.ts",
-      "target": "file:server/routes/combos.ts",
-      "type": "imports",
-      "weight": 0.7
-    },
-    {
-      "source": "file:src/features/ordering/components/ComboCard.tsx",
-      "target": "file:src/shared/types.ts",
-      "type": "imports",
-      "weight": 0.7
-    },
-    {
-      "source": "file:src/features/ordering/components/ComboCard.tsx",
-      "target": "function:src/features/ordering/components/ComboCard.tsx:ComboCard",
-      "type": "contains",
-      "weight": 1
-    },
-    {
-      "source": "file:src/features/ordering/components/ComboCard.tsx",
-      "target": "function:src/features/ordering/components/ComboCard.tsx:ComboCard",
-      "type": "exports",
-      "weight": 0.8
-    },
-    {
-      "source": "file:src/App.tsx",
-      "target": "file:src/features/ordering/components/ComboCard.tsx",
-      "type": "imports",
-      "weight": 0.7
-    },
-    {
       "source": "document:docs/superpowers/specs/2026-06-09-combo-design.md",
       "target": "file:src/features/ordering/components/ComboCard.tsx",
       "type": "documents",
-      "weight": 0.5
+      "weight": 0.5,
+      "direction": "forward"
     },
     {
       "source": "document:docs/superpowers/specs/2026-06-09-combo-design.md",
       "target": "file:server/routes/combos.ts",
       "type": "documents",
-      "weight": 0.5
+      "weight": 0.5,
+      "direction": "forward"
     },
     {
       "source": "document:docs/superpowers/plans/2026-06-09-combo-plan.md",
       "target": "document:docs/superpowers/specs/2026-06-09-combo-design.md",
       "type": "related",
-      "weight": 0.5
-    },
-    {
-      "source": "file:server/routes/users.ts",
-      "target": "file:server/db.ts",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
-    },
-    {
-      "source": "file:server/routes/messages.ts",
-      "target": "file:server/db.ts",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
+      "weight": 0.5,
+      "direction": "forward"
     },
     {
       "source": "file:server/app.ts",
@@ -3518,48 +3481,6 @@
       "weight": 0.7
     },
     {
-      "source": "file:src/App.tsx",
-      "target": "file:src/features/profile/components/ProfilePanel.tsx",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
-    },
-    {
-      "source": "file:src/App.tsx",
-      "target": "file:src/features/friends/components/FriendsPanel.tsx",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
-    },
-    {
-      "source": "file:src/App.tsx",
-      "target": "file:src/features/chat/components/ChatPanel.tsx",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
-    },
-    {
-      "source": "file:src/features/profile/components/ProfilePanel.tsx",
-      "target": "file:src/shared/api.ts",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
-    },
-    {
-      "source": "file:src/features/friends/components/FriendsPanel.tsx",
-      "target": "file:src/shared/api.ts",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
-    },
-    {
-      "source": "file:src/features/chat/components/ChatPanel.tsx",
-      "target": "file:src/shared/api.ts",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
-    },
-    {
       "source": "file:src/features/friends/components/FriendsPanel.tsx",
       "target": "file:src/features/profile/components/ProfilePanel.tsx",
       "type": "calls",
@@ -3574,20 +3495,52 @@
       "weight": 0.6
     },
     {
-      "source": "file:src/features/square/components/SquarePanel.tsx",
-      "target": "file:src/features/profile/components/ProfilePanel.tsx",
-      "type": "calls",
+      "source": "file:src/features/admin/components/AdminPanel.tsx",
+      "target": "file:src/features/admin/components/AnalyticsPanel.tsx",
+      "type": "imports",
       "direction": "forward",
-      "weight": 0.6
+      "weight": 0.7,
+      "recoveredFromImportMap": true
     },
     {
-      "source": "file:src/shared/api.ts",
-      "target": "file:src/features/profile/components/ProfilePanel.tsx",
-      "type": "tested_by",
+      "source": "file:src/features/admin/components/AnalyticsPanel.tsx",
+      "target": "file:src/shared/api.ts",
+      "type": "imports",
       "direction": "forward",
-      "weight": 0.5
+      "weight": 0.7,
+      "recoveredFromImportMap": true
     }
   ],
+  "project": {
+    "name": "窝里蹲点单系统",
+    "languages": [
+      "css",
+      "dockerfile",
+      "html",
+      "javascript",
+      "json",
+      "markdown",
+      "typescript",
+      "yaml"
+    ],
+    "frameworks": [
+      "React",
+      "Vite",
+      "Tailwind CSS",
+      "Express",
+      "Vitest",
+      "Docker",
+      "Docker Compose",
+      "GitHub Actions",
+      "better-sqlite3",
+      "motion",
+      "react-router-dom"
+    ],
+    "description": "宿舍便利店点单小程序，支持商品浏览、购物车管理、一键复制订单、广场发帖组队、个人主页名片/好友/私聊、管理后台。React + Express + SQLite 全栈应用。",
+    "analyzedAt": "2026-06-11T16:33:14.394Z",
+    "gitCommitHash": "2e959bcaa0a125aca463e2270995d2ba046f9cb4"
+  },
+  "version": "1.0.0",
   "layers": [
     {
       "id": "layer:application-entry",
