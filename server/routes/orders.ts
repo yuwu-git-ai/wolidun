@@ -159,6 +159,72 @@ router.get('/orders/:id', (req: Request, res: Response) => {
   res.json(serializeOrder(row));
 });
 
+/** Restore stock for all items (used when cancelling or before re-editing). */
+function restoreStock(items: any[]) {
+  const db = getDb();
+  for (const item of items) {
+    if (item.comboId) {
+      const combo = db.prepare('SELECT * FROM combos WHERE id = ?').get(item.comboId) as any;
+      if (combo) {
+        const comboItems: { productId: string; variantId?: string | null }[] =
+          typeof combo.items === 'string' ? JSON.parse(combo.items) : combo.items;
+        for (const ci of comboItems) {
+          if (ci.variantId) {
+            db.prepare('UPDATE product_variants SET stock = stock + ? WHERE id = ?').run(item.quantity, ci.variantId);
+          } else {
+            db.prepare('UPDATE products SET stock = stock + ? WHERE id = ?').run(item.quantity, ci.productId);
+          }
+        }
+      }
+    } else if (item.variantId) {
+      db.prepare('UPDATE product_variants SET stock = stock + ? WHERE id = ?').run(item.quantity, item.variantId);
+    } else {
+      db.prepare('UPDATE products SET stock = stock + ? WHERE id = ?').run(item.quantity, item.id);
+    }
+  }
+}
+
+/** Deduct stock for all items (same logic as POST). */
+function deductStock(items: any[]) {
+  const db = getDb();
+  for (const item of items) {
+    if (item.comboId) {
+      const subItems = item.comboItems || [];
+      for (const ci of subItems) {
+        if (ci.variantId) {
+          const v = db.prepare('SELECT * FROM product_variants WHERE id = ? AND product_id = ?').get(ci.variantId, ci.productId) as any;
+          if (v) {
+            const newStock = v.stock - item.quantity;
+            if (newStock < 0) throw new Error(`商品 "${ci.productName || ci.productId}（${v.name}）" 库存不足`);
+            db.prepare('UPDATE product_variants SET stock = ? WHERE id = ?').run(newStock, ci.variantId);
+          }
+        } else {
+          const cp = db.prepare('SELECT * FROM products WHERE id = ?').get(ci.productId) as any;
+          if (cp) {
+            const newStock = cp.stock - item.quantity;
+            if (newStock < 0) throw new Error(`商品 "${cp.name}" 库存不足`);
+            db.prepare('UPDATE products SET stock = ? WHERE id = ?').run(newStock, cp.id);
+          }
+        }
+      }
+    } else if (item.variantId) {
+      const v = db.prepare('SELECT * FROM product_variants WHERE id = ? AND product_id = ?').get(item.variantId, item.id) as any;
+      if (v) {
+        const newStock = v.stock - item.quantity;
+        if (newStock < 0) throw new Error(`商品 "${item.name}（${v.name}）" 库存不足`);
+        db.prepare('UPDATE product_variants SET stock = ? WHERE id = ?').run(newStock, item.variantId);
+      }
+    } else {
+      const p = db.prepare('SELECT * FROM products WHERE id = ?').get(item.id) as any;
+      if (p) {
+        const newStock = p.stock - item.quantity;
+        if (newStock < 0) throw new Error(`商品 "${p.name}" 库存不足`);
+        db.prepare('UPDATE products SET stock = ? WHERE id = ?').run(newStock, item.id);
+      }
+    }
+  }
+}
+
 function isAdminReq(req: Request): boolean {
   const adminKey = req.headers['x-admin-key'] as string;
   const expectedKey = process.env.ADMIN_KEY || 'admin123';
@@ -274,16 +340,35 @@ router.put('/orders/:id', (req: Request, res: Response) => {
     return;
   }
 
+  // Only admin can change items; users can only toggle delivery on pending orders
+  const hasItemChanges = items && JSON.stringify(items) !== existing.items;
+  if (hasItemChanges && !admin) {
+    res.status(403).json({ error: '仅管理员可修改订单商品' });
+    return;
+  }
+
   const currentDelivery: boolean = existing.is_delivery === 1;
   const newDelivery = typeof isDelivery === 'boolean' ? isDelivery : currentDelivery;
-  const newItems = items || JSON.parse(existing.items);
+  const oldItems = JSON.parse(existing.items);
+  const newItems = hasItemChanges ? items : oldItems;
 
-  // Recalculate total from DB prices
   const { totalPrice } = recalcTotal(newItems, newDelivery);
 
-  if (typeof isDelivery === 'boolean' || items) {
-    db.prepare('UPDATE orders SET is_delivery = ?, items = ?, total_price = ? WHERE id = ?')
-      .run(newDelivery ? 1 : 0, JSON.stringify(newItems), totalPrice, id);
+  if (hasItemChanges) {
+    // Reverse old stock + apply new stock in one transaction
+    const editTx = db.transaction(() => {
+      // 1. Restore old stock
+      restoreStock(oldItems);
+      // 2. Deduct new stock
+      deductStock(newItems);
+      // 3. Update order
+      db.prepare('UPDATE orders SET is_delivery = ?, items = ?, total_price = ? WHERE id = ?')
+        .run(newDelivery ? 1 : 0, JSON.stringify(newItems), totalPrice, id);
+    });
+    editTx();
+  } else if (typeof isDelivery === 'boolean') {
+    db.prepare('UPDATE orders SET is_delivery = ?, total_price = ? WHERE id = ?')
+      .run(newDelivery ? 1 : 0, totalPrice, id);
   }
 
   const row = db.prepare('SELECT * FROM orders WHERE id = ?').get(id);

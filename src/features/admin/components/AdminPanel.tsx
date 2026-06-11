@@ -8,7 +8,7 @@ import {
   fetchOrders, fetchProducts, fetchStats,
   updateOrderStatus, deleteOrder, updateOrder, createProduct, updateProduct, deleteProduct,
 } from '../../../shared/api';
-import type { Order, Product, Combo } from '../../../shared/types';
+import type { Order, Product, Combo, CartItem } from '../../../shared/types';
 import { fetchCombos, createCombo, updateCombo, deleteCombo, fetchAllUsers, toggleUserAdmin, broadcastNotification, setGlobalAdminUser, fetchAnnouncements, deleteAnnouncement, fetchRecentNotifications, deleteNotification } from '../../../shared/api';
 import { DEFAULT_CATEGORIES } from '../../../shared/constants';
 import { STATUS_LABELS, getErrorMessage } from '../../../shared/utils';
@@ -167,16 +167,15 @@ export default function AdminPanel({ adminKey, adminUser }: { adminKey: string; 
     }
   };
 
-  const handleEditOrder = async (orderId: string, isDelivery: boolean) => {
-    const order = orders.find(o => o.id === orderId);
-    if (!order) return;
-    const label = isDelivery ? '配送' : '自提';
-    if (!confirm(`确定改为「${label}」？价格将重新计算。`)) return;
+  const handleSaveEdit = async (orderId: string, items: CartItem[], isDelivery: boolean) => {
+    if (!confirm('确定保存修改？价格将重新计算，库存也会调整。')) return;
     try {
-      await updateOrder(orderId, { isDelivery, nickname: order.nickname });
+      await updateOrder(orderId, { isDelivery, items, nickname: '' }, adminKey);
       loadOrders();
+      loadProducts();
     } catch (err) {
       alert(getErrorMessage(err));
+      throw err;
     }
   };
 
@@ -461,7 +460,7 @@ export default function AdminPanel({ adminKey, adminUser }: { adminKey: string; 
                     <div key={order.id}>
                       <OrderCard order={order} expanded={expandedOrder === order.id}
                         onToggle={() => setExpandedOrder(expandedOrder === order.id ? null : order.id)}
-                        onStatusChange={handleStatusChange} onDelete={handleDeleteOrder} onEdit={handleEditOrder} />
+                        onStatusChange={handleStatusChange} onDelete={handleDeleteOrder} onSaveEdit={handleSaveEdit} products={products} />
                     </div>
                   ))}
                 </div>
@@ -475,7 +474,7 @@ export default function AdminPanel({ adminKey, adminUser }: { adminKey: string; 
                   <div key={order.id}>
                     <OrderCard order={order} expanded={expandedOrder === order.id}
                       onToggle={() => setExpandedOrder(expandedOrder === order.id ? null : order.id)}
-                      onStatusChange={handleStatusChange} onDelete={handleDeleteOrder} onEdit={handleEditOrder} />
+                      onStatusChange={handleStatusChange} onDelete={handleDeleteOrder} onSaveEdit={handleSaveEdit} products={products} />
                   </div>
                 ))}
               </div>
@@ -488,7 +487,7 @@ export default function AdminPanel({ adminKey, adminUser }: { adminKey: string; 
                       <div key={order.id}>
                         <OrderCard order={order} expanded={expandedOrder === order.id}
                           onToggle={() => setExpandedOrder(expandedOrder === order.id ? null : order.id)}
-                          onStatusChange={handleStatusChange} onDelete={handleDeleteOrder} onEdit={handleEditOrder} />
+                          onStatusChange={handleStatusChange} onDelete={handleDeleteOrder} onSaveEdit={handleSaveEdit} products={products} />
                       </div>
                     ))}
                   </div>

@@ -237,9 +237,12 @@ export async function updateOrderStatus(orderId: string, status: string, adminKe
   });
 }
 
-export async function updateOrder(orderId: string, data: { isDelivery?: boolean; items?: CartItem[]; nickname: string }): Promise<Order> {
+export async function updateOrder(orderId: string, data: { isDelivery?: boolean; items?: CartItem[]; nickname: string }, adminKey?: string): Promise<Order> {
+  const headers: Record<string, string> = {};
+  if (adminKey) headers['X-Admin-Key'] = adminKey;
   return request(`${BASE}/orders/${orderId}`, {
     method: 'PUT',
+    headers: Object.keys(headers).length > 0 ? headers : undefined,
     body: JSON.stringify(data),
   });
 }

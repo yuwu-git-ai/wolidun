@@ -1,5 +1,5 @@
 import { useState, useEffect, FormEvent } from 'react';
-import { ArrowLeft, Clock, Search, Trash2, Edit3, Save, X } from 'lucide-react';
+import { ArrowLeft, Clock, Search, Trash2 } from 'lucide-react';
 import { Order, CartItem, Product } from '../../../shared/types';
 import { fetchOrders, fetchOrderById, deleteOrder, updateOrder } from '../../../shared/api';
 import { STATUS_LABELS, STATUS_COLORS, getItemUnitPrice, getErrorMessage } from '../../../shared/utils';
@@ -16,12 +16,6 @@ export default function OrderHistory({ identity, products, onClose, onReorder }:
   const [loading, setLoading] = useState(true);
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [changedIds, setChangedIds] = useState<Set<string>>(new Set());
-
-  // Edit state
-  const [editingOrderId, setEditingOrderId] = useState<string | null>(null);
-  const [editItems, setEditItems] = useState<CartItem[]>([]);
-  const [editIsDelivery, setEditIsDelivery] = useState(false);
-  const [saving, setSaving] = useState(false);
 
   // Order tracker state
   const [trackId, setTrackId] = useState('');
@@ -78,95 +72,6 @@ export default function OrderHistory({ identity, products, onClose, onReorder }:
     } finally {
       setTrackLoading(false);
     }
-  };
-
-  const startEditing = (order: Order) => {
-    setEditingOrderId(order.id);
-    // Deep clone items for editing
-    setEditItems(order.items.map(item => ({
-      ...item,
-      comboItems: item.comboItems ? item.comboItems.map(ci => ({ ...ci })) : undefined,
-    })));
-    setEditIsDelivery(order.isDelivery);
-  };
-
-  const cancelEditing = () => {
-    setEditingOrderId(null);
-    setEditItems([]);
-  };
-
-  const toggleItemBrewing = (idx: number) => {
-    setEditItems(prev => prev.map((item, i) =>
-      i === idx ? { ...item, isBrewingSelected: !item.isBrewingSelected } : item
-    ));
-  };
-
-  const toggleItemFreezing = (idx: number) => {
-    setEditItems(prev => prev.map((item, i) =>
-      i === idx ? { ...item, isFreezingSelected: !item.isFreezingSelected } : item
-    ));
-  };
-
-  const toggleComboSubBrewing = (itemIdx: number, subIdx: number) => {
-    setEditItems(prev => prev.map((item, i) => {
-      if (i !== itemIdx || !item.comboItems) return item;
-      const newComboItems = item.comboItems.map((ci, j) =>
-        j === subIdx ? { ...ci, selectedBrewing: !ci.selectedBrewing } : ci
-      );
-      return { ...item, comboItems: newComboItems };
-    }));
-  };
-
-  const setItemVariant = (idx: number, variantId: string) => {
-    setEditItems(prev => prev.map((item, i) => {
-      if (i !== idx) return item;
-      const product = products.find(p => p.id === item.id);
-      const variant = product?.variants?.find(v => v.id === variantId);
-      return {
-        ...item,
-        variantId,
-        variantName: variant?.name,
-        price: variant?.price != null ? variant.price : (product?.price || item.price),
-      };
-    }));
-  };
-
-  const setComboSubVariant = (itemIdx: number, subIdx: number, variantId: string) => {
-    setEditItems(prev => prev.map((item, i) => {
-      if (i !== itemIdx || !item.comboItems) return item;
-      const ci = item.comboItems[subIdx];
-      const product = products.find(p => p.id === ci.productId);
-      const variant = product?.variants?.find(v => v.id === variantId);
-      const newComboItems = item.comboItems.map((ci2, j) =>
-        j === subIdx ? { ...ci2, variantId, variantName: variant?.name, productPrice: variant?.price != null ? variant.price : ci2.productPrice } : ci2
-      );
-      return { ...item, comboItems: newComboItems };
-    }));
-  };
-
-  const toggleComboSubFreezing = (itemIdx: number, subIdx: number) => {
-    setEditItems(prev => prev.map((item, i) => {
-      if (i !== itemIdx || !item.comboItems) return item;
-      const newComboItems = item.comboItems.map((ci, j) =>
-        j === subIdx ? { ...ci, selectedFreezing: !ci.selectedFreezing } : ci
-      );
-      return { ...item, comboItems: newComboItems };
-    }));
-  };
-
-  const saveOrder = async () => {
-    if (!editingOrderId) return;
-    setSaving(true);
-    try {
-      const updated = await updateOrder(editingOrderId, {
-        isDelivery: editIsDelivery,
-        items: editItems,
-        nickname: identity.nickname,
-      });
-      setOrders(prev => prev.map(o => o.id === editingOrderId ? updated : o));
-      cancelEditing();
-    } catch (err) { alert(getErrorMessage(err)); }
-    finally { setSaving(false); }
   };
 
   return (
@@ -266,201 +171,79 @@ export default function OrderHistory({ identity, products, onClose, onReorder }:
               {expandedId === order.id && (
                 <div className="px-4 pb-4 border-t border-slate-50 pt-3 space-y-2">
                   <p className="text-xs text-slate-400">订单号：{order.id}</p>
-
-                  {editingOrderId === order.id ? (
-                    /* ── Edit Mode ── */
-                    <div className="space-y-3">
-                      {editItems.map((item, i) => (
-                        <div key={i} className="p-3 bg-amber-50/50 rounded-xl border border-amber-100 space-y-2">
-                          {item.comboId ? (
-                            /* Combo in edit mode */
-                            <>
-                              <div className="flex justify-between text-sm font-bold">
-                                <span>🍱 {item.name}</span>
-                                <span>x{item.quantity}</span>
-                              </div>
-                              {(item.comboItems || []).map((ci, si) => (
-                                <div key={si} className="ml-3 p-2 bg-white rounded-lg text-xs space-y-1">
-                                  <div className="flex justify-between font-bold">
-                                    <span>{ci.productName || ci.productId}</span>
-                                    {ci.variantName && <span className="text-slate-400">{ci.variantName}</span>}
-                                  </div>
-                                  {/* Variant selector for combo sub-item */}
-                                  {(() => {
-                                    const p = products.find(pr => pr.id === ci.productId);
-                                    const vars = p?.variants;
-                                    if (vars && vars.length > 0) {
-                                      return (
-                                        <select
-                                          value={ci.variantId || ''}
-                                          onChange={e => setComboSubVariant(i, si, e.target.value)}
-                                          className="w-full px-2 py-1 bg-slate-50 rounded border border-slate-200 text-[10px] outline-none focus:border-amber-300">
-                                          <option value="">默认</option>
-                                          {vars.map(v => (
-                                            <option key={v.id} value={v.id} disabled={(v.stock || 0) <= 0}>
-                                              {v.name}{v.price != null ? ` ¥${v.price}` : ''}{v.stock <= 0 ? ' (售罄)' : ''}
-                                            </option>
-                                          ))}
-                                        </select>
-                                      );
-                                    }
-                                    return null;
-                                  })()}
-                                  <div className="flex gap-3">
-                                    <label className="flex items-center gap-1 cursor-pointer">
-                                      <input type="checkbox" checked={!!ci.selectedBrewing}
-                                        onChange={() => toggleComboSubBrewing(i, si)}
-                                        className="w-3 h-3 rounded border-slate-300 text-orange-500" />
-                                      <span className="text-[10px]">帮泡 +¥1</span>
-                                    </label>
-                                    <label className="flex items-center gap-1 cursor-pointer">
-                                      <input type="checkbox" checked={!!ci.selectedFreezing}
-                                        onChange={() => toggleComboSubFreezing(i, si)}
-                                        className="w-3 h-3 rounded border-slate-300 text-indigo-500" />
-                                      <span className="text-[10px]">冰镇 +¥0.5</span>
-                                    </label>
-                                  </div>
-                                </div>
-                              ))}
-                            </>
-                          ) : (
-                            /* Regular item in edit mode */
-                            <>
-                              <div className="flex justify-between text-sm font-bold">
-                                <span>{item.name}{item.variantName ? ` · ${item.variantName}` : ''}</span>
-                                <span>x{item.quantity}</span>
-                              </div>
-                              {/* Variant selector */}
-                              {(() => {
-                                const p = products.find(pr => pr.id === item.id);
-                                const vars = p?.variants;
-                                if (vars && vars.length > 0) {
-                                  return (
-                                    <select
-                                      value={item.variantId || ''}
-                                      onChange={e => setItemVariant(i, e.target.value)}
-                                      className="w-full mt-1 px-2 py-1.5 bg-white rounded-lg border border-slate-200 text-xs outline-none focus:border-orange-300">
-                                      <option value="">默认</option>
-                                      {vars.map(v => (
-                                        <option key={v.id} value={v.id} disabled={(v.stock || 0) <= 0}>
-                                          {v.name}{v.price != null ? ` ¥${v.price}` : ''}{v.stock <= 0 ? ' (售罄)' : ''}
-                                        </option>
-                                      ))}
-                                    </select>
-                                  );
-                                }
-                                return null;
-                              })()}
-                              <div className="flex gap-3">
-                                <label className="flex items-center gap-1 cursor-pointer">
-                                  <input type="checkbox" checked={!!item.isBrewingSelected}
-                                    onChange={() => toggleItemBrewing(i)}
-                                    className="w-3 h-3 rounded border-slate-300 text-orange-500" />
-                                  <span className="text-[10px]">帮泡 +¥1</span>
-                                </label>
-                                <label className="flex items-center gap-1 cursor-pointer">
-                                  <input type="checkbox" checked={!!item.isFreezingSelected}
-                                    onChange={() => toggleItemFreezing(i)}
-                                    className="w-3 h-3 rounded border-slate-300 text-indigo-500" />
-                                  <span className="text-[10px]">冰镇 +¥0.5</span>
-                                </label>
-                              </div>
-                            </>
-                          )}
-                        </div>
-                      ))}
-
-                      {/* Delivery toggle */}
-                      <label className="flex items-center gap-2 cursor-pointer py-2">
-                        <input type="checkbox" checked={editIsDelivery}
-                          onChange={e => setEditIsDelivery(e.target.checked)}
-                          className="w-4 h-4 rounded-md border-slate-300 text-orange-500" />
-                        <span className="text-xs font-bold">配送到寝（满¥20免¥1）</span>
-                      </label>
-
-                      <div className="flex gap-2">
-                        <button onClick={saveOrder} disabled={saving}
-                          className="flex-1 py-2.5 bg-green-500 text-white rounded-xl font-bold text-sm hover:bg-green-600 transition-all disabled:opacity-50 flex items-center justify-center gap-1">
-                          <Save size={14} /> {saving ? '保存中...' : '保存修改'}
-                        </button>
-                        <button onClick={cancelEditing}
-                          className="px-3 py-2.5 bg-slate-100 text-slate-500 rounded-xl hover:bg-slate-200 transition-all">
-                          <X size={16} />
-                        </button>
-                      </div>
-                    </div>
-                  ) : (
-                    /* ── View Mode ── */
-                    <>
-                      {order.items.map((item, i: number) => (
-                        <div key={i} className={item.comboId ? 'p-2 bg-amber-50/50 rounded-xl border border-amber-100' : ''}>
-                          {item.comboId ? (
-                            /* Combo display */
-                            <>
-                              <div className="flex justify-between text-sm font-bold">
-                                <span>🍱 {item.name}</span>
-                                <span className="text-amber-600">¥{(getItemUnitPrice(item) * item.quantity).toFixed(2)}</span>
-                              </div>
-                              {(item.comboItems || []).map((ci, si) => (
-                                <div key={si} className="ml-3 flex justify-between text-[11px] text-slate-500 mt-0.5">
-                                  <span className="flex items-center gap-1">
-                                    └ {ci.productName || ci.productId}
-                                    {ci.variantName && <span className="text-[10px] text-slate-400">·{ci.variantName}</span>}
-                                    {ci.selectedBrewing && <span className="text-[9px] bg-orange-100 text-orange-600 px-1 py-0.5 rounded font-black">帮泡+¥1</span>}
-                                    {ci.selectedFreezing && <span className="text-[9px] bg-indigo-100 text-indigo-600 px-1 py-0.5 rounded font-black">冰镇+¥0.5</span>}
-                                  </span>
-                                </div>
-                              ))}
-                            </>
-                          ) : (
-                            /* Regular item display */
-                            <div className="flex justify-between text-sm">
-                              <span className="flex items-center gap-1 flex-wrap">
-                                {item.name}{item.variantName ? ` · ${item.variantName}` : ''} x{item.quantity}
-                                {item.isBrewingSelected && <span className="text-[9px] bg-orange-100 text-orange-600 px-1 py-0.5 rounded font-black">帮泡+¥1</span>}
-                                {item.isFreezingSelected && <span className="text-[9px] bg-indigo-100 text-indigo-600 px-1 py-0.5 rounded font-black">冰镇+¥0.5</span>}
+                  {order.items.map((item, i: number) => (
+                    <div key={i} className={item.comboId ? 'p-2 bg-amber-50/50 rounded-xl border border-amber-100' : ''}>
+                      {item.comboId ? (
+                        <>
+                          <div className="flex justify-between text-sm font-bold">
+                            <span>🍱 {item.name}</span>
+                            <span className="text-amber-600">¥{(getItemUnitPrice(item) * item.quantity).toFixed(2)}</span>
+                          </div>
+                          {(item.comboItems || []).map((ci, si) => (
+                            <div key={si} className="ml-3 flex justify-between text-[11px] text-slate-500 mt-0.5">
+                              <span className="flex items-center gap-1">
+                                └ {ci.productName || ci.productId}
+                                {ci.variantName && <span className="text-[10px] text-slate-400">·{ci.variantName}</span>}
+                                {ci.selectedBrewing && <span className="text-[9px] bg-orange-100 text-orange-600 px-1 py-0.5 rounded font-black">帮泡+¥1</span>}
+                                {ci.selectedFreezing && <span className="text-[9px] bg-indigo-100 text-indigo-600 px-1 py-0.5 rounded font-black">冰镇+¥0.5</span>}
                               </span>
-                              <span className="font-bold">¥{(getItemUnitPrice(item) * item.quantity).toFixed(2)}</span>
                             </div>
-                          )}
+                          ))}
+                        </>
+                      ) : (
+                        <div className="flex justify-between text-sm">
+                          <span className="flex items-center gap-1 flex-wrap">
+                            {item.name}{item.variantName ? ` · ${item.variantName}` : ''} x{item.quantity}
+                            {item.isBrewingSelected && <span className="text-[9px] bg-orange-100 text-orange-600 px-1 py-0.5 rounded font-black">帮泡+¥1</span>}
+                            {item.isFreezingSelected && <span className="text-[9px] bg-indigo-100 text-indigo-600 px-1 py-0.5 rounded font-black">冰镇+¥0.5</span>}
+                          </span>
+                          <span className="font-bold">¥{(getItemUnitPrice(item) * item.quantity).toFixed(2)}</span>
                         </div>
-                      ))}
-                      <div className="flex justify-between font-bold text-sm pt-2 border-t border-slate-50">
-                        <span>总计</span>
-                        <span className="text-orange-600">¥{order.totalPrice.toFixed(2)}</span>
-                      </div>
-                      {order.isDelivery && (
-                        <div className="text-[10px] text-slate-400">配送方式：配送到寝{order.totalPrice >= 20 ? '（已满20免配送费）' : ''}</div>
                       )}
-                      {!order.isDelivery && (
-                        <div className="text-[10px] text-slate-400">配送方式：自提</div>
-                      )}
-                      <div className="flex gap-2 mt-2">
-                        <button
-                          onClick={() => onReorder(order.items)}
-                          className="flex-1 py-2.5 bg-orange-500 text-white rounded-xl font-bold text-sm hover:bg-orange-600 transition-all active:scale-[0.98]">
-                          再来一单
-                        </button>
-                        <button
-                          onClick={() => startEditing(order)}
-                          className="px-3 py-2.5 bg-blue-50 text-blue-500 hover:bg-blue-100 rounded-xl font-bold text-xs transition-all flex items-center gap-1">
-                          <Edit3 size={14} /> 修改
-                        </button>
-                        <button
-                          onClick={async () => {
-                            if (!confirm('确定删除该订单？')) return;
-                            try {
-                              await deleteOrder(order.id, identity.nickname);
-                              setOrders(prev => prev.filter(o => o.id !== order.id));
-                            } catch (err) { alert(getErrorMessage(err)); }
-                          }}
-                          className="px-3 py-2.5 bg-red-50 text-red-400 hover:bg-red-100 rounded-xl transition-all"
-                          title="删除订单">
-                          <Trash2 size={16} />
-                        </button>
-                      </div>
-                    </>
-                  )}
+                    </div>
+                  ))}
+                  <div className="flex justify-between font-bold text-sm pt-2 border-t border-slate-50">
+                    <span>总计</span>
+                    <span className="text-orange-600">¥{order.totalPrice.toFixed(2)}</span>
+                  </div>
+                  <div className="text-[10px] text-slate-400">
+                    {order.isDelivery ? `配送到寝${order.totalPrice >= 20 ? '（已满20免配送费）' : ''}` : '自提'}
+                  </div>
+                  <div className="flex gap-2 mt-2">
+                    <button
+                      onClick={() => onReorder(order.items)}
+                      className="flex-1 py-2.5 bg-orange-500 text-white rounded-xl font-bold text-sm hover:bg-orange-600 transition-all active:scale-[0.98]">
+                      再来一单
+                    </button>
+                    {order.status === 'pending' && (
+                      <button
+                        onClick={async () => {
+                          const newDelivery = !order.isDelivery;
+                          const label = newDelivery ? '配送' : '自提';
+                          if (!confirm(`确定改为「${label}」？价格将重新计算。`)) return;
+                          try {
+                            const updated = await updateOrder(order.id, { isDelivery: newDelivery, nickname: identity.nickname });
+                            setOrders(prev => prev.map(o => o.id === order.id ? updated : o));
+                          } catch (err) { alert(getErrorMessage(err)); }
+                        }}
+                        className="px-3 py-2.5 bg-blue-50 text-blue-500 hover:bg-blue-100 rounded-xl font-bold text-xs transition-all"
+                        title={order.isDelivery ? '改为自提' : '补配送'}>
+                        {order.isDelivery ? '改自提' : '补配送'}
+                      </button>
+                    )}
+                    <button
+                      onClick={async () => {
+                        if (!confirm('确定删除该订单？')) return;
+                        try {
+                          await deleteOrder(order.id, identity.nickname);
+                          setOrders(prev => prev.filter(o => o.id !== order.id));
+                        } catch (err) { alert(getErrorMessage(err)); }
+                      }}
+                      className="px-3 py-2.5 bg-red-50 text-red-400 hover:bg-red-100 rounded-xl transition-all"
+                      title="删除订单">
+                      <Trash2 size={16} />
+                    </button>
+                  </div>
                 </div>
               )}
             </div>
