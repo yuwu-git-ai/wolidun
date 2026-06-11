@@ -53,8 +53,6 @@ router.post('/orders', (req: Request, res: Response) => {
             throw new Error('套餐中的商品已下架');
           }
           let unitPrice = cp.price;
-          if (ci.selectedBrewing) unitPrice += 1;
-          if (ci.selectedFreezing) unitPrice += 0.5;
 
           if (ci.variantId) {
             const v = db.prepare('SELECT * FROM product_variants WHERE id = ? AND product_id = ?').get(ci.variantId, ci.productId) as any;
@@ -69,6 +67,9 @@ router.post('/orders', (req: Request, res: Response) => {
             if (newStock < 0) throw new Error(`商品 "${cp.name}" 库存不足`);
             db.prepare('UPDATE products SET stock = ? WHERE id = ?').run(newStock, cp.id);
           }
+
+          if (ci.selectedBrewing) unitPrice += 1;
+          if (ci.selectedFreezing) unitPrice += 0.5;
           comboSubtotal += unitPrice;
         }
         itemsTotal += (comboSubtotal - comboDiscount) * item.quantity;
@@ -81,8 +82,6 @@ router.post('/orders', (req: Request, res: Response) => {
       }
 
       let unitPrice = product.price;
-      if (item.isBrewingSelected) unitPrice += 1;
-      if (item.isFreezingSelected) unitPrice += 0.5;
 
       // If variant selected, use variant price override and deduct variant stock
       if (item.variantId) {
@@ -99,6 +98,8 @@ router.post('/orders', (req: Request, res: Response) => {
         }
         db.prepare('UPDATE product_variants SET stock = ? WHERE id = ?').run(newStock, item.variantId);
       } else {
+        if (item.isBrewingSelected) unitPrice += 1;
+        if (item.isFreezingSelected) unitPrice += 0.5;
         const newStock = product.stock - item.quantity;
         if (newStock < 0) {
           throw new Error(`商品 "${product.name}" 库存不足，仅剩 ${product.stock} 件`);
