@@ -6,12 +6,32 @@ import { getDb } from '../db';
 const router = Router();
 
 function serializeOrder(o: any) {
+  const db = getDb();
+  let items = typeof o.items === 'string' ? JSON.parse(o.items) : o.items;
+
+  // Resolve variant names for combo sub-items (old orders may not have them)
+  for (const item of items) {
+    if (item.comboId && item.comboItems) {
+      for (const ci of item.comboItems) {
+        if (ci.variantId && !ci.variantName) {
+          const v = db.prepare('SELECT name FROM product_variants WHERE id = ?').get(ci.variantId) as any;
+          if (v) ci.variantName = v.name;
+        }
+      }
+    }
+    // Also resolve variant name for regular items
+    if (item.variantId && !item.variantName) {
+      const v = db.prepare('SELECT name FROM product_variants WHERE id = ?').get(item.variantId) as any;
+      if (v) item.variantName = v.name;
+    }
+  }
+
   return {
     id: o.id,
     nickname: o.nickname,
     dorm: o.dorm,
     isDelivery: o.is_delivery === 1,
-    items: typeof o.items === 'string' ? JSON.parse(o.items) : o.items,
+    items,
     totalPrice: o.total_price,
     status: o.status,
     createdAt: o.created_at,

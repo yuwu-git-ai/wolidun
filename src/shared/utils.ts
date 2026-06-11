@@ -132,20 +132,30 @@ export function detectCombos(cart: CartItem[], combos: Combo[]): CartItem[] {
         result[existingComboIdx] = { ...result[existingComboIdx], quantity: result[existingComboIdx].quantity + n };
       } else {
         const firstMatchedItem = matches[0].cartItems[0].item;
+        const resolvedComboItems = combo.items.map(ci => {
+          const match = matches.find(m => m.comboItem.productId === ci.productId);
+          const cartItem = match?.cartItems[0]?.item;
+          return {
+            productId: ci.productId,
+            variantId: cartItem?.variantId || ci.variantId || null,
+            variantName: cartItem?.variantName,
+            productName: cartItem?.name || ci.productName,
+            productPrice: cartItem ? (cartItem.price || 0) : undefined,
+            image: cartItem?.image,
+            selectedBrewing: cartItem?.isBrewingSelected || false,
+            selectedFreezing: cartItem?.isFreezingSelected || false,
+          };
+        });
+        const rawTotal = resolvedComboItems.reduce((s, ci) => s + (ci.productPrice || 0), 0);
+        const resolvedPrice = Math.max(0, rawTotal - combo.discount);
         result.push({
           ...firstMatchedItem,
           id: combo.id,
           name: combo.name,
-          price: combo.comboPrice,
+          price: resolvedPrice,
           quantity: n,
           comboId: combo.id,
-          comboItems: combo.items.map(ci => ({
-            productId: ci.productId,
-            variantId: ci.variantId || null,
-            productName: undefined,
-            productPrice: undefined,
-            image: undefined,
-          })),
+          comboItems: resolvedComboItems,
           comboDiscount: combo.discount,
           isBrewingSelected: false,
           isFreezingSelected: false,
