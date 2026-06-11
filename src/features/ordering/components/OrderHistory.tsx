@@ -1,5 +1,5 @@
 import { useState, useEffect, FormEvent } from 'react';
-import { ArrowLeft, Clock, Search, Trash2 } from 'lucide-react';
+import { ArrowLeft, Clock, Search, Trash2, Copy } from 'lucide-react';
 import { Order, CartItem } from '../../../shared/types';
 import { fetchOrders, fetchOrderById, deleteOrder } from '../../../shared/api';
 import { STATUS_LABELS, STATUS_COLORS, getItemUnitPrice, getErrorMessage } from '../../../shared/utils';
@@ -15,6 +15,39 @@ export default function OrderHistory({ identity, onClose, onReorder }: OrderHist
   const [loading, setLoading] = useState(true);
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [changedIds, setChangedIds] = useState<Set<string>>(new Set());
+
+  // Copy state
+  const [copiedId, setCopiedId] = useState<string | null>(null);
+
+  const copyOrderText = (order: Order) => {
+    const lines: string[] = [];
+    lines.push(`🧾 订单 ${order.id.slice(0, 8)}`);
+    for (const item of order.items) {
+      const price = getItemUnitPrice(item);
+      if (item.comboId) {
+        lines.push(`🍱 ${item.name} x${item.quantity}  ¥${(price * item.quantity).toFixed(2)}`);
+        for (const ci of (item.comboItems || [])) {
+          const extras = [];
+          if (ci.variantName) extras.push(ci.variantName);
+          if (ci.selectedBrewing) extras.push('帮泡');
+          if (ci.selectedFreezing) extras.push('冰镇');
+          lines.push(`  └ ${ci.productName}${extras.length ? `（${extras.join('+')}）` : ''}`);
+        }
+      } else {
+        const extras = [];
+        if (item.variantName) extras.push(item.variantName);
+        if (item.isBrewingSelected) extras.push('帮泡');
+        if (item.isFreezingSelected) extras.push('冰镇');
+        lines.push(`${item.name}${extras.length ? `（${extras.join('+')}）` : ''} x${item.quantity}  ¥${(price * item.quantity).toFixed(2)}`);
+      }
+    }
+    lines.push(`方式：${order.isDelivery ? '配送' : '自提'}`);
+    lines.push(`总计：¥${order.totalPrice.toFixed(2)}`);
+    navigator.clipboard.writeText(lines.join('\n')).then(() => {
+      setCopiedId(order.id);
+      setTimeout(() => setCopiedId(null), 2000);
+    }).catch(() => {});
+  };
 
   // Order tracker state
   const [trackId, setTrackId] = useState('');
@@ -209,6 +242,12 @@ export default function OrderHistory({ identity, onClose, onReorder }: OrderHist
                     {order.isDelivery ? `配送到寝${order.totalPrice >= 20 ? '（已满20免配送费）' : ''}` : '自提'}
                   </div>
                   <div className="flex gap-2 mt-2">
+                    <button
+                      onClick={() => copyOrderText(order)}
+                      className={`px-3 py-2.5 rounded-xl font-bold text-xs transition-all flex items-center gap-1 ${copiedId === order.id ? 'bg-green-100 text-green-600' : 'bg-slate-100 text-slate-500 hover:bg-slate-200'}`}
+                      title="复制订单">
+                      <Copy size={14} /> {copiedId === order.id ? '已复制' : '复制'}
+                    </button>
                     <button
                       onClick={() => onReorder(order.items)}
                       className="flex-1 py-2.5 bg-orange-500 text-white rounded-xl font-bold text-sm hover:bg-orange-600 transition-all active:scale-[0.98]">
