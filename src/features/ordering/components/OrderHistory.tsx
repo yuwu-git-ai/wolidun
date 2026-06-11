@@ -1,16 +1,17 @@
 import { useState, useEffect, FormEvent } from 'react';
 import { ArrowLeft, Clock, Search, Trash2, Edit3, Save, X } from 'lucide-react';
-import { Order, CartItem } from '../../../shared/types';
+import { Order, CartItem, Product } from '../../../shared/types';
 import { fetchOrders, fetchOrderById, deleteOrder, updateOrder } from '../../../shared/api';
 import { STATUS_LABELS, STATUS_COLORS, getItemUnitPrice, getErrorMessage } from '../../../shared/utils';
 
 interface OrderHistoryProps {
   identity: { nickname: string; dorm: string };
+  products: Product[];
   onClose: () => void;
   onReorder: (items: CartItem[]) => void;
 }
 
-export default function OrderHistory({ identity, onClose, onReorder }: OrderHistoryProps) {
+export default function OrderHistory({ identity, products, onClose, onReorder }: OrderHistoryProps) {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [expandedId, setExpandedId] = useState<string | null>(null);
@@ -111,6 +112,33 @@ export default function OrderHistory({ identity, onClose, onReorder }: OrderHist
       if (i !== itemIdx || !item.comboItems) return item;
       const newComboItems = item.comboItems.map((ci, j) =>
         j === subIdx ? { ...ci, selectedBrewing: !ci.selectedBrewing } : ci
+      );
+      return { ...item, comboItems: newComboItems };
+    }));
+  };
+
+  const setItemVariant = (idx: number, variantId: string) => {
+    setEditItems(prev => prev.map((item, i) => {
+      if (i !== idx) return item;
+      const product = products.find(p => p.id === item.id);
+      const variant = product?.variants?.find(v => v.id === variantId);
+      return {
+        ...item,
+        variantId,
+        variantName: variant?.name,
+        price: variant?.price != null ? variant.price : (product?.price || item.price),
+      };
+    }));
+  };
+
+  const setComboSubVariant = (itemIdx: number, subIdx: number, variantId: string) => {
+    setEditItems(prev => prev.map((item, i) => {
+      if (i !== itemIdx || !item.comboItems) return item;
+      const ci = item.comboItems[subIdx];
+      const product = products.find(p => p.id === ci.productId);
+      const variant = product?.variants?.find(v => v.id === variantId);
+      const newComboItems = item.comboItems.map((ci2, j) =>
+        j === subIdx ? { ...ci2, variantId, variantName: variant?.name, productPrice: variant?.price != null ? variant.price : ci2.productPrice } : ci2
       );
       return { ...item, comboItems: newComboItems };
     }));
@@ -257,6 +285,27 @@ export default function OrderHistory({ identity, onClose, onReorder }: OrderHist
                                     <span>{ci.productName || ci.productId}</span>
                                     {ci.variantName && <span className="text-slate-400">{ci.variantName}</span>}
                                   </div>
+                                  {/* Variant selector for combo sub-item */}
+                                  {(() => {
+                                    const p = products.find(pr => pr.id === ci.productId);
+                                    const vars = p?.variants;
+                                    if (vars && vars.length > 0) {
+                                      return (
+                                        <select
+                                          value={ci.variantId || ''}
+                                          onChange={e => setComboSubVariant(i, si, e.target.value)}
+                                          className="w-full px-2 py-1 bg-slate-50 rounded border border-slate-200 text-[10px] outline-none focus:border-amber-300">
+                                          <option value="">默认</option>
+                                          {vars.map(v => (
+                                            <option key={v.id} value={v.id} disabled={(v.stock || 0) <= 0}>
+                                              {v.name}{v.price != null ? ` ¥${v.price}` : ''}{v.stock <= 0 ? ' (售罄)' : ''}
+                                            </option>
+                                          ))}
+                                        </select>
+                                      );
+                                    }
+                                    return null;
+                                  })()}
                                   <div className="flex gap-3">
                                     <label className="flex items-center gap-1 cursor-pointer">
                                       <input type="checkbox" checked={!!ci.selectedBrewing}
@@ -281,6 +330,27 @@ export default function OrderHistory({ identity, onClose, onReorder }: OrderHist
                                 <span>{item.name}{item.variantName ? ` · ${item.variantName}` : ''}</span>
                                 <span>x{item.quantity}</span>
                               </div>
+                              {/* Variant selector */}
+                              {(() => {
+                                const p = products.find(pr => pr.id === item.id);
+                                const vars = p?.variants;
+                                if (vars && vars.length > 0) {
+                                  return (
+                                    <select
+                                      value={item.variantId || ''}
+                                      onChange={e => setItemVariant(i, e.target.value)}
+                                      className="w-full mt-1 px-2 py-1.5 bg-white rounded-lg border border-slate-200 text-xs outline-none focus:border-orange-300">
+                                      <option value="">默认</option>
+                                      {vars.map(v => (
+                                        <option key={v.id} value={v.id} disabled={(v.stock || 0) <= 0}>
+                                          {v.name}{v.price != null ? ` ¥${v.price}` : ''}{v.stock <= 0 ? ' (售罄)' : ''}
+                                        </option>
+                                      ))}
+                                    </select>
+                                  );
+                                }
+                                return null;
+                              })()}
                               <div className="flex gap-3">
                                 <label className="flex items-center gap-1 cursor-pointer">
                                   <input type="checkbox" checked={!!item.isBrewingSelected}
