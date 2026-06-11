@@ -20,30 +20,28 @@ export default function OrderHistory({ identity, onClose, onReorder }: OrderHist
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
   const copyOrderText = (order: Order) => {
-    const lines: string[] = [];
-    lines.push(`🧾 订单 ${order.id.slice(0, 8)}`);
-    for (const item of order.items) {
-      const price = getItemUnitPrice(item);
-      if (item.comboId) {
-        lines.push(`🍱 ${item.name} x${item.quantity}  ¥${(price * item.quantity).toFixed(2)}`);
-        for (const ci of (item.comboItems || [])) {
-          const extras = [];
-          if (ci.variantName) extras.push(ci.variantName);
-          if (ci.selectedBrewing) extras.push('帮泡');
-          if (ci.selectedFreezing) extras.push('冰镇');
-          lines.push(`  └ ${ci.productName}${extras.length ? `（${extras.join('+')}）` : ''}`);
-        }
-      } else {
-        const extras = [];
-        if (item.variantName) extras.push(item.variantName);
-        if (item.isBrewingSelected) extras.push('帮泡');
-        if (item.isFreezingSelected) extras.push('冰镇');
-        lines.push(`${item.name}${extras.length ? `（${extras.join('+')}）` : ''} x${item.quantity}  ¥${(price * item.quantity).toFixed(2)}`);
+    const orderLines = order.items.map(item => {
+      if (item.comboId && item.comboItems) {
+        const subLines = item.comboItems.map(ci => {
+          const subP = ci.productPrice || 0;
+          return `  - ${ci.productName || '商品'} x${item.quantity}  ¥${(subP * item.quantity).toFixed(2)}`;
+        }).join('\n');
+        return `🍱套餐: ${item.name}\n${subLines}\n  套餐优惠  -¥${((item.comboDiscount || 0) * item.quantity).toFixed(2)}`;
       }
-    }
-    lines.push(`方式：${order.isDelivery ? '配送' : '自提'}`);
-    lines.push(`总计：¥${order.totalPrice.toFixed(2)}`);
-    navigator.clipboard.writeText(lines.join('\n')).then(() => {
+      const svc: string[] = [];
+      if (item.isBrewingSelected) svc.push('帮泡+¥1');
+      if (item.isFreezingSelected) svc.push('冰镇+¥0.5');
+      const svcStr = svc.length > 0 ? ` [${svc.join(', ')}]` : '';
+      const variantStr = item.variantName ? ` · ${item.variantName}` : '';
+      const up = getItemUnitPrice(item);
+      return `${item.name}${variantStr}${svcStr} x${item.quantity} - ¥${(up * item.quantity).toFixed(2)}`;
+    });
+    const dInfo = order.isDelivery
+      ? `配送: 送到 ${order.dorm}`
+      : '取餐方式: 自提';
+    const text = `--- 窝里蹲点单 ---\n下单人: ${order.nickname}\n${dInfo}\n---\n${orderLines.join('\n')}\n---\n总计: ¥${order.totalPrice.toFixed(2)}\n订单号: ${order.id}`;
+
+    navigator.clipboard.writeText(text).then(() => {
       setCopiedId(order.id);
       setTimeout(() => setCopiedId(null), 2000);
     }).catch(() => {});
