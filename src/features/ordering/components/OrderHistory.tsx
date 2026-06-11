@@ -1,17 +1,16 @@
 import { useState, useEffect, FormEvent } from 'react';
 import { ArrowLeft, Clock, Search, Trash2 } from 'lucide-react';
-import { Order, CartItem, Product } from '../../../shared/types';
-import { fetchOrders, fetchOrderById, deleteOrder, updateOrder } from '../../../shared/api';
+import { Order, CartItem } from '../../../shared/types';
+import { fetchOrders, fetchOrderById, deleteOrder } from '../../../shared/api';
 import { STATUS_LABELS, STATUS_COLORS, getItemUnitPrice, getErrorMessage } from '../../../shared/utils';
 
 interface OrderHistoryProps {
   identity: { nickname: string; dorm: string };
-  products: Product[];
   onClose: () => void;
   onReorder: (items: CartItem[]) => void;
 }
 
-export default function OrderHistory({ identity, products, onClose, onReorder }: OrderHistoryProps) {
+export default function OrderHistory({ identity, onClose, onReorder }: OrderHistoryProps) {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [expandedId, setExpandedId] = useState<string | null>(null);
@@ -215,22 +214,6 @@ export default function OrderHistory({ identity, products, onClose, onReorder }:
                       className="flex-1 py-2.5 bg-orange-500 text-white rounded-xl font-bold text-sm hover:bg-orange-600 transition-all active:scale-[0.98]">
                       再来一单
                     </button>
-                    {order.status === 'pending' && (
-                      <button
-                        onClick={async () => {
-                          const newDelivery = !order.isDelivery;
-                          const label = newDelivery ? '配送' : '自提';
-                          if (!confirm(`确定改为「${label}」？价格将重新计算。`)) return;
-                          try {
-                            const updated = await updateOrder(order.id, { isDelivery: newDelivery, nickname: identity.nickname });
-                            setOrders(prev => prev.map(o => o.id === order.id ? updated : o));
-                          } catch (err) { alert(getErrorMessage(err)); }
-                        }}
-                        className="px-3 py-2.5 bg-blue-50 text-blue-500 hover:bg-blue-100 rounded-xl font-bold text-xs transition-all"
-                        title={order.isDelivery ? '改为自提' : '补配送'}>
-                        {order.isDelivery ? '改自提' : '补配送'}
-                      </button>
-                    )}
                     <button
                       onClick={async () => {
                         if (!confirm('确定删除该订单？')) return;

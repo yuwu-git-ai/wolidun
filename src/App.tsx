@@ -584,7 +584,7 @@ function CustomerApp() {
       )}
       {state.showOrderHistory && state.identity && (
         <div className="fixed top-14 sm:top-16 left-0 right-0 bottom-0 z-40 bg-slate-50 overflow-y-auto">
-          <OrderHistory identity={state.identity} products={state.products} onClose={() => actions.setShowOrderHistory(false)} onReorder={actions.reorder} />
+          <OrderHistory identity={state.identity} onClose={() => actions.setShowOrderHistory(false)} onReorder={actions.reorder} />
         </div>
       )}
 
