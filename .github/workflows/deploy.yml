@@ -32,6 +32,8 @@ jobs:
           script: |
             cd /root/app
             cd /root/app
+            echo "[deploy] === What's on port 80? ==="
+            ss -tlnp 2>/dev/null | grep ':80 ' || netstat -tlnp 2>/dev/null | grep ':80 ' || echo "nothing found on port 80"
             echo "[deploy] git pull as fallback (may fail)..."
             git pull origin master 2>&1 || echo "[deploy] git pull failed, using SCP'd files"
             echo "[deploy] Building and starting..."
