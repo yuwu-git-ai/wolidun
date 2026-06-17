@@ -22,4 +22,5 @@ EXPOSE 3001
 ENV NODE_ENV=production
 ENV PORT=3001
 ENV DB_PATH=/app/data/ordering.db
+ENV TZ=Asia/Shanghai
 CMD ["node", "dist-server/server/index.js"]

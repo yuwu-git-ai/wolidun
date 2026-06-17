@@ -18,7 +18,7 @@ router.get('/stats', (req: Request, res: Response) => {
 
   // Popular products
   const orders = db.prepare(
-    `SELECT items FROM orders WHERE datetime(created_at, '+8 hours') > datetime('now', '+8 hours', '-30 days')`
+    `SELECT items FROM orders WHERE datetime(created_at) > datetime('now', '+8 hours', '-30 days')`
   ).all() as any[];
 
   const productCounts = new Map<string, number>();
@@ -37,7 +37,7 @@ router.get('/stats', (req: Request, res: Response) => {
   // Today's stats
   const today = db.prepare(
     `SELECT COUNT(*) as count, COALESCE(SUM(total_price), 0) as revenue
-     FROM orders WHERE date(datetime(created_at, '+8 hours')) = date(datetime('now', '+8 hours')) AND status != 'cancelled'`
+     FROM orders WHERE date(datetime(created_at)) = date(datetime('now')) AND status != 'cancelled'`
   ).get() as any;
 
   // ── Monthly view: all days of a specific month ──
@@ -48,12 +48,12 @@ router.get('/stats', (req: Request, res: Response) => {
 
     // Get actual data for days in this month
     const rows = db.prepare(
-      `SELECT date(datetime(created_at, '+8 hours')) as d,
+      `SELECT date(datetime(created_at)) as d,
               COUNT(*) as count,
               COALESCE(SUM(total_price), 0) as revenue
        FROM orders
        WHERE status != 'cancelled'
-         AND strftime('%Y-%m', datetime(created_at, '+8 hours')) = ?
+         AND strftime('%Y-%m', datetime(created_at)) = ?
        GROUP BY d ORDER BY d ASC`
     ).all(`${year}-${String(month).padStart(2, '0')}`) as any[];
 
@@ -82,12 +82,12 @@ router.get('/stats', (req: Request, res: Response) => {
     const year = parseInt(yearStr);
 
     const rows = db.prepare(
-      `SELECT strftime('%m', datetime(created_at, '+8 hours')) as m,
+      `SELECT strftime('%m', datetime(created_at)) as m,
               COUNT(*) as count,
               COALESCE(SUM(total_price), 0) as revenue
        FROM orders
        WHERE status != 'cancelled'
-         AND strftime('%Y', datetime(created_at, '+8 hours')) = ?
+         AND strftime('%Y', datetime(created_at)) = ?
        GROUP BY m ORDER BY m ASC`
     ).all(String(year)) as any[];
 
@@ -112,7 +112,7 @@ router.get('/stats', (req: Request, res: Response) => {
 
   // ── Legacy: all data ──
   const dailyRows = db.prepare(
-    `SELECT date(datetime(created_at, '+8 hours')) as d,
+    `SELECT date(datetime(created_at)) as d,
             COUNT(*) as count,
             COALESCE(SUM(total_price), 0) as revenue
      FROM orders WHERE status != 'cancelled'
@@ -125,7 +125,7 @@ router.get('/stats', (req: Request, res: Response) => {
   });
 
   const monthlyRows = db.prepare(
-    `SELECT strftime('%Y-%m', datetime(created_at, '+8 hours')) as m,
+    `SELECT strftime('%Y-%m', datetime(created_at)) as m,
             COUNT(*) as count,
             COALESCE(SUM(total_price), 0) as revenue
      FROM orders WHERE status != 'cancelled'
