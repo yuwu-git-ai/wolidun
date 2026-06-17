@@ -31,8 +31,9 @@ jobs:
           command_timeout: 15m
           script: |
             cd /root/app
-            echo "[deploy] Opening firewall port 3001..."
-            ufw allow 3001/tcp 2>/dev/null || iptables -I INPUT -p tcp --dport 3001 -j ACCEPT 2>/dev/null || echo "[deploy] firewall rule skipped"
+            echo "[deploy] Checking public IP..."
+            PUBLIC_IP=$(curl -s --max-time 5 ifconfig.me 2>/dev/null || curl -s --max-time 5 icanhazip.com 2>/dev/null || echo "unknown")
+            echo "[deploy] Server public IP: $PUBLIC_IP"
             echo "[deploy] git pull as fallback (may fail)..."
             git pull origin master 2>&1 || echo "[deploy] git pull failed, using SCP'd files"
             echo "[deploy] Building and starting..."
