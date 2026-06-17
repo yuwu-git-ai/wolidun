@@ -34,6 +34,8 @@ jobs:
             echo "[deploy] Checking public IP..."
             PUBLIC_IP=$(curl -s --max-time 5 ifconfig.me 2>/dev/null || curl -s --max-time 5 icanhazip.com 2>/dev/null || echo "unknown")
             echo "[deploy] Server public IP: $PUBLIC_IP"
+            echo "[deploy] Checking what's on port 80..."
+            ss -tlnp | grep :80 2>/dev/null || netstat -tlnp | grep :80 2>/dev/null || echo "[deploy] nothing on port 80"
             echo "[deploy] git pull as fallback (may fail)..."
             git pull origin master 2>&1 || echo "[deploy] git pull failed, using SCP'd files"
             echo "[deploy] Building and starting..."
