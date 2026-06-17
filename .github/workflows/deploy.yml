@@ -12,26 +12,33 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Package and upload to server
+      - name: Upload files to server
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           password: ${{ secrets.SSH_PASSWORD }}
-          source: "."
+          source: "*"
           target: "/root/app"
-          rm: false
           strip_components: 0
 
-      - name: Rebuild and restart
+      - name: Rebuild and check logs
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           password: ${{ secrets.SSH_PASSWORD }}
+          command_timeout: 15m
           script: |
             cd /root/app
-            docker compose down --remove-orphans || true
+            echo "[deploy] git pull as fallback (may fail)..."
+            git pull origin master 2>&1 || echo "[deploy] git pull failed, using SCP'd files"
+            echo "[deploy] Building and starting..."
+            docker compose down --remove-orphans 2>/dev/null || true
             docker rm -f app-app-1 2>/dev/null || true
             docker network rm app_default 2>/dev/null || true
-            docker compose up -d --build
+            docker compose up -d --build 2>&1
+            echo "[deploy] Waiting for server to start..."
+            sleep 10
+            echo "[deploy] Docker logs:"
+            docker logs app-app-1 --tail 50 2>&1
