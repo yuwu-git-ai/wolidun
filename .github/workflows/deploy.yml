@@ -18,7 +18,7 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           password: ${{ secrets.SSH_PASSWORD }}
-          source: "*"
+          source: "."
           target: "/root/app"
           strip_components: 0
 
@@ -31,6 +31,8 @@ jobs:
           command_timeout: 15m
           script: |
             cd /root/app
+            echo "[deploy] Opening firewall port 3001..."
+            ufw allow 3001/tcp 2>/dev/null || iptables -I INPUT -p tcp --dport 3001 -j ACCEPT 2>/dev/null || echo "[deploy] firewall rule skipped"
             echo "[deploy] git pull as fallback (may fail)..."
             git pull origin master 2>&1 || echo "[deploy] git pull failed, using SCP'd files"
             echo "[deploy] Building and starting..."
@@ -42,7 +44,9 @@ jobs:
             sleep 10
             echo "[deploy] Docker logs:"
             docker logs app-app-1 --tail 50 2>&1
-            echo "[deploy] Testing container from host..."
+            echo "[deploy] Testing container from host (localhost)..."
             curl -v --max-time 5 http://localhost:3001/api/health 2>&1 || echo "[deploy] localhost curl failed"
+            echo "[deploy] Testing container from host (public IP)..."
+            curl -v --max-time 5 http://124.223.177.149:3001/api/health 2>&1 || echo "[deploy] public IP curl failed"
             echo "[deploy] Checking iptables..."
             iptables -L -n 2>&1 | head -20 || echo "[deploy] iptables not available"
