@@ -9,7 +9,21 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: SSH deploy
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Package and upload to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          source: "."
+          target: "/root/app"
+          rm: false
+          strip_components: 0
+
+      - name: Rebuild and restart
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -17,12 +31,6 @@ jobs:
           password: ${{ secrets.SSH_PASSWORD }}
           script: |
             cd /root/app
-            for i in 1 2 3; do
-              echo "[deploy] git pull attempt $i/3"
-              if git pull origin master; then break; fi
-              echo "[deploy] pull failed, retrying in 10s..."
-              sleep 10
-            done
             docker compose down --remove-orphans || true
             docker rm -f app-app-1 2>/dev/null || true
             docker network rm app_default 2>/dev/null || true
