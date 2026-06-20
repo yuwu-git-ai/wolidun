@@ -343,6 +343,33 @@ function runMigrations() {
     db.prepare('INSERT INTO schema_version (version) VALUES (14)').run();
     console.log('[DB] Migrated to schema v14 (chat post type).');
   }
+
+  if (current < 15) {
+    // v15: fix timezone — store created_at in Asia/Shanghai (+8)
+    db.pragma('foreign_keys = OFF');
+
+    db.exec(`
+      CREATE TABLE orders_v15 (
+        id TEXT PRIMARY KEY,
+        nickname TEXT NOT NULL,
+        dorm TEXT NOT NULL,
+        is_delivery INTEGER DEFAULT 0,
+        items TEXT NOT NULL,
+        total_price REAL NOT NULL,
+        status TEXT DEFAULT 'pending',
+        created_at TEXT DEFAULT (datetime('now', '+8 hours'))
+      );
+      INSERT INTO orders_v15 (id, nickname, dorm, is_delivery, items, total_price, status, created_at)
+        SELECT id, nickname, dorm, is_delivery, items, total_price, status,
+          datetime(created_at, '+8 hours') FROM orders;
+      DROP TABLE orders;
+      ALTER TABLE orders_v15 RENAME TO orders;
+    `);
+
+    db.pragma('foreign_keys = ON');
+    db.prepare('INSERT INTO schema_version (version) VALUES (15)').run();
+    console.log('[DB] Migrated to schema v15 (orders timezone fix).');
+  }
 }
 
 function initTables() {
@@ -358,7 +385,7 @@ function initTables() {
       allow_brewing INTEGER DEFAULT 0,
       allow_freezing INTEGER DEFAULT 0,
       is_hot INTEGER DEFAULT 0,
-      created_at TEXT DEFAULT (datetime('now'))
+      created_at TEXT DEFAULT (datetime('now', '+8 hours'))
     );
 
     CREATE TABLE IF NOT EXISTS orders (
@@ -369,7 +396,7 @@ function initTables() {
       items TEXT NOT NULL,
       total_price REAL NOT NULL,
       status TEXT DEFAULT 'pending',
-      created_at TEXT DEFAULT (datetime('now'))
+      created_at TEXT DEFAULT (datetime('now', '+8 hours'))
     );
   `);
 }
