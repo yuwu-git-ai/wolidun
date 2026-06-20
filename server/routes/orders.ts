@@ -180,20 +180,18 @@ router.get('/orders/:id', (req: Request, res: Response) => {
 });
 
 /** Restore stock for all items (used when cancelling or before re-editing). */
+/** Restore stock for all items (used when cancelling or deleting). */
 function restoreStock(items: any[]) {
   const db = getDb();
   for (const item of items) {
     if (item.comboId) {
-      const combo = db.prepare('SELECT * FROM combos WHERE id = ?').get(item.comboId) as any;
-      if (combo) {
-        const comboItems: { productId: string; variantId?: string | null }[] =
-          typeof combo.items === 'string' ? JSON.parse(combo.items) : combo.items;
-        for (const ci of comboItems) {
-          if (ci.variantId) {
-            db.prepare('UPDATE product_variants SET stock = stock + ? WHERE id = ?').run(item.quantity, ci.variantId);
-          } else {
-            db.prepare('UPDATE products SET stock = stock + ? WHERE id = ?').run(item.quantity, ci.productId);
-          }
+      // Use order's comboItems (not current combo definition) to match deduction
+      const subItems = item.comboItems || [];
+      for (const ci of subItems) {
+        if (ci.variantId) {
+          db.prepare('UPDATE product_variants SET stock = stock + ? WHERE id = ?').run(item.quantity, ci.variantId);
+        } else {
+          db.prepare('UPDATE products SET stock = stock + ? WHERE id = ?').run(item.quantity, ci.productId);
         }
       }
     } else if (item.variantId) {
@@ -322,26 +320,7 @@ router.put('/orders/:id', (req: Request, res: Response) => {
     if (status === 'cancelled' && existing.status !== 'cancelled') {
       const existingItems = JSON.parse(existing.items);
       const restoreTx = db.transaction(() => {
-        for (const item of existingItems) {
-          if (item.comboId) {
-            const combo = db.prepare('SELECT * FROM combos WHERE id = ?').get(item.comboId) as any;
-            if (combo) {
-              const comboItems: { productId: string; variantId?: string | null }[] =
-                typeof combo.items === 'string' ? JSON.parse(combo.items) : combo.items;
-              for (const ci of comboItems) {
-                if (ci.variantId) {
-                  db.prepare('UPDATE product_variants SET stock = stock + ? WHERE id = ?').run(item.quantity, ci.variantId);
-                } else {
-                  db.prepare('UPDATE products SET stock = stock + ? WHERE id = ?').run(item.quantity, ci.productId);
-                }
-              }
-            }
-          } else if (item.variantId) {
-            db.prepare('UPDATE product_variants SET stock = stock + ? WHERE id = ?').run(item.quantity, item.variantId);
-          } else {
-            db.prepare('UPDATE products SET stock = stock + ? WHERE id = ?').run(item.quantity, item.id);
-          }
-        }
+        restoreStock(existingItems);
         db.prepare('UPDATE orders SET status = ? WHERE id = ?').run(status, id);
       });
       restoreTx();
@@ -417,26 +396,7 @@ router.delete('/orders/:id', (req: Request, res: Response) => {
 
   // Restore stock
   const items = typeof order.items === 'string' ? JSON.parse(order.items) : order.items;
-  for (const item of items) {
-    if (item.comboId) {
-      const combo = db.prepare('SELECT * FROM combos WHERE id = ?').get(item.comboId) as any;
-      if (combo) {
-        const comboItems: { productId: string; variantId?: string | null }[] =
-          typeof combo.items === 'string' ? JSON.parse(combo.items) : combo.items;
-        for (const ci of comboItems) {
-          if (ci.variantId) {
-            db.prepare('UPDATE product_variants SET stock = stock + ? WHERE id = ?').run(item.quantity, ci.variantId);
-          } else {
-            db.prepare('UPDATE products SET stock = stock + ? WHERE id = ?').run(item.quantity, ci.productId);
-          }
-        }
-      }
-    } else if (item.variantId) {
-      db.prepare('UPDATE product_variants SET stock = stock + ? WHERE id = ?').run(item.quantity, item.variantId);
-    } else {
-      db.prepare('UPDATE products SET stock = stock + ? WHERE id = ?').run(item.quantity, item.id);
-    }
-  }
+  restoreStock(items);
 
   db.prepare('DELETE FROM orders WHERE id = ?').run(req.params.id);
   res.json({ success: true });

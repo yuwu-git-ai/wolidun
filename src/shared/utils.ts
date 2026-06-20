@@ -19,12 +19,13 @@ export const STATUS_COLORS: Record<string, string> = {
 
 // ── Cart helpers ──
 
-export function getCartKey(item: { id: string; variantId?: string; isBrewingSelected?: boolean; isFreezingSelected?: boolean; comboId?: string; comboItems?: { productId: string; selectedBrewing?: boolean; selectedFreezing?: boolean }[] }): string {
+export function getCartKey(item: { id: string; variantId?: string; isBrewingSelected?: boolean; isFreezingSelected?: boolean; comboId?: string; comboItems?: { productId: string; variantId?: string | null; selectedBrewing?: boolean; selectedFreezing?: boolean }[] }): string {
   if (item.comboId && item.comboItems) {
-    // Encode per-sub-item brewing/freezing so different selections create different cart entries
+    // Encode per-sub-item variant/brewing/freezing so different selections create different cart entries
+    const variants = item.comboItems.map(ci => `${ci.productId}:${ci.variantId || ''}`).join(',');
     const brew = item.comboItems.filter(ci => ci.selectedBrewing).map(ci => ci.productId).join(',');
     const freez = item.comboItems.filter(ci => ci.selectedFreezing).map(ci => ci.productId).join(',');
-    return `c${item.comboId}-b:${brew}-f:${freez}`;
+    return `c${item.comboId}-v:${variants}-b:${brew}-f:${freez}`;
   }
   return `${item.comboId ? 'c' + item.comboId : item.id}-${item.variantId || ''}-${item.isBrewingSelected ? 'b' : ''}-${item.isFreezingSelected ? 'f' : ''}`;
 }

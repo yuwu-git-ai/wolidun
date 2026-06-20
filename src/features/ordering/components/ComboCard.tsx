@@ -20,6 +20,20 @@ export default function ComboCard({ combo, cart, products, onAddCombo }: ComboCa
     setVariantIds(new Map());
   }, [combo.id]);
 
+  // Count how many of a specific variant are already in cart (via combo items)
+  const getVariantCartQty = (productId: string, variantId: string | null | undefined) => {
+    let qty = 0;
+    for (const ci of cart) {
+      if (!ci.comboId || !ci.comboItems) continue;
+      for (const sci of ci.comboItems) {
+        if (sci.productId === productId && (sci.variantId || null) === (variantId || null)) {
+          qty += ci.quantity;
+        }
+      }
+    }
+    return qty;
+  };
+
   const toggleBrewing = (productId: string) => {
     setBrewingIds(prev => {
       const next = new Set(prev);
@@ -59,9 +73,12 @@ export default function ComboCard({ combo, cart, products, onAddCombo }: ComboCa
 
   const allRequiredSelected = combo.items.every(ci => {
     const product = products.find(p => p.id === ci.productId);
-    const hasVariants = (product?.variants?.filter(v => v.stock > 0) || []).length > 0;
-    if (!hasVariants) return true;
-    return !!(variantIds.get(ci.productId) || ci.variantId);
+    const sel = variantIds.get(ci.productId) || ci.variantId;
+    const variantsWithStock = (product?.variants || []).filter(v => v.stock > getVariantCartQty(ci.productId, v.id));
+    if (variantsWithStock.length === 0) return true; // no selectable variants
+    if (!sel) return false;
+    const sv = variantsWithStock.find(v => v.id === sel);
+    return !!sv;
   });
 
   return (
@@ -80,7 +97,10 @@ export default function ComboCard({ combo, cart, products, onAddCombo }: ComboCa
         <div className="flex flex-col gap-2">
         {combo.items.map(ci => {
           const product = products.find(p => p.id === ci.productId);
-          const productVariants = product?.variants?.filter(v => v.stock > 0) || [];
+          const productVariants = (product?.variants || []).filter(v => {
+            const avail = v.stock - getVariantCartQty(ci.productId, v.id);
+            return avail > 0;
+          });
           const itemPrice = getItemPrice(ci);
           return (
           <div key={ci.productId} className="flex flex-col gap-1">
@@ -105,9 +125,12 @@ export default function ComboCard({ combo, cart, products, onAddCombo }: ComboCa
                 className="w-full px-2 py-1.5 bg-white rounded-lg border border-slate-200 text-[10px] outline-none focus:border-amber-300"
               >
                 <option value="" disabled>请选择</option>
-                {productVariants.map(v => (
-                  <option key={v.id} value={v.id}>{v.name}{v.price != null ? ` ¥${v.price}` : ''}</option>
-                ))}
+                {productVariants.map(v => {
+                  const avail = v.stock - getVariantCartQty(ci.productId, v.id);
+                  return (
+                    <option key={v.id} value={v.id}>{v.name}{v.price != null ? ` ¥${v.price}` : ''} (库存: {avail})</option>
+                  );
+                })}
               </select>
             )}
             {/* Brewing / Freezing options per sub-item */}

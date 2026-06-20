@@ -85,7 +85,7 @@ export function customerReducer(state: CustomerRawState, action: CustomerAction)
       const { product, variantId, isBrewing, isFreezing } = action.payload;
       const variant = variantId ? product.variants?.find(v => v.id === variantId) : undefined;
       const variantPrice = variant?.price;
-      const key = getCartKey({ id: product.id, variantId, isBrewingSelected: isBrewing, isFreezingSelected: isFreezing });
+      const key = getCartKey({ id: product.id, variantId, isBrewingSelected: isBrewing, isFreezingSelected: isFreezing, comboId: (product as any).comboId, comboItems: (product as any).comboItems });
       const existingIdx = state.cart.findIndex(item => getCartKey(item) === key);
       let newCart: CartItem[];
       if (existingIdx >= 0) {
@@ -110,15 +110,15 @@ export function customerReducer(state: CustomerRawState, action: CustomerAction)
     case 'REMOVE_FROM_CART': {
       const key = getCartKey(action.payload);
       const existingIdx = state.cart.findIndex(i => getCartKey(i) === key);
+      if (existingIdx < 0) return state;
       let newCart: CartItem[];
-      if (existingIdx >= 0 && state.cart[existingIdx].quantity > 1) {
+      if (state.cart[existingIdx].quantity > 1) {
         newCart = state.cart.map((item, idx) =>
           idx === existingIdx ? { ...item, quantity: item.quantity - 1 } : item
         );
       } else {
-        newCart = state.cart.filter(i => getCartKey(i) !== key);
+        newCart = state.cart.filter((_, idx) => idx !== existingIdx);
       }
-      newCart = detectCombos(newCart, state.combos);
       return { ...state, cart: newCart };
     }
 
@@ -137,7 +137,7 @@ export function customerReducer(state: CustomerRawState, action: CustomerAction)
           merged.push({ ...incoming });
         }
       }
-      return { ...state, cart: merged, showOrderHistory: false };
+      return { ...state, cart: detectCombos(merged, state.combos), showOrderHistory: false };
     }
 
     case 'UPDATE_CART_NOTE': {
@@ -237,6 +237,7 @@ export function customerReducer(state: CustomerRawState, action: CustomerAction)
         newCart = [...state.cart, comboItem];
       }
       newCart = detectCombos(newCart, state.combos);
+      console.log('[ADD_COMBO] after detectCombos, cart keys:', newCart.map(i => getCartKey(i)), 'quantities:', newCart.map(i => i.quantity));
       return { ...state, cart: newCart };
     }
 

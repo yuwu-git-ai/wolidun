@@ -517,7 +517,7 @@ function CustomerApp() {
                         {(item.comboItems || []).map(ci => (
                           <div key={ci.productId} className="flex justify-between text-[11px] text-slate-400 ml-4">
                             <span>
-                              └ {ci.productName}
+                              └ {ci.productName}{ci.variantName ? ` · ${ci.variantName}` : ''}
                               {ci.selectedBrewing && <span className="text-[9px] text-orange-600 font-bold ml-1">+帮泡¥1</span>}
                               {ci.selectedFreezing && <span className="text-[9px] text-indigo-600 font-bold ml-1">+冰镇¥0.5</span>}
                             </span>
@@ -584,7 +584,7 @@ function CustomerApp() {
       )}
       {state.showOrderHistory && state.identity && (
         <div className="fixed top-14 sm:top-16 left-0 right-0 bottom-0 z-40 bg-slate-50 overflow-y-auto">
-          <OrderHistory identity={state.identity} onClose={() => actions.setShowOrderHistory(false)} onReorder={actions.reorder} />
+          <OrderHistory identity={state.identity} onClose={() => actions.setShowOrderHistory(false)} onReorder={actions.reorder} onStockChange={actions.refreshProducts} />
         </div>
       )}
 

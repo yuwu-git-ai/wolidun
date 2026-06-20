@@ -8,9 +8,10 @@ interface OrderHistoryProps {
   identity: { nickname: string; dorm: string };
   onClose: () => void;
   onReorder: (items: CartItem[]) => void;
+  onStockChange?: () => void;
 }
 
-export default function OrderHistory({ identity, onClose, onReorder }: OrderHistoryProps) {
+export default function OrderHistory({ identity, onClose, onReorder, onStockChange }: OrderHistoryProps) {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [expandedId, setExpandedId] = useState<string | null>(null);
@@ -24,7 +25,8 @@ export default function OrderHistory({ identity, onClose, onReorder }: OrderHist
       if (item.comboId && item.comboItems) {
         const subLines = item.comboItems.map(ci => {
           const subP = ci.productPrice || 0;
-          return `  - ${ci.productName || '商品'} x${item.quantity}  ¥${(subP * item.quantity).toFixed(2)}`;
+          const variantLabel = ci.variantName ? ` · ${ci.variantName}` : '';
+          return `  - ${ci.productName || '商品'}${variantLabel} x${item.quantity}  ¥${(subP * item.quantity).toFixed(2)}`;
         }).join('\n');
         return `🍱套餐: ${item.name}\n${subLines}\n  套餐优惠  -¥${((item.comboDiscount || 0) * item.quantity).toFixed(2)}`;
       }
@@ -41,10 +43,27 @@ export default function OrderHistory({ identity, onClose, onReorder }: OrderHist
       : '取餐方式: 自提';
     const text = `--- 窝里蹲点单 ---\n下单人: ${order.nickname}\n${dInfo}\n---\n${orderLines.join('\n')}\n---\n总计: ¥${order.totalPrice.toFixed(2)}\n订单号: ${order.id}`;
 
-    navigator.clipboard.writeText(text).then(() => {
+    // Robust clipboard copy — works in HTTP, HTTPS, and WeChat browser
+    let ok = false;
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(text).catch(() => {});
+      ok = true;
+    } else {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.left = '-9999px';
+      ta.style.top = '-9999px';
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      try { ok = document.execCommand('copy'); } catch { /* ignore */ }
+      document.body.removeChild(ta);
+    }
+    if (ok) {
       setCopiedId(order.id);
       setTimeout(() => setCopiedId(null), 2000);
-    }).catch(() => {});
+    }
   };
 
   // Order tracker state
@@ -257,6 +276,7 @@ export default function OrderHistory({ identity, onClose, onReorder }: OrderHist
                         try {
                           await deleteOrder(order.id, identity.nickname);
                           setOrders(prev => prev.filter(o => o.id !== order.id));
+                          onStockChange?.();
                         } catch (err) { alert(getErrorMessage(err)); }
                       }}
                       className="px-3 py-2.5 bg-red-50 text-red-400 hover:bg-red-100 rounded-xl transition-all"

@@ -31,6 +31,7 @@ export interface CustomerAppActions {
   clearCart: () => void;
   reorder: (items: CartItem[]) => void;
   updateCartNote: (item: CartItem, note: string) => void;
+  refreshProducts: () => void;
   setActiveCategory: (id: string) => void;
   setSearchQuery: (q: string) => void;
   setCopied: (v: boolean) => void;
@@ -195,6 +196,12 @@ export function useCustomerApp(): { state: CustomerAppState; actions: CustomerAp
 
   const setIsDelivery = (v: boolean) => dispatch({ type: 'SET_IS_DELIVERY', payload: v });
 
+  const refreshProducts = () => {
+    fetchProducts()
+      .then(products => dispatch({ type: 'SET_PRODUCTS', payload: products }))
+      .catch(() => {});
+  };
+
   const setIsMobileCartOpen = (v: boolean) => dispatch({ type: 'SET_IS_MOBILE_CART_OPEN', payload: v });
 
   const addComboToCart = (combo: Combo, brewingIds: Set<string>, freezingIds: Set<string>, variantIds: Map<string, string>) =>
@@ -257,7 +264,8 @@ export function useCustomerApp(): { state: CustomerAppState; actions: CustomerAp
         if (item.comboId && item.comboItems) {
           const subLines = item.comboItems.map(ci => {
             const subP = (ci.productPrice || 0);
-            return `  - ${ci.productName || '商品'} x${item.quantity}  ¥${(subP * item.quantity).toFixed(2)}`;
+            const variantLabel = ci.variantName ? ` · ${ci.variantName}` : '';
+            return `  - ${ci.productName || '商品'}${variantLabel} x${item.quantity}  ¥${(subP * item.quantity).toFixed(2)}`;
           }).join('\n');
           return `🍱套餐: ${item.name}\n${subLines}\n  套餐优惠  -¥${((item.comboDiscount || 0) * item.quantity).toFixed(2)}`;
         }
@@ -306,6 +314,7 @@ export function useCustomerApp(): { state: CustomerAppState; actions: CustomerAp
     setShowIdentityForm,
     setShowOrderHistory,
     setShowProfileForm,
+    refreshProducts,
     setIsDelivery,
     setIsMobileCartOpen,
     copyToClipboard,
@@ -314,7 +323,7 @@ export function useCustomerApp(): { state: CustomerAppState; actions: CustomerAp
     handleUpdateProfile,
     handleLogout,
     addComboToCart,
-  }), [confirmAndCopy, handleSaveIdentity, handleUpdateProfile, handleLogout]);
+  }), [confirmAndCopy, handleSaveIdentity, handleUpdateProfile, handleLogout, refreshProducts]);
 
   return { state, actions };
 }
