@@ -37,7 +37,7 @@ router.get('/stats', (req: Request, res: Response) => {
   // Today's stats
   const today = db.prepare(
     `SELECT COUNT(*) as count, COALESCE(SUM(total_price), 0) as revenue
-     FROM orders WHERE date(datetime(created_at)) = date(datetime('now')) AND status != 'cancelled'`
+     FROM orders WHERE date(datetime(created_at)) = date(datetime('now', '+8 hours')) AND status != 'cancelled'`
   ).get() as any;
 
   // ── Monthly view: all days of a specific month ──
