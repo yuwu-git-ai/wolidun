@@ -113,7 +113,25 @@ export default function CartPanel({ cart, products, identity, isDelivery, setIsD
                         <Minus size={12} />
                       </button>
                       <button onClick={() => {
-                        if (item.comboId) { onAdd(item); return; }
+                        if (item.comboId && item.comboItems) {
+                          // Validate stock for every combo sub-item before allowing +1
+                          let canAdd = true;
+                          for (const ci of item.comboItems) {
+                            const p = products.find(p => p.id === ci.productId);
+                            if (!p) { canAdd = false; break; }
+                            const totalInCart = cart
+                              .filter(c => c.comboId && c.comboItems?.some(sci =>
+                                sci.productId === ci.productId && (sci.variantId || null) === (ci.variantId || null)
+                              ))
+                              .reduce((s, c) => s + c.quantity, 0);
+                            const maxStock = ci.variantId
+                              ? (p.variants?.find(v => v.id === ci.variantId)?.stock || 0)
+                              : (p.stock || 0);
+                            if (totalInCart >= maxStock) { canAdd = false; break; }
+                          }
+                          if (canAdd) onAdd(item);
+                          return;
+                        }
                         const p = products.find(p => p.id === item.id);
                         const totalInCart = cart.filter(c => c.id === item.id && c.variantId === item.variantId).reduce((s, i) => s + i.quantity, 0);
                         const maxStock = item.variantId && p?.variants
@@ -122,7 +140,22 @@ export default function CartPanel({ cart, products, identity, isDelivery, setIsD
                         if (maxStock > totalInCart) onAdd(item);
                       }}
                         className="w-7 h-7 bg-slate-800 text-white hover:bg-slate-700 rounded-lg flex items-center justify-center transition-colors disabled:bg-slate-200 disabled:text-slate-400"
-                        disabled={item.comboId ? false : (() => {
+                        disabled={item.comboId && item.comboItems ? (() => {
+                          for (const ci of item.comboItems) {
+                            const p = products.find(p => p.id === ci.productId);
+                            if (!p) return true;
+                            const totalInCart = cart
+                              .filter(c => c.comboId && c.comboItems?.some(sci =>
+                                sci.productId === ci.productId && (sci.variantId || null) === (ci.variantId || null)
+                              ))
+                              .reduce((s, c) => s + c.quantity, 0);
+                            const maxStock = ci.variantId
+                              ? (p.variants?.find(v => v.id === ci.variantId)?.stock || 0)
+                              : (p.stock || 0);
+                            if (totalInCart >= maxStock) return true;
+                          }
+                          return false;
+                        })() : (() => {
                           const p = products.find(p => p.id === item.id);
                           const totalInCart = cart.filter(c => c.id === item.id && c.variantId === item.variantId).reduce((s, i) => s + i.quantity, 0);
                           const maxStock = item.variantId && p?.variants

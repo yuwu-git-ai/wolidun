@@ -34,6 +34,18 @@ export default function ComboCard({ combo, cart, products, onAddCombo }: ComboCa
     return qty;
   };
 
+  // Count how many of a product (all variants) are already in cart via combo items
+  const getProductCartQty = (productId: string) => {
+    let qty = 0;
+    for (const ci of cart) {
+      if (!ci.comboId || !ci.comboItems) continue;
+      for (const sci of ci.comboItems) {
+        if (sci.productId === productId) qty += ci.quantity;
+      }
+    }
+    return qty;
+  };
+
   const toggleBrewing = (productId: string) => {
     setBrewingIds(prev => {
       const next = new Set(prev);
@@ -73,12 +85,22 @@ export default function ComboCard({ combo, cart, products, onAddCombo }: ComboCa
 
   const allRequiredSelected = combo.items.every(ci => {
     const product = products.find(p => p.id === ci.productId);
+    if (!product) return false;
     const sel = variantIds.get(ci.productId) || ci.variantId;
-    const variantsWithStock = (product?.variants || []).filter(v => v.stock > getVariantCartQty(ci.productId, v.id));
-    if (variantsWithStock.length === 0) return true; // no selectable variants
-    if (!sel) return false;
-    const sv = variantsWithStock.find(v => v.id === sel);
-    return !!sv;
+    const hasVariants = (product.variants || []).length > 0;
+    if (hasVariants) {
+      // Product has variants — check each variant's stock individually
+      const variantsWithStock = (product.variants || []).filter(v => v.stock > getVariantCartQty(ci.productId, v.id));
+      if (variantsWithStock.length === 0) return false; // all variants sold out
+      if (!sel) return false;
+      const sv = variantsWithStock.find(v => v.id === sel);
+      return !!sv;
+    } else {
+      // Product has no variants — check product-level stock
+      const productCartQty = getProductCartQty(ci.productId);
+      const productStock = product.stock || 0;
+      return productStock > productCartQty;
+    }
   });
 
   return (
@@ -133,6 +155,16 @@ export default function ComboCard({ combo, cart, products, onAddCombo }: ComboCa
                 })}
               </select>
             )}
+            {/* Stock display for products without variants */}
+            {productVariants.length === 0 && (() => {
+              const productCartQty = getProductCartQty(ci.productId);
+              const availStock = (product?.stock || 0) - productCartQty;
+              return (
+                <span className={availStock <= 0 ? 'text-[9px] px-1 text-red-500 font-bold' : availStock <= 10 ? 'text-[9px] px-1 text-orange-500' : 'text-[9px] px-1 text-slate-400'}>
+                  {availStock <= 0 ? '已售罄' : `库存: ${availStock}`}
+                </span>
+              );
+            })()}
             {/* Brewing / Freezing options per sub-item */}
             {(ci.allowBrewing || ci.allowFreezing) && (
               <div className="flex gap-3 px-1">
