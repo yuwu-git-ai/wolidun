@@ -103,6 +103,20 @@ export default function ComboCard({ combo, cart, products, onAddCombo }: ComboCa
     }
   });
 
+  // Check if any sub-item is sold out (distinguish from "not yet selected")
+  const hasSoldOutItem = combo.items.some(ci => {
+    const product = products.find(p => p.id === ci.productId);
+    if (!product) return true;
+    const hasVariants = (product.variants || []).length > 0;
+    if (hasVariants) {
+      const variantsWithStock = (product.variants || []).filter(v => v.stock > getVariantCartQty(ci.productId, v.id));
+      return variantsWithStock.length === 0;
+    } else {
+      const productCartQty = getProductCartQty(ci.productId);
+      return (product.stock || 0) <= productCartQty;
+    }
+  });
+
   return (
     <div className="bg-white p-2.5 sm:p-4 rounded-[16px] sm:rounded-[32px] shadow-sm border border-amber-200 flex flex-col gap-2 sm:gap-4 group hover:shadow-md transition-all duration-300 ring-1 ring-amber-100 h-full">
       <div className="flex items-center gap-2">
@@ -210,7 +224,7 @@ export default function ComboCard({ combo, cart, products, onAddCombo }: ComboCa
         onClick={() => onAddCombo(combo, brewingIds, freezingIds, variantIds)}
         className={`w-full min-h-10 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl font-bold text-[11px] sm:text-base transition-all flex items-center justify-center gap-1 sm:gap-2 ${allRequiredSelected ? 'bg-amber-500 text-white hover:bg-amber-600 shadow-lg shadow-amber-500/20 active:scale-[0.98]' : 'bg-slate-200 text-slate-400 cursor-not-allowed'}`}
       >
-        <Plus size={16} /> {allRequiredSelected ? '加入购物车' : '请选择'}
+        <Plus size={16} /> {allRequiredSelected ? '加入购物车' : hasSoldOutItem ? '已售罄' : '请选择'}
       </button>
     </div>
   );
