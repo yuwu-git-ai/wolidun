@@ -20,13 +20,20 @@ export default function ComboCard({ combo, cart, products, onAddCombo }: ComboCa
     setVariantIds(new Map());
   }, [combo.id]);
 
-  // Count how many of a specific variant are already in cart (via combo items)
+  // Count how many of a specific variant are already in cart (combo items + individual items)
   const getVariantCartQty = (productId: string, variantId: string | null | undefined) => {
     let qty = 0;
     for (const ci of cart) {
-      if (!ci.comboId || !ci.comboItems) continue;
-      for (const sci of ci.comboItems) {
-        if (sci.productId === productId && (sci.variantId || null) === (variantId || null)) {
+      if (ci.comboId && ci.comboItems) {
+        // Combo items
+        for (const sci of ci.comboItems) {
+          if (sci.productId === productId && (sci.variantId || null) === (variantId || null)) {
+            qty += ci.quantity;
+          }
+        }
+      } else {
+        // Individual items
+        if (ci.id === productId && (ci.variantId || null) === (variantId || null)) {
           qty += ci.quantity;
         }
       }
@@ -34,13 +41,16 @@ export default function ComboCard({ combo, cart, products, onAddCombo }: ComboCa
     return qty;
   };
 
-  // Count how many of a product (all variants) are already in cart via combo items
+  // Count how many of a product (all variants) are already in cart (combo + individual)
   const getProductCartQty = (productId: string) => {
     let qty = 0;
     for (const ci of cart) {
-      if (!ci.comboId || !ci.comboItems) continue;
-      for (const sci of ci.comboItems) {
-        if (sci.productId === productId) qty += ci.quantity;
+      if (ci.comboId && ci.comboItems) {
+        for (const sci of ci.comboItems) {
+          if (sci.productId === productId) qty += ci.quantity;
+        }
+      } else {
+        if (ci.id === productId) qty += ci.quantity;
       }
     }
     return qty;

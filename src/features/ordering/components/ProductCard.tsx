@@ -27,10 +27,26 @@ export default function ProductCard({ product, onAdd, cart, isPopular }: Product
 
   const displayPrice = selectedVariant?.price != null ? selectedVariant.price : product.price;
 
+  // Count combo items that consume this product/variant
+  const comboVariantQty = (vid?: string | null) => {
+    let qty = 0;
+    for (const ci of cart) {
+      if (!ci.comboId || !ci.comboItems) continue;
+      for (const sci of ci.comboItems) {
+        if (sci.productId === product.id && (sci.variantId || null) === (vid || null)) {
+          qty += ci.quantity;
+        }
+      }
+    }
+    return qty;
+  };
+
   const quantityInCart = hasVariants && selectedVariantId
     ? cart.filter(c => c.id === product.id && c.variantId === selectedVariantId).reduce((s, i) => s + i.quantity, 0)
+      + comboVariantQty(selectedVariantId)
     : !hasVariants
     ? cart.filter(c => c.id === product.id).reduce((s, i) => s + i.quantity, 0)
+      + comboVariantQty(null)
     : 0;
 
   const availableStock = hasVariants
@@ -75,22 +91,24 @@ export default function ProductCard({ product, onAdd, cart, isPopular }: Product
             <span className="text-[9px] sm:text-[10px] font-bold text-slate-500">选择</span>
             <div className="flex flex-wrap gap-1 sm:gap-1.5">
               {product.variants!.map(v => {
-                const vStock = v.stock;
+                const indivQty = cart.filter(c => c.id === product.id && c.variantId === v.id).reduce((s, i) => s + i.quantity, 0);
+                const comboQty = comboVariantQty(v.id);
+                const avail = v.stock - indivQty - comboQty;
                 const vPrice = v.price != null ? `¥${v.price}` : '';
                 return (
                   <button
                     key={v.id}
                     onClick={() => setSelectedVariantId(v.id)}
-                    disabled={vStock <= 0}
+                    disabled={avail <= 0}
                     className={`px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg text-[10px] sm:text-xs font-bold transition-all border ${
                       selectedVariantId === v.id
                         ? 'bg-orange-500 text-white border-orange-500'
-                        : vStock <= 0
+                        : avail <= 0
                         ? 'bg-slate-50 text-slate-300 border-slate-100 cursor-not-allowed'
                         : 'bg-slate-50 text-slate-600 border-slate-200 hover:border-orange-300 hover:text-orange-600'
                     }`}
                   >
-                    {v.name}{vPrice ? ` ${vPrice}` : ''}{vStock <= 10 && vStock > 0 ? ` (剩${vStock})` : ''}{vStock <= 0 ? ' (售罄)' : ''}
+                    {v.name}{vPrice ? ` ${vPrice}` : ''}{avail <= 10 && avail > 0 ? ` (剩${avail})` : ''}{avail <= 0 ? ' (售罄)' : ''}
                   </button>
                 );
               })}
