@@ -285,10 +285,14 @@ export function useCustomerApp(): { state: CustomerAppState; actions: CustomerAp
 
       copyToClipboard(text);
 
-      // Reload products after order
-      fetchProducts()
-        .then(products => dispatch({ type: 'SET_PRODUCTS', payload: products }))
-        .catch(err => console.warn('Failed to reload products after order:', err));
+      // Reload products first (wait for it), THEN clear cart
+      // This avoids a flash where empty cart shows old server stock
+      try {
+        const products = await fetchProducts();
+        dispatch({ type: 'SET_PRODUCTS', payload: products });
+      } catch (err) {
+        console.warn('Failed to reload products after order:', err);
+      }
 
       dispatch({ type: 'SET_COPIED', payload: true });
       dispatch({ type: 'SET_SHOW_CONFIRM', payload: false });
